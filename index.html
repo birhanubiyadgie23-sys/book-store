@@ -52,14 +52,20 @@
     </main>
 
     <script>
-        // የSupabase ማገናኛ (እባክዎ የእርስዎን URL እና Anon Key ያስገቡ)
+        // የSupabase ማገናኛ
         const SUPABASE_URL = 'https://dmjpbujthqprvpszgcrs.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtanBidWp0aHFwcnZwc3pnY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTA5ODgsImV4cCI6MjEwODU4Njk4OH0.1pciufqyTB71Q6qlYus3crxbs8pOqDYwWIyk72Kkico';
         
-        const supabase = window.supabase.createClient('https://dmjpbujthqprvpszgcrs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtanBidWp0aHFwcnZwc3pnY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTA5ODgsImV4cCI6MjEwODU4Njk4OH0.1pciufqyTB71Q6qlYus3crxbs8pOqDYwWIyk72Kkico');
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let booksList = [];
         let cart = [];
+
+        // ቅርጫቱን መክፈቻ/መዝጊያ ፋንክሽን
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            sidebar.classList.toggle('hidden');
+        }
 
         // መጽሐፍትን ከዳታቤዝ ማምጣት
         async function fetchBooks() {
@@ -68,7 +74,7 @@
             
             if (error) {
                 console.error('ስህተት ተፈጥሯል:', error);
-                grid.innerHTML = '<p class="text-red-500">መጽሐፍትን መጫን አልተቻለም።</p>';
+                grid.innerHTML = '<p class="text-red-500">መጽሐፍትን መጫን አልተቻለም። (እባክዎ የSupabase ፖሊሲ ማስተካከልዎን ያረጋግጡ)</p>';
                 return;
             }
 
