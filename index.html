@@ -154,52 +154,7 @@
             updateCartUI();
         }
 
-        // የክፍያ ሂደት ማስጀመር (Checkout Process)
-async function checkout() {
-    if (cart.length === 0) {
-        alert('እባክዎ መጀመሪያ መጽሐፍ ይምረጡ!');
-        return;
-    }
-
-    // አጠቃላይ ዋጋን ማስላት
-    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    // የደንበኛ መረጃዎችን መቀበል (ለሙከራ)
-    const email = prompt("እባክዎ ኢሜይልዎን ያስገቡ:", "example@gmail.com");
-    if (!email) return;
-
-    try {
-        // 1. ትዕዛዙን በ Supabase 'orders' ሰንጠረዥ ውስጥ ማስመዝገብ
-        const { data: order, error } = await client
-            .from('orders')
-            .insert([
-                {
-                    total_amount: totalAmount,
-                    status: 'pending',
-                    payment_method: 'chapa'
-                }
-            ])
-            .select()
-            .single();
-
-        if (error) {
-            alert('ትዕዛዝ ማስመዝገብ አልተቻለም፡ ' + error.message);
-            return;
-        }
-
-        // 2. ወደ Chapa ክፍያ ማስወንጨፊያ (Chapa Checkout Payload)
-        alert(`ትዕዛዝዎ ቁጥር #${order.id.substr(0, 8)} ተመዝግቧል። አሁን ወደ ክፍያ ገጽ ይዛወራሉ።`);
-
-        // Chapa API Integration (በ backend ወይም በ Chapa Inline Checkout የሚከናወን)
-        initializeChapaPayment(order.id, totalAmount, email);
-
-    } catch (err) {
-        console.error('Checkout Error:', err);
-        alert('ስህተት ተፈጥሯል፡ ' + err.message);
-    }
-}
-
-// የ Chapa ክፍያ ማስፈጸሚያ
+የ Chapa ክፍያ ማስፈጸሚያ
 function initializeChapaPayment(orderId, amount, email) {
     // Chapa Public Key (ከ Chapa Dashboard የሚገኝ)
     const CHAPA_PUBLIC_KEY = 'CHAPA_TEST_PUB_bd1uC0FqsULd2paaQoCkc0qb8gRvSuSt94ElGIcc';
@@ -212,7 +167,6 @@ function initializeChapaPayment(orderId, amount, email) {
     // ለሙከራ ያህል የተቀናጀ የክፍያ ማረጋገጫ መልእክት
     alert(`የ ${amount} ብር ክፍያ በ Chapa በኩል ለማጠናቀቅ ዝግጁ ነው።\n(የ Chapa Secret Key ሲቀናጅ ክፍያው ሙሉ በሙሉ ይፈጸማል)`);
 }
-
         fetchBooks();
     </script>
 </body>
