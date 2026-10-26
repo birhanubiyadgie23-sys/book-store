@@ -154,18 +154,80 @@
             updateCartUI();
         }
 
-የ Chapa ክፍያ ማስፈጸሚያ
-function initializeChapaPayment(orderId, amount, email) {
-    // Chapa Public Key (ከ Chapa Dashboard የሚገኝ)
-    const CHAPA_PUBLIC_KEY = 'CHAPA_TEST_PUB_bd1uC0FqsULd2paaQoCkc0qb8gRvSuSt94ElGIcc';
+// የ Chapa ክፍያ ማስፈጸሚያ
+async function checkout() {
+    if (cart.length === 0) {
+        alert('እባክዎ መጀመሪያ መጽሐፍ ይምረጡ!');
+        return;
+    }
 
-    // የ Chapa ክፍያ ፎርም መፍጠር እና ማሳየት
-    const checkoutUrl = `https://checkout.chapa.co/checkout/web/payment/` 
+    // አጠቃላይ ዋጋን ማስላት
+    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
-    console.log(`Order ID: ${orderId}, Amount: ${amount}, Email: ${email}`);
-    
-    // ለሙከራ ያህል የተቀናጀ የክፍያ ማረጋገጫ መልእክት
-    alert(`የ ${amount} ብር ክፍያ በ Chapa በኩል ለማጠናቀቅ ዝግጁ ነው።\n(የ Chapa Secret Key ሲቀናጅ ክፍያው ሙሉ በሙሉ ይፈጸማል)`);
+    const email = prompt("እባክዎ ኢሜይልዎን ያስገቡ:", "example@gmail.com");
+    if (!email) return;
+
+    const firstName = prompt("የእርስዎን ስም ያስገቡ:", "ብርሃኑ");
+    if (!firstName) return;
+
+    const lastName = prompt("የአባትዎን ስም ያስገቡ:", "ቢያድጌ");
+    if (!lastName) return;
+
+    try {
+        // 1. ትዕዛዙን በ Supabase 'orders' ሰንጠረዥ ውስጥ ማስመዝገብ (RLS ጠፍቷል)
+        const { data: order, error } = await client
+            .from('orders')
+            .insert([
+                {
+                    total_amount: totalAmount,
+                    status: 'pending',
+                    payment_method: 'chapa'
+                }
+            ])
+            .select()
+            .single();
+
+        if (error) {
+            alert('ትዕዛዝ ማስመዝገብ አልተቻለም፡ ' + error.message);
+            return;
+        }
+
+        // 2. የ Chapa Public Key ማካተት
+        const CHAPA_PUBLIC_KEY = 'CHAPA_TEST_PUB_bd1uC0FqsULd2paaQoCkc0qb8gRvSuSt94ElGIcc'; 
+        const txRef = 'tx-' + Math.random().toString(36).substring(2, 15);
+
+        // 3. የ Chapa Checkout ፎርም በራስ-ሰር በመፍጠር ወደ ክፍያ ገጽ መውሰድ
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'https://api.chapa.co/v1/hosted/pay';
+
+        const fields = {
+            public_key: CHAPA_PUBLIC_KEY,
+            amount: totalAmount,
+            currency: 'ETB',
+            email: email,
+            first_name: firstName,
+            last_name: lastName,
+            tx_ref: txRef,
+            callback_url: 'https://webhook.site/your-callback',
+            return_url: window.location.href
+        };
+
+        for (const key in fields) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = fields[key];
+            form.appendChild(hiddenField);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+
+    } catch (err) {
+        console.error('Checkout Error:', err);
+        alert('ስህተት ተፈጥሯል፡ ' + err.message);
+    }
 }
         fetchBooks();
     </script>
