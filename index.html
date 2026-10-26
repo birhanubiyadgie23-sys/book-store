@@ -56,7 +56,7 @@
         const SUPABASE_URL = 'https://dmjpbujthqprvpszgcrs.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtanBidWp0aHFwcnZwc3pnY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTA5ODgsImV4cCI6MjEwODU4Njk4OH0.1pciufqyTB71Q6qlYus3crxbs8pOqDYwWIyk72Kkico';
         
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let booksList = [];
         let cart = [];
@@ -70,32 +70,36 @@
         // መጽሐፍትን ከዳታቤዝ ማምጣት
         async function fetchBooks() {
             const grid = document.getElementById('books-grid');
-            const { data: books, error } = await supabase.from('books').select('*');
-            
-            if (error) {
-                console.error('ስህተት ተፈጥሯል:', error);
-                grid.innerHTML = '<p class="text-red-500">መጽሐፍትን መጫን አልተቻለም። (እባክዎ የSupabase ፖሊሲ ማስተካከልዎን ያረጋግጡ)</p>';
-                return;
-            }
+            try {
+                const { data: books, error } = await client.from('books').select('*');
+                
+                if (error) {
+                    console.error('Supabase Error:', error);
+                    grid.innerHTML = `<p class="text-red-500 font-bold">የዳታቤዝ ስህተት: ${error.message}</p>`;
+                    return;
+                }
 
-            booksList = books;
+                if (!books || books.length === 0) {
+                    grid.innerHTML = '<p class="text-gray-500">ምንም መጽሐፍ አልተገኘም። እባክዎ Supabase ውስጥ መጽሐፍት መግባታቸውን ያረጋግጡ።</p>';
+                    return;
+                }
 
-            if (!books || books.length === 0) {
-                grid.innerHTML = '<p class="text-gray-500">ምንም መጽሐፍ አልተገኘም።</p>';
-                return;
-            }
-
-            grid.innerHTML = books.map(book => `
-                <div class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between hover:shadow-lg transition">
-                    <div>
-                        <img src="${book.cover_image_url || 'https://via.placeholder.com/150'}" alt="${book.title}" class="w-full h-48 object-cover rounded mb-4">
-                        <h3 class="font-bold text-lg text-gray-800">${book.title}</h3>
-                        <p class="text-sm text-gray-600 mb-2">ደራሲ፡ ${book.author}</p>
-                        <p class="text-indigo-600 font-semibold mb-4">${book.price} ብር</p>
+                booksList = books;
+                grid.innerHTML = books.map(book => `
+                    <div class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between hover:shadow-lg transition">
+                        <div>
+                            <img src="${book.cover_image_url || 'https://via.placeholder.com/150'}" alt="${book.title}" class="w-full h-48 object-cover rounded mb-4">
+                            <h3 class="font-bold text-lg text-gray-800">${book.title}</h3>
+                            <p class="text-sm text-gray-600 mb-2">ደራሲ፡ ${book.author}</p>
+                            <p class="text-indigo-600 font-semibold mb-4">${book.price} ብር</p>
+                        </div>
+                        <button onclick="addToCart('${book.id}')" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition">ወደ ቅርጫት ጨምር</button>
                     </div>
-                    <button onclick="addToCart('${book.id}')" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition">ወደ ቅርጫት ጨምር</button>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (err) {
+                console.error('Script Error:', err);
+                grid.innerHTML = `<p class="text-red-500 font-bold">የኮድ ስህተት ተፈጥሯል: ${err.message}</p>`;
+            }
         }
 
         // መጽሐፍ ወደ ቅርጫት መጨመር
@@ -131,12 +135,12 @@
             cartItemsContainer.innerHTML = cart.map(item => {
                 total += item.price * item.quantity;
                 return `
-                    <div class="flex justify-between items-center text-sm">
+                    <div class="flex justify-between items-center text-sm mb-2">
                         <div>
                             <p class="font-bold text-gray-800">${item.title}</p>
                             <p class="text-gray-500">${item.price} ብር x ${item.quantity}</p>
                         </div>
-                        <button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-700 font-bold">×</button>
+                        <button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-700 font-bold px-2">×</button>
                     </div>
                 `;
             }).join('');
@@ -150,7 +154,7 @@
             updateCartUI();
         }
 
-        // ክፍያ (ቀጣይ ደረጃ - Telebirr / Chapa)
+        // ክፍያ 
         function checkout() {
             if (cart.length === 0) {
                 alert('እባክዎ መጀመሪያ መጽሐፍ ይምረጡ!');
