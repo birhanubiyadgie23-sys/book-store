@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ይቻላል የመጽሐፍት መደብር</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <!-- ዋና ራስጌ (Header) -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-indigo-600">ይቻላል የመጽሐፍት መደብር</h1>
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleCart()" class="relative bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition">
+                    🛒 ቅርጫት <span id="cart-count" class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ዋናው ማሳያ (Main Content) -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+        
+        <!-- የመጽሐፍት ግሪድ -->
+        <div class="w-full md:w-3/4">
+            <h2 class="text-xl font-semibold mb-6 text-gray-800">የሚገኙ መጽሐፍት</h2>
+            <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <p class="text-gray-500">መጽሐፍት በመጫን ላይ ናቸው...</p>
+            </div>
+        </div>
+
+        <!-- የግዢ ቅርጫት ጎን ሰሌዳ (Cart Sidebar) -->
+        <div id="cart-sidebar" class="w-full md:w-1/4 bg-white p-6 rounded-lg shadow-md h-fit">
+            <h3 class="text-lg font-bold mb-4 text-gray-800">የግዢ ቅርጫት</h3>
+            <div id="cart-items" class="space-y-4 mb-4">
+                <p class="text-gray-500 text-sm">ቅርጫቱ ባዶ ነው።</p>
+            </div>
+            <div class="border-t pt-4">
+                <div class="flex justify-between font-bold text-gray-800 mb-4">
+                    <span>ድምር፡</span>
+                    <span id="cart-total">0.00 ብር</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold">ክፍያ ይፈጽሙ</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // የSupabase ማገናኛ (እባክዎ የእርስዎን URL እና Anon Key ያስገቡ)
+        const SUPABASE_URL = 'https://dmjpbujthqprvpszgcrs.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtanBidWp0aHFwcnZwc3pnY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTA5ODgsImV4cCI6MjEwODU4Njk4OH0.1pciufqyTB71Q6qlYus3crxbs8pOqDYwWIyk72Kkico';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let booksList = [];
+        let cart = [];
+
+        // መጽሐፍትን ከዳታቤዝ ማምጣት
+        async function fetchBooks() {
+            const grid = document.getElementById('books-grid');
+            const { data: books, error } = await supabase.from('books').select('*');
+            
+            if (error) {
+                console.error('ስህተት ተፈጥሯል:', error);
+                grid.innerHTML = '<p class="text-red-500">መጽሐፍትን መጫን አልተቻለም።</p>';
+                return;
+            }
+
+            booksList = books;
+
+            if (!books || books.length === 0) {
+                grid.innerHTML = '<p class="text-gray-500">ምንም መጽሐፍ አልተገኘም።</p>';
+                return;
+            }
+
+            grid.innerHTML = books.map(book => `
+                <div class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <img src="${book.cover_image_url || 'https://via.placeholder.com/150'}" alt="${book.title}" class="w-full h-48 object-cover rounded mb-4">
+                        <h3 class="font-bold text-lg text-gray-800">${book.title}</h3>
+                        <p class="text-sm text-gray-600 mb-2">ደራሲ፡ ${book.author}</p>
+                        <p class="text-indigo-600 font-semibold mb-4">${book.price} ብር</p>
+                    </div>
+                    <button onclick="addToCart('${book.id}')" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition">ወደ ቅርጫት ጨምር</button>
+                </div>
+            `).join('');
+        }
+
+        // መጽሐፍ ወደ ቅርጫት መጨመር
+        function addToCart(bookId) {
+            const book = booksList.find(b => b.id === bookId);
+            if (!book) return;
+
+            const existingItem = cart.find(item => item.id === bookId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...book, quantity: 1 });
+            }
+
+            updateCartUI();
+        }
+
+        // የቅርጫት ገጽታ ማዘመን
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-gray-500 text-sm">ቅርጫቱ ባዶ ነው።</p>';
+                cartTotal.textContent = '0.00 ብር';
+                return;
+            }
+
+            let total = 0;
+            cartItemsContainer.innerHTML = cart.map(item => {
+                total += item.price * item.quantity;
+                return `
+                    <div class="flex justify-between items-center text-sm">
+                        <div>
+                            <p class="font-bold text-gray-800">${item.title}</p>
+                            <p class="text-gray-500">${item.price} ብር x ${item.quantity}</p>
+                        </div>
+                        <button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-700 font-bold">×</button>
+                    </div>
+                `;
+            }).join('');
+
+            cartTotal.textContent = total.toFixed(2) + ' ብር';
+        }
+
+        // ከቅርጫት ማስወገድ
+        function removeFromCart(bookId) {
+            cart = cart.filter(item => item.id !== bookId);
+            updateCartUI();
+        }
+
+        // ክፍያ (ቀጣይ ደረጃ - Telebirr / Chapa)
+        function checkout() {
+            if (cart.length === 0) {
+                alert('እባክዎ መጀመሪያ መጽሐፍ ይምረጡ!');
+                return;
+            }
+            alert('ወደ ክፍያ ስርዓት (Telebirr / Chapa API) በመሄድ ላይ...');
+        }
+
+        fetchBooks();
+    </script>
+</body>
+</html>
