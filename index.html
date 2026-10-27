@@ -1,238 +1,1250 @@
 <!DOCTYPE html>
-<html lang="am" class="h-full">
+<html lang="am" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ይቻላል የመጽሐፍት መደብር</title>
+    <title>ይቻላል የመጽሐፍት መደብር - Yichalal Bookstore</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter & Ethiopic support -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b'
+                        },
+                        amberGold: '#f59e0b',
+                        ethiopianGreen: '#009a44',
+                        ethiopianYellow: '#fed100',
+                        ethiopianRed: '#e4002b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Ethiopic', 'sans-serif']
+                    },
+                    keyframes: {
+                        kenburns: {
+                            '0%': { transform: 'scale(1) translate(0, 0)' },
+                            '50%': { transform: 'scale(1.15) translate(-1%, -1%)' },
+                            '100%': { transform: 'scale(1.05) translate(1%, 0.5%)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+                            '50%': { opacity: '0.8', transform: 'scale(1.05)' }
+                        }
+                    },
+                    animation: {
+                        'kenburns': 'kenburns 16s ease-in-out infinite alternate',
+                        'float': 'float 4s ease-in-out infinite',
+                        'pulseGlow': 'pulseGlow 3s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts for Ethiopic support -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Ethiopic:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Noto Sans Ethiopic', 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        /* Glassmorphism helpers */
+        .glass-panel {
+            background: rgba(22, 27, 46, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card {
+            background: rgba(30, 37, 60, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-input {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3730a3;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+        /* Crossfade Slideshow Styles */
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background-size: cover;
+            background-position: center;
+            will-change: transform, opacity;
+        }
+        .hero-slide.active {
+            opacity: 1;
+        }
     </style>
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 h-full flex flex-col justify-between">
+<body class="min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
 
-    <!-- ፕሪሚየም ራስጌ (Header) -->
-    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <span class="bg-indigo-600 text-white p-2 rounded-xl font-bold text-lg shadow-md shadow-indigo-100">ይ</span>
-                <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">ይቻላል መደብር</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button onclick="toggleCart()" class="relative flex items-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl transition font-medium text-sm">
-                    <span>🛒 ቅርጫት</span>
-                    <span id="cart-count" class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+    <!-- TOP HEADER NAVBAR -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-slate-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <!-- Brand Logo -->
+            <a href="#" onclick="showCategory('all'); return false;" class="flex items-center gap-3 group shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-amberGold flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:scale-105 transition-transform duration-300">
+                    <i class="fa-solid fa-book-open-reader text-2xl text-white"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-brand-400">
+                        ይቻላል
+                    </span>
+                    <span class="block text-xs font-semibold tracking-widest text-amberGold uppercase">መጽሐፍት መደብር</span>
+                </div>
+            </a>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex flex-1 max-w-xl mx-4 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="መጽሐፍ፣ ደራሲ ወይም አይሶቢኤን (ISBN) ይፈልጉ..." 
+                    class="w-full pl-11 pr-10 py-3 rounded-full glass-input text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-inner">
+                <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Admin Portal Button -->
+                <button onclick="openAdminModal()" class="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl glass-card hover:bg-slate-800 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700/60 hover:border-brand-500/50 transition-all" title="የአድሚን ዳሽቦርድ">
+                    <i class="fa-solid fa-user-gear text-brand-400 text-base"></i>
+                    <span class="hidden lg:inline">አድሚን</span>
+                </button>
+
+                <!-- Saved Items / Favorites -->
+                <button onclick="toggleFavoritesModal()" class="relative p-3 rounded-xl glass-card hover:bg-slate-800 text-slate-200 text-sm border border-slate-700/60 transition-all" title="የተወደዱ መጽሐፍት">
+                    <i class="fa-regular fa-heart text-amberGold text-lg"></i>
+                    <span id="favBadge" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-amberGold text-slate-950 font-extrabold text-xs rounded-full flex items-center justify-center">0</span>
+                </button>
+
+                <!-- Shopping Cart Drawer Trigger -->
+                <button onclick="toggleCartDrawer()" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-brand-600/30 transition-all transform active:scale-95">
+                    <i class="fa-solid fa-cart-shopping text-base"></i>
+                    <span class="hidden sm:inline">ካርት</span>
+                    <span id="cartCountBadge" class="bg-white/20 text-white px-2 py-0.5 rounded-full text-xs font-bold ml-0.5">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Bar Mobile -->
+        <div class="px-4 pb-3 md:hidden">
+            <div class="relative w-full">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" oninput="handleSearch(this.value)" placeholder="መጽሐፍ ይፈልጉ..." 
+                    class="w-full pl-9 pr-8 py-2 rounded-xl glass-input text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
             </div>
         </div>
     </header>
 
-    <!-- ዋናው ማሳያ (Main Content) -->
-    <main class="max-w-7xl mx-auto px-6 py-10 flex-grow w-full flex flex-col lg:flex-row gap-10">
-        
-        <!-- የመጽሐፍት ግሪድ ክፍል -->
-        <div class="w-full lg:w-3/4">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900">የተመረጡ መጽሐፍት</h2>
-                    <p class="text-slate-500 text-sm mt-1">የዕውቀት ማዕድ የሆነውን መጽሐፍ ይምረጡ</p>
-                </div>
-            </div>
-            <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                <div class="col-span-full py-12 text-center text-slate-400">መጽሐፍት በመጫን ላይ ናቸው...</div>
-            </div>
-        </div>
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow">
 
-        <!-- የግዢ ቅርጫት ጎን ሰሌዳ (Cart Sidebar) -->
-        <div id="cart-sidebar" class="w-full lg:w-1/4 bg-white p-6 rounded-2xl shadow-xl shadow-slate-100 border border-slate-100 h-fit sticky top-24">
-            <h3 class="text-lg font-bold mb-4 text-slate-900 border-b pb-3">የግዢ ቅርጫትዎ</h3>
-            <div id="cart-items" class="space-y-4 mb-6 max-h-72 overflow-y-auto pr-1">
-                <p class="text-slate-400 text-sm py-4 text-center">ቅርጫቱ ባዶ ነው።</p>
+        <!-- HYPER-MODERN HERO SECTION WITH CONTINUOUS ZOOM SLIDESHOW -->
+        <section class="relative w-full min-h-[560px] md:min-h-[640px] flex items-center justify-center overflow-hidden border-b border-slate-800/80">
+            
+            <!-- Dynamic Ken Burns Background Slides Container -->
+            <div id="heroSlidesContainer" class="absolute inset-0 z-0 bg-slate-950">
+                <!-- Dynamic slide items inserted by JavaScript -->
             </div>
-            <div class="border-t border-slate-100 pt-4">
-                <div class="flex justify-between font-bold text-slate-900 mb-6">
-                    <span>አጠቃላይ ድምር፡</span>
-                    <span id="cart-total" class="text-indigo-600">0.00 ብር</span>
+
+            <!-- Dark Gradient / Glass Overlay for Contrast -->
+            <div class="absolute inset-0 z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/85 backdrop-blur-[2px]"></div>
+            <div class="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40"></div>
+
+            <!-- Decorative Ambient Glow Effect -->
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl pointer-events-none animate-pulseGlow z-10"></div>
+
+            <!-- Hero Main Interactive Content -->
+            <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-10">
+                
+                <!-- Hero Text Info -->
+                <div class="max-w-2xl space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-card border border-amberGold/30 text-amberGold text-xs font-semibold uppercase tracking-wider animate-bounce">
+                        <i class="fa-solid fa-crown text-xs"></i>
+                        <span>ቁጥር #1 የኢትዮጵያ ኦንላይን መጽሐፍት መደብር</span>
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight">
+                        እውቀትን ይሸምቱ፣ <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-indigo-300 to-amberGold">
+                            ምናብዎን ያበልጽጉ!
+                        </span>
+                    </h1>
+
+                    <p class="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-normal">
+                        የተመረጡ የሀገር ውስጥና የአለም አቀፍ ድንቅ መጽሐፍትን በአንድ ቦታ ያግኙ። በቀላሉ ይዘዙ፣ በቻፓ (Chapa) ክፍያዎን በፍጥነት ፈጽመው በደቂቃዎች ውስጥ ወደ ንባብ ዓለም ይግቡ።
+                    </p>
+
+                    <!-- CTAs -->
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
+                        <a href="#catalog" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-brand-500 to-amberGold text-white font-bold text-sm shadow-xl shadow-brand-600/30 hover:scale-105 transition-all flex items-center gap-2">
+                            <span>መጽሐፍትን ይመልከቱ</span>
+                            <i class="fa-solid fa-arrow-down text-xs"></i>
+                        </a>
+                        <button onclick="openAdminModal()" class="px-6 py-3.5 rounded-xl glass-panel hover:bg-slate-800 text-slate-200 text-sm font-semibold border border-slate-700/80 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-images text-brand-400"></i>
+                            <span>ጀርባ ምስል ይቀይሩ</span>
+                        </button>
+                    </div>
+
+                    <!-- Dynamic Floating Stats Badges -->
+                    <div class="pt-6 grid grid-cols-3 gap-3 max-w-lg mx-auto md:mx-0">
+                        <div class="p-3 rounded-xl glass-card border border-white/5 text-center">
+                            <div class="text-xl sm:text-2xl font-black text-white">500+</div>
+                            <div class="text-[11px] text-slate-400 font-medium">የተመረጡ መጽሐፍት</div>
+                        </div>
+                        <div class="p-3 rounded-xl glass-card border border-white/5 text-center">
+                            <div class="text-xl sm:text-2xl font-black text-amberGold flex items-center justify-center gap-1">
+                                <span>4.9</span> <i class="fa-solid fa-star text-xs"></i>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-medium">የደራሲያን ምዘና</div>
+                        </div>
+                        <div class="p-3 rounded-xl glass-card border border-white/5 text-center">
+                            <div class="text-xl sm:text-2xl font-black text-brand-400">10k+</div>
+                            <div class="text-[11px] text-slate-400 font-medium">ቋሚ አንባቢዎች</div>
+                        </div>
+                    </div>
                 </div>
-                <button onclick="checkout()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-3 rounded-xl transition shadow-lg shadow-emerald-100 font-semibold text-sm">ክፍያ በደህና ይፈጽሙ</button>
+
+                <!-- Featured Highlight Card Widget -->
+                <div class="w-full max-w-sm hidden md:block">
+                    <div class="glass-panel rounded-3xl p-5 border border-white/10 shadow-2xl relative overflow-hidden group hover:border-brand-500/50 transition-all">
+                        <div class="absolute -right-12 -bottom-12 w-32 h-32 bg-amberGold/10 rounded-full blur-xl"></div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-bold">የሳምንቱ ምርጥ</span>
+                            <span class="text-xs text-slate-400"><i class="fa-solid fa-fire text-amberGold mr-1"></i> ተወዳጅ</span>
+                        </div>
+                        
+                        <div class="relative h-64 rounded-2xl overflow-hidden mb-4 shadow-md">
+                            <img id="heroFeaturedImg" src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80" alt="የሳምንቱ ምርጥ" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-3 left-3 right-3">
+                                <h3 id="heroFeaturedTitle" class="text-base font-bold text-white leading-snug">የቀን አሳቦች (Mindset Essentials)</h3>
+                                <p id="heroFeaturedAuthor" class="text-xs text-slate-300">በእውቀቱ ስዩም</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-slate-400 block">ዋጋ</span>
+                                <span id="heroFeaturedPrice" class="text-lg font-black text-amberGold">450 ETB</span>
+                            </div>
+                            <button id="heroFeaturedBuyBtn" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs shadow-md transition-all">
+                                አሁኑኑ ይዘዙ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
+
+            <!-- Slide Navigation Controls & Indicators Bottom Overlay -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 glass-card px-4 py-2 rounded-full border border-white/10">
+                <button onclick="prevSlide()" class="text-slate-400 hover:text-white px-1 text-xs">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div id="slideIndicators" class="flex items-center gap-1.5">
+                    <!-- Dynamic Indicators generated by JS -->
+                </div>
+                <button onclick="nextSlide()" class="text-slate-400 hover:text-white px-1 text-xs">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MAIN CATALOG SECTION -->
+        <section id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            
+            <!-- Category Filter Tabs & Section Header -->
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-layer-group text-amberGold"></i>
+                        <span>የመጽሐፍት ስብስብ</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1">የሚፈልጉትን የመጽሐፍ ዘርፍ መርጠው ያስሱ</p>
+                </div>
+
+                <!-- Category Chips Slider -->
+                <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
+                    <button onclick="filterCategory('all')" class="cat-btn active px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all glass-card bg-brand-600 text-white border border-brand-500">
+                        ሁሉም (All)
+                    </button>
+                    <button onclick="filterCategory('ልብ-ወለድ')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-slate-300 hover:text-white glass-card hover:bg-slate-800 transition-all border border-slate-700/60">
+                        ልብ-ወለድ
+                    </button>
+                    <button onclick="filterCategory('ስነ-ልቦና')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-slate-300 hover:text-white glass-card hover:bg-slate-800 transition-all border border-slate-700/60">
+                        ስነ-ልቦና & እራስን ማነፅ
+                    </button>
+                    <button onclick="filterCategory('ታሪክ')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-slate-300 hover:text-white glass-card hover:bg-slate-800 transition-all border border-slate-700/60">
+                        ታሪክ & ባህል
+                    </button>
+                    <button onclick="filterCategory('ንግድ')" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-slate-300 hover:text-white glass-card hover:bg-slate-800 transition-all border border-slate-700/60">
+                        ንግድ & ፍልስፍና
+                    </button>
+                </div>
+            </div>
+
+            <!-- Books Grid Container -->
+            <div id="booksGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Book Cards dynamic rendering via JS -->
+            </div>
+
+            <!-- Empty State fallback -->
+            <div id="emptyState" class="hidden text-center py-16 glass-card rounded-3xl border border-slate-800">
+                <i class="fa-solid fa-book-open text-5xl text-slate-600 mb-4"></i>
+                <h3 class="text-lg font-bold text-slate-300">ምንም የተገኘ መጽሐፍ የለም</h3>
+                <p class="text-xs text-slate-500 mt-1">እባክዎ የፍለጋ ቃሉን ወይም የዘርፍ ምርጫውን ቀይረው ይሞክሩ።</p>
+                <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold">ሁሉንም አሳይ</button>
+            </div>
+        </section>
 
     </main>
 
-    <!-- እግርጌ (Footer) -->
-    <footer class="bg-white border-t border-slate-100 py-6 mt-12 text-center text-slate-400 text-xs">
-        <p>© 2026 ይቻላል መጽሐፍት መደብር። መብቱ በህግ የተጠበቀ ነው።</p>
+    <!-- FOOTER -->
+    <footer class="mt-20 border-t border-slate-800 glass-panel py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-amberGold flex items-center justify-center text-white">
+                    <i class="fa-solid fa-book text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white text-base">ይቻላል የመጽሐፍት መደብር</h3>
+                    <p class="text-xs text-slate-400">© 2026 Yichalal Books. በቻፓ (Chapa Payment) የተረጋገጠ ክፍያ።</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6 text-slate-400 text-sm">
+                <span class="hover:text-brand-400 cursor-pointer transition-colors"><i class="fa-brands fa-telegram text-base mr-1"></i> ቴሌግራም</span>
+                <span class="hover:text-brand-400 cursor-pointer transition-colors"><i class="fa-brands fa-facebook text-base mr-1"></i> ፌስቡክ</span>
+                <span class="hover:text-brand-400 cursor-pointer transition-colors"><i class="fa-solid fa-phone text-base mr-1"></i> +251 900 000 000</span>
+            </div>
+        </div>
     </footer>
 
-    <script>
-        // የSupabase ማገናኛ
-        const SUPABASE_URL = 'https://dmjpbujthqprvpszgcrs.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtanBidWp0aHFwcnZwc3pnY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTA5ODgsImV4cCI6MjEwODU4Njk4OH0.1pciufqyTB71Q6qlYus3crxbs8pOqDYwWIyk72Kkico';
+    <!-- SHOPPING CART SLIDE-OVER DRAWER -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
+        <!-- Backdrop overlay -->
+        <div id="cartBackdrop" onclick="toggleCartDrawer()" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm cursor-pointer"></div>
         
-        const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        let booksList = [];
-        let cart = [];
-
-        function toggleCart() {
-            const sidebar = document.getElementById('cart-sidebar');
-            sidebar.classList.toggle('hidden');
-        }
-
-        async function fetchBooks() {
-            const grid = document.getElementById('books-grid');
-            try {
-                const { data: books, error } = await client.from('books').select('*');
-                
-                if (error) {
-                    grid.innerHTML = `<p class="text-rose-500 font-medium">የዳታቤዝ ስህተት: ${error.message}</p>`;
-                    return;
-                }
-
-                if (!books || books.length === 0) {
-                    grid.innerHTML = '<p class="text-slate-400">ምንም መጽሐፍ አልተገኘም።</p>';
-                    return;
-                }
-
-                booksList = books;
-                grid.innerHTML = books.map(book => `
-                    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
-                        <div>
-                            <div class="overflow-hidden rounded-xl mb-4 bg-slate-100 h-52">
-                                <img src="${book.cover_image_url || 'https://via.placeholder.com/150'}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            </div>
-                            <h3 class="font-bold text-base text-slate-900 mb-1 line-clamp-1">${book.title}</h3>
-                            <p class="text-xs text-slate-500 mb-3">ደራሲ፡ ${book.author}</p>
-                            <p class="text-indigo-600 font-bold text-sm mb-4">${book.price} ብር</p>
-                        </div>
-                        <button onclick="addToCart('${book.id}')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white py-2.5 rounded-xl transition font-medium text-xs shadow-sm">ወደ ቅርጫት ጨምር</button>
+        <!-- Drawer Content -->
+        <div id="cartContent" class="absolute top-0 right-0 bottom-0 w-full max-w-md bg-slate-900 border-l border-slate-800 p-6 flex flex-col justify-between shadow-2xl transform translate-x-full transition-transform duration-300 pointer-events-auto">
+            <div>
+                <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-brand-400 text-xl"></i>
+                        <h2 class="text-lg font-bold text-white">የእርስዎ የትእዛዝ ቅርጫት</h2>
                     </div>
-                `).join('');
-            } catch (err) {
-                grid.innerHTML = `<p class="text-rose-500 font-medium">የኮድ ስህተት ተፈጥሯል: ${err.message}</p>`;
+                    <button onclick="toggleCartDrawer()" class="p-2 text-slate-400 hover:text-white rounded-lg">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items List -->
+                <div id="cartItemsList" class="mt-4 space-y-4 max-h-[55vh] overflow-y-auto pr-1">
+                    <!-- Dynamic cart items rendered here -->
+                </div>
+            </div>
+
+            <!-- Cart Footer Summary & Checkout -->
+            <div class="pt-4 border-t border-slate-800">
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-xs text-slate-400">
+                        <span>የመጽሐፍት ድምር</span>
+                        <span id="cartSubtotal" class="font-bold text-slate-200">0 ETB</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-400">
+                        <span>የማድረሻ አገልግሎት (Delivery)</span>
+                        <span class="font-bold text-emerald-400">ነጻ (Free)</span>
+                    </div>
+                    <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-slate-800/60">
+                        <span>ጠቅላላ ክፍያ</span>
+                        <span id="cartTotal" class="text-amberGold">0 ETB</span>
+                    </div>
+                </div>
+
+                <button onclick="processChapaCheckout()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-900/30 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span>በቻፓ ይክፈሉ (Pay with Chapa)</span>
+                </button>
+                <p class="text-[11px] text-center text-slate-500 mt-2">ደህንነቱ በተጠበቀ የቻፓ (Chapa Ethiopia) ሲስተም የተደገፈ</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN BACKGROUND & BOOK MANAGER MODAL -->
+    <div id="adminModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-3xl rounded-3xl border border-slate-700/80 p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+            
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 rounded-2xl bg-brand-600/30 border border-brand-500/40 text-brand-300">
+                        <i class="fa-solid fa-sliders text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-white">የአድሚን አስተዳደር ዳሽቦርድ</h2>
+                        <p class="text-xs text-slate-400">የጀርባ ምስሎችን እና መጽሐፍትን በቀላሉ ይቆጣጠሩ</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminModal()" class="p-2 text-slate-400 hover:text-white rounded-lg">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Admin Tabs Navigation -->
+            <div class="flex gap-2 border-b border-slate-800 my-4 pb-2">
+                <button id="adminTabBgBtn" onclick="switchAdminTab('bg')" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white transition-all">
+                    <i class="fa-solid fa-images mr-1"></i> የጀርባ ምስሎች (Hero Backgrounds)
+                </button>
+                <button id="adminTabBooksBtn" onclick="switchAdminTab('books')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all">
+                    <i class="fa-solid fa-book-medical mr-1"></i> አዲስ መጽሐፍ ጨምር
+                </button>
+            </div>
+
+            <!-- TAB 1: HERO BACKGROUND IMAGES MANAGER -->
+            <div id="adminTabBg" class="space-y-6">
+                <!-- Add New Hero Slide Form -->
+                <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+                    <h3 class="text-xs font-bold text-amberGold uppercase tracking-wider">አዲስ የጀርባ ምስል መጨመሪያ</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="newBgUrlInput" placeholder="የምስል URL (https://...)" class="glass-input p-2.5 rounded-xl text-xs text-white">
+                        <input type="text" id="newBgTitleInput" placeholder="መግለጫ/ርዕስ (ምሳሌ: Modern Library)" class="glass-input p-2.5 rounded-xl text-xs text-white">
+                    </div>
+                    <div class="flex items-center justify-between pt-1">
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs text-slate-400">የመቀየሪያ ሰከንድ:</label>
+                            <select id="slideIntervalSelect" onchange="updateSlideInterval(this.value)" class="glass-input px-2 py-1 rounded-lg text-xs text-white">
+                                <option value="4000">4 ሰከንድ</option>
+                                <option value="6000" selected>6 ሰከንድ</option>
+                                <option value="8000">8 ሰከንድ</option>
+                                <option value="10000">10 ሰከንድ</option>
+                            </select>
+                        </div>
+                        <button onclick="addCustomHeroSlide()" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> ምስል ጨምር
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Existing Hero Slides Grid -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xs font-bold text-slate-300">አሁን የሚሰሩ ምስሎች</h3>
+                        <button onclick="resetDefaultHeroSlides()" class="text-xs text-brand-400 hover:underline">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> ወደ ነበረበት መልስ (Reset Defaults)
+                        </button>
+                    </div>
+
+                    <div id="adminSlidesList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-1">
+                        <!-- Dynamic list of current background slides -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: BOOK ADDITION FORM -->
+            <div id="adminTabBooks" class="hidden space-y-4">
+                <form id="addBookForm" onsubmit="handleAddNewBook(event)" class="space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">የመጽሐፍ ርዕስ</label>
+                            <input type="text" id="bookTitle" required placeholder="ምሳሌ: ፍቅር እስከ መቃብር" class="w-full glass-input p-2.5 rounded-xl text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">ደራሲ</label>
+                            <input type="text" id="bookAuthor" required placeholder="ምሳሌ: ሐዲስ ዓለማየሁ" class="w-full glass-input p-2.5 rounded-xl text-xs text-white">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">ዋጋ (ETB)</label>
+                            <input type="number" id="bookPrice" required placeholder="350" class="w-full glass-input p-2.5 rounded-xl text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">ዘርፍ (Category)</label>
+                            <select id="bookCategory" class="w-full glass-input p-2.5 rounded-xl text-xs text-white">
+                                <option value="ልብ-ወለድ">ልብ-ወለድ</option>
+                                <option value="ስነ-ልቦና">ስነ-ልቦና</option>
+                                <option value="ታሪክ">ታሪክ & ባህል</option>
+                                <option value="ንግድ">ንግድ & ፍልስፍና</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">የደረጃ ምዘና (Rating)</label>
+                            <input type="number" step="0.1" min="1" max="5" id="bookRating" value="4.8" class="w-full glass-input p-2.5 rounded-xl text-xs text-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">የመጽሐፍ ሽፋን ምስል URL (Book Cover Image)</label>
+                        <input type="url" id="bookCover" required placeholder="https://images.unsplash.com/photo-..." class="w-full glass-input p-2.5 rounded-xl text-xs text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">አጭር ማብራሪያ (Description)</label>
+                        <textarea id="bookDesc" rows="3" placeholder="ስለ መጽሐፉ አጭር መግለጫ ይፃፉ..." class="w-full glass-input p-2.5 rounded-xl text-xs text-white"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-amberGold text-white font-extrabold text-xs shadow-lg transition-all">
+                        መጽሐፉን ወደ መደብሩ ጨምር
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BOOK QUICK VIEW MODAL -->
+    <div id="quickViewModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl border border-slate-700/80 p-6 shadow-2xl relative">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-white rounded-full">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div id="quickViewContent" class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+                <!-- Dynamically injected book details -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // INITIAL DATA & APP STATE
+        // ==========================================
+        
+        // Chapa Public Key Configuration
+        const CHAPA_PUBLIC_KEY = 'CHAPA_TEST_PUB_lySnQ7s0rqESvfkJyNtF-iHtrlK0A0RrkWaQKN7I';
+
+        // Curated Aesthetic Default Hero Background Slides
+        const DEFAULT_HERO_SLIDES = [
+            {
+                id: '1',
+                url: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1920&q=80',
+                title: 'ጥልቅ የመጽሐፍት ማዕከል'
+            },
+            {
+                id: '2',
+                url: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1920&q=80',
+                title: 'ጸጥተኛ የንባብ ድባብ'
+            },
+            {
+                id: '3',
+                url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1920&q=80',
+                title: 'ዘመናዊ ቤተ-መጽሐፍት'
+            },
+            {
+                id: '4',
+                url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1920&q=80',
+                title: 'የእውቀት ውቅያኖስ'
             }
-        }
+        ];
 
-        function addToCart(bookId) {
-            const book = booksList.find(b => b.id === bookId);
-            if (!book) return;
-
-            const existingItem = cart.find(item => item.id === bookId);
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ ...book, quantity: 1 });
+        // Sample Books Database
+        const INITIAL_BOOKS = [
+            {
+                id: 'b1',
+                title: 'ፍቅር እስከ መቃብር',
+                author: 'ሐዲስ ዓለማየሁ',
+                price: 450,
+                category: 'ልብ-ወለድ',
+                rating: 4.9,
+                cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80',
+                desc: 'በኢትዮጵያ ሥነ-ጽሑፍ ታሪክ ውስጥ ትልቅ ቦታ ያለውና የሁለት ፍቅረኛሞችን አሳዛኝና ልብ የሚነካ የፍቅር ታሪክ የሚያወሳ ድቅ ድርሰት።'
+            },
+            {
+                id: 'b2',
+                title: 'የተሰበረው ሰንሰለት',
+                author: 'ዶ/ር ምህረት ደበበ',
+                price: 380,
+                category: 'ስነ-ልቦና',
+                rating: 4.8,
+                cover: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80',
+                desc: 'የአእምሮን አስተሳሰብ በማደስ የህይወት ግቦችን ለማሳካት የሚረዱ ተግባራዊ የስነ-ልቦና ምክሮችን ያካተተ ድቅ መጽሐፍ።'
+            },
+            {
+                id: 'b3',
+                title: 'ኦሮማይ',
+                author: 'በአሉ ግርማ',
+                price: 420,
+                category: 'ልብ-ወለድ',
+                rating: 4.9,
+                cover: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=600&q=80',
+                desc: 'በታሪካዊ ሁነቶችና በፖለቲካዊ ውጥረቶች ዙሪያ የሚያጠነጥን ማራኪና እውነተኛ የታሪክ ፍሰት ያለው ድቅ ድርሰት።'
+            },
+            {
+                id: 'b4',
+                title: 'የሀብት ምስጢር (Mindset for Wealth)',
+                author: 'እየሩሳሌም ካሳሁን',
+                price: 350,
+                category: 'ንግድ',
+                rating: 4.7,
+                cover: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&w=600&q=80',
+                desc: 'የፋይናንስ ነፃነትን ለማስገኘትና የግል ቢዝነስን ለማሳደግ የሚረዱ የዘመናችን ስኬታማ የንግድ ምስጢራት።'
+            },
+            {
+                id: 'b5',
+                title: 'የኢትዮጵያ ታሪክ ከቀዳማዊ እስከ ዛሬ',
+                author: 'ፕ/ሮ ላፕሶ ጌታሁን',
+                price: 520,
+                category: 'ታሪክ',
+                rating: 4.9,
+                cover: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=600&q=80',
+                desc: 'ስለ ጥንታዊቷ ኢትዮጵያ ታሪክ፣ ባህልና የነገሥታት አገዛዝ ሰፊና ጥልቅ ትንታኔ የሚሰጥ የታሪክ ማዕከል መጽሐፍ።'
+            },
+            {
+                id: 'b6',
+                title: 'የቀን አሳቦች',
+                author: 'በእውቀቱ ስዩም',
+                price: 310,
+                category: 'ልብ-ወለድ',
+                rating: 4.8,
+                cover: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80',
+                desc: 'በአሽሙርና በፈገግታ የተሞሉ የማህበራዊ ህይወት ምልከታዎችና ፍልስፍናዊ ወጎች ስብስብ።'
             }
+        ];
 
+        // State Store
+        let heroSlides = JSON.parse(localStorage.getItem('yichalal_slides')) || DEFAULT_HERO_SLIDES;
+        let books = JSON.parse(localStorage.getItem('yichalal_books')) || INITIAL_BOOKS;
+        let cart = JSON.parse(localStorage.getItem('yichalal_cart')) || [];
+        let favorites = JSON.parse(localStorage.getItem('yichalal_favs')) || [];
+
+        let currentSlideIndex = 0;
+        let slideIntervalTime = 6000; // 6 seconds
+        let slideTimer = null;
+        let selectedCategory = 'all';
+        let searchQuery = '';
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        window.onload = function() {
+            renderHeroSlides();
+            startSlideshow();
+            renderBooks();
             updateCartUI();
+            updateFavUI();
+            renderAdminSlidesList();
+        };
+
+        // ==========================================
+        // HERO KEN BURNS SLIDESHOW LOGIC
+        // ==========================================
+        function renderHeroSlides() {
+            const container = document.getElementById('heroSlidesContainer');
+            const indicators = document.getElementById('slideIndicators');
+            
+            if (!heroSlides || heroSlides.length === 0) {
+                heroSlides = DEFAULT_HERO_SLIDES;
+            }
+
+            container.innerHTML = '';
+            indicators.innerHTML = '';
+
+            heroSlides.forEach((slide, index) => {
+                // Slide Element
+                const slideDiv = document.createElement('div');
+                slideDiv.className = `hero-slide ${index === currentSlideIndex ? 'active' : ''}`;
+                slideDiv.style.backgroundImage = `url('${slide.url}')`;
+                
+                // Add Ken Burns animation class
+                const animInner = document.createElement('div');
+                animInner.className = 'w-full h-full bg-cover bg-center animate-kenburns';
+                animInner.style.backgroundImage = `url('${slide.url}')`;
+                slideDiv.appendChild(animInner);
+
+                container.appendChild(slideDiv);
+
+                // Indicator Dots
+                const dot = document.createElement('button');
+                dot.onclick = () => goToSlide(index);
+                dot.className = `h-2 rounded-full transition-all duration-300 ${index === currentSlideIndex ? 'w-6 bg-amberGold' : 'w-2 bg-slate-600 hover:bg-slate-400'}`;
+                indicators.appendChild(dot);
+            });
         }
 
-        function updateCartUI() {
-            const cartItemsContainer = document.getElementById('cart-items');
-            const cartCount = document.getElementById('cart-count');
-            const cartTotal = document.getElementById('cart-total');
+        function startSlideshow() {
+            if (slideTimer) clearInterval(slideTimer);
+            slideTimer = setInterval(() => {
+                nextSlide();
+            }, slideIntervalTime);
+        }
 
-            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % heroSlides.length;
+            updateSlideDisplay();
+        }
 
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="text-slate-400 text-xs py-4 text-center">ቅርጫቱ ባዶ ነው።</p>';
-                cartTotal.textContent = '0.00 ብር';
+        function prevSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + heroSlides.length) % heroSlides.length;
+            updateSlideDisplay();
+        }
+
+        function goToSlide(index) {
+            currentSlideIndex = index;
+            updateSlideDisplay();
+            startSlideshow(); // reset timer on manual click
+        }
+
+        function updateSlideDisplay() {
+            const slideEls = document.querySelectorAll('.hero-slide');
+            const indicators = document.getElementById('slideIndicators').children;
+
+            slideEls.forEach((slide, idx) => {
+                if (idx === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            Array.from(indicators).forEach((dot, idx) => {
+                if (idx === currentSlideIndex) {
+                    dot.className = 'h-2 w-6 bg-amberGold rounded-full transition-all duration-300';
+                } else {
+                    dot.className = 'h-2 w-2 bg-slate-600 hover:bg-slate-400 rounded-full transition-all duration-300';
+                }
+            });
+        }
+
+        function updateSlideInterval(val) {
+            slideIntervalTime = parseInt(val);
+            startSlideshow();
+            showToast('የጀርባ መቀየሪያ ሰከንድ ተስተካክሏል!');
+        }
+
+        // ==========================================
+        // ADMIN BACKGROUND MANAGER LOGIC
+        // ==========================================
+        function addCustomHeroSlide() {
+            const urlInput = document.getElementById('newBgUrlInput');
+            const titleInput = document.getElementById('newBgTitleInput');
+
+            if (!urlInput.value.trim()) {
+                showToast('እባክዎ ትክክለኛ የምስል URL ያስገቡ', 'error');
                 return;
             }
 
-            let total = 0;
-            cartItemsContainer.innerHTML = cart.map(item => {
-                total += item.price * item.quantity;
-                return `
-                    <div class="flex justify-between items-center text-xs border-b border-slate-50 pb-3">
-                        <div class="pr-2">
-                            <p class="font-bold text-slate-800 line-clamp-1">${item.title}</p>
-                            <p class="text-slate-400 mt-0.5">${item.price} ብር × ${item.quantity}</p>
+            const newSlide = {
+                id: Date.now().toString(),
+                url: urlInput.value.trim(),
+                title: titleInput.value.trim() || 'Custom Slide'
+            };
+
+            heroSlides.push(newSlide);
+            saveSlidesState();
+            renderHeroSlides();
+            renderAdminSlidesList();
+
+            urlInput.value = '';
+            titleInput.value = '';
+            showToast('አዲስ የጀርባ ምስል በተሳካ ሁኔታ ተጨምሯል!');
+        }
+
+        function deleteHeroSlide(id) {
+            if (heroSlides.length <= 1) {
+                showToast('ቢያንስ አንድ የጀርባ ምስል መኖር አለበት!', 'error');
+                return;
+            }
+            heroSlides = heroSlides.filter(s => s.id !== id);
+            if (currentSlideIndex >= heroSlides.length) currentSlideIndex = 0;
+            
+            saveSlidesState();
+            renderHeroSlides();
+            renderAdminSlidesList();
+            showToast('የጀርባ ምስሉ ተሰርዟል!');
+        }
+
+        function resetDefaultHeroSlides() {
+            heroSlides = [...DEFAULT_HERO_SLIDES];
+            currentSlideIndex = 0;
+            saveSlidesState();
+            renderHeroSlides();
+            renderAdminSlidesList();
+            showToast('የጀርባ ምስሎች ወደ ነበሩበት ተመልሰዋል!');
+        }
+
+        function saveSlidesState() {
+            localStorage.setItem('yichalal_slides', JSON.stringify(heroSlides));
+        }
+
+        function renderAdminSlidesList() {
+            const listEl = document.getElementById('adminSlidesList');
+            if (!listEl) return;
+
+            listEl.innerHTML = heroSlides.map((slide, idx) => `
+                <div class="flex items-center justify-between p-2 rounded-xl glass-card border border-slate-800">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <img src="${slide.url}" class="w-12 h-10 object-cover rounded-lg shrink-0">
+                        <div class="truncate">
+                            <p class="text-xs font-bold text-white truncate">${slide.title}</p>
+                            <p class="text-[10px] text-slate-400 truncate">${slide.url}</p>
                         </div>
-                        <button onclick="removeFromCart('${item.id}')" class="text-rose-400 hover:text-rose-600 font-bold p-1">✕</button>
                     </div>
+                    <button onclick="deleteHeroSlide('${slide.id}')" class="p-2 text-slate-400 hover:text-red-400 text-xs shrink-0" title="ሰርዝ">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function switchAdminTab(tab) {
+            const bgTab = document.getElementById('adminTabBg');
+            const booksTab = document.getElementById('adminTabBooks');
+            const bgBtn = document.getElementById('adminTabBgBtn');
+            const booksBtn = document.getElementById('adminTabBooksBtn');
+
+            if (tab === 'bg') {
+                bgTab.classList.remove('hidden');
+                booksTab.classList.add('hidden');
+                bgBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white transition-all';
+                booksBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all';
+            } else {
+                bgTab.classList.add('hidden');
+                booksTab.classList.remove('hidden');
+                booksBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white transition-all';
+                bgBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all';
+            }
+        }
+
+        // ==========================================
+        // BOOK CATALOG DISPLAY & FILTERS
+        // ==========================================
+        function renderBooks() {
+            const grid = document.getElementById('booksGrid');
+            const empty = document.getElementById('emptyState');
+
+            let filtered = books.filter(b => {
+                const matchesCat = selectedCategory === 'all' || b.category === selectedCategory;
+                const matchesSearch = b.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      b.author.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.innerHTML = filtered.map(book => {
+                const isFav = favorites.includes(book.id);
+                return `
+                <div class="glass-card rounded-2xl p-4 border border-slate-800/80 hover:border-brand-500/40 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 shadow-lg">
+                    <div>
+                        <!-- Book Cover Image -->
+                        <div class="relative h-64 rounded-xl overflow-hidden mb-4 bg-slate-900">
+                            <img src="${book.cover}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'">
+                            
+                            <!-- Rating Badge -->
+                            <div class="absolute top-2 left-2 px-2.5 py-1 rounded-lg glass-panel text-[11px] font-bold text-amberGold flex items-center gap-1 shadow">
+                                <i class="fa-solid fa-star text-xs"></i> ${book.rating}
+                            </div>
+
+                            <!-- Favorite Button -->
+                            <button onclick="toggleFavorite('${book.id}')" class="absolute top-2 right-2 p-2 rounded-lg glass-panel hover:bg-slate-800 text-slate-300 transition-all">
+                                <i class="${isFav ? 'fa-solid text-red-500' : 'fa-regular'} fa-heart text-sm"></i>
+                            </button>
+
+                            <!-- Quick View Overlay -->
+                            <button onclick="openQuickView('${book.id}')" class="absolute bottom-2 right-2 px-3 py-1.5 rounded-lg glass-panel hover:bg-brand-600 text-white text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fa-solid fa-eye mr-1"></i> ተመልከት
+                            </button>
+                        </div>
+
+                        <!-- Book Info -->
+                        <span class="text-[10px] uppercase font-extrabold tracking-wider text-brand-400 bg-brand-500/10 px-2.5 py-0.5 rounded-md">${book.category}</span>
+                        <h3 class="text-base font-bold text-white mt-1.5 line-clamp-1 group-hover:text-brand-300 transition-colors">${book.title}</h3>
+                        <p class="text-xs text-slate-400 mb-3">${book.author}</p>
+                    </div>
+
+                    <!-- Price & Cart Add Button -->
+                    <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-500 block">ዋጋ</span>
+                            <span class="text-base font-black text-amberGold">${book.price} ETB</span>
+                        </div>
+                        <button onclick="addToCart('${book.id}')" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-semibold text-xs shadow-md active:scale-95 transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>ወደ ቅርጫት</span>
+                        </button>
+                    </div>
+                </div>
                 `;
             }).join('');
+        }
 
-            cartTotal.textContent = total.toFixed(2) + ' ብር';
+        function filterCategory(cat) {
+            selectedCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.innerText.includes(cat) || (cat === 'all' && btn.innerText.includes('ሁሉም'))) {
+                    btn.className = 'cat-btn active px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all glass-card bg-brand-600 text-white border border-brand-500';
+                } else {
+                    btn.className = 'cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-slate-300 hover:text-white glass-card hover:bg-slate-800 transition-all border border-slate-700/60';
+                }
+            });
+            renderBooks();
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (val.trim()) {
+                clearBtn?.classList.remove('hidden');
+            } else {
+                clearBtn?.classList.add('hidden');
+            }
+            renderBooks();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            searchQuery = '';
+            document.getElementById('clearSearchBtn')?.classList.add('hidden');
+            renderBooks();
+        }
+
+        function resetFilters() {
+            selectedCategory = 'all';
+            clearSearch();
+        }
+
+        // ==========================================
+        // SHOPPING CART & CHAPA CHECKOUT
+        // ==========================================
+        function addToCart(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            const existingIndex = cart.findIndex(item => item.id === bookId);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push({ ...book, qty: 1 });
+            }
+
+            saveCartState();
+            updateCartUI();
+            showToast(`"${book.title}" ወደ ቅርጫት ተጨምሯል!`);
+        }
+
+        function updateCartQty(bookId, change) {
+            const idx = cart.findIndex(i => i.id === bookId);
+            if (idx > -1) {
+                cart[idx].qty += change;
+                if (cart[idx].qty <= 0) {
+                    cart.splice(idx, 1);
+                }
+            }
+            saveCartState();
+            updateCartUI();
         }
 
         function removeFromCart(bookId) {
-            cart = cart.filter(item => item.id !== bookId);
+            cart = cart.filter(i => i.id !== bookId);
+            saveCartState();
             updateCartUI();
+            showToast('መጽሐፉ ከቅርጫት ተወግዷል');
         }
 
-        async function checkout() {
+        function updateCartUI() {
+            const countBadge = document.getElementById('cartCountBadge');
+            const listEl = document.getElementById('cartItemsList');
+            const subtotalEl = document.getElementById('cartSubtotal');
+            const totalEl = document.getElementById('cartTotal');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            countBadge.innerText = totalItems;
+            subtotalEl.innerText = `${totalPrice} ETB`;
+            totalEl.innerText = `${totalPrice} ETB`;
+
             if (cart.length === 0) {
-                alert('እባክዎ መጀመሪያ መጽሐፍ ይምረጡ!');
+                listEl.innerHTML = `
+                    <div class="text-center py-12 text-slate-500">
+                        <i class="fa-solid fa-cart-flatbed text-4xl mb-3"></i>
+                        <p class="text-xs font-semibold">የእርስዎ ቅርጫት ባዶ ነው</p>
+                    </div>
+                `;
                 return;
             }
 
-            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const email = prompt("እባክዎ ኢሜይልዎን ያስገቡ:", "example@gmail.com");
-            if (!email) return;
+            listEl.innerHTML = cart.map(item => `
+                <div class="flex items-center justify-between p-3 rounded-2xl glass-card border border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.cover}" class="w-12 h-14 object-cover rounded-lg shrink-0">
+                        <div>
+                            <h4 class="text-xs font-bold text-white line-clamp-1">${item.title}</h4>
+                            <p class="text-[11px] text-amberGold font-black mt-0.5">${item.price} ETB</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-1.5 glass-panel px-2 py-1 rounded-lg">
+                            <button onclick="updateCartQty('${item.id}', -1)" class="text-slate-400 hover:text-white text-xs px-1">-</button>
+                            <span class="text-xs font-bold text-white px-1">${item.qty}</span>
+                            <button onclick="updateCartQty('${item.id}', 1)" class="text-slate-400 hover:text-white text-xs px-1">+</button>
+                        </div>
+                        <button onclick="removeFromCart('${item.id}')" class="p-1.5 text-slate-500 hover:text-red-400 text-xs">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-            const firstName = prompt("የእርስዎን ስም ያስገቡ:", "ብርሃኑ");
-            if (!firstName) return;
-
-            const lastName = prompt("የአባትዎን ስም ያስገቡ:", "ቢያድጌ");
-            if (!lastName) return;
-
-            try {
-                const { data: order, error } = await client
-                    .from('orders')
-                    .insert([{ total_amount: totalAmount, status: 'pending', payment_method: 'chapa' }])
-                    .select()
-                    .single();
-
-                if (error) {
-                    alert('ትዕዛዝ ማስመዝገብ አልተቻለም፡ ' + error.message);
-                    return;
-                }
-
-                const CHAPA_PUBLIC_KEY = 'CHAPA_TEST_PUB_lySnQ7s0rqESvfkJyNtF-iHtrlK0A0RrkWaQKN7I'; 
-                const txRef = 'tx-' + Math.random().toString(36).substring(2, 15);
-
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'https://api.chapa.co/v1/hosted/pay';
-
-                const fields = {
-                    public_key: CHAPA_PUBLIC_KEY,
-                    amount: totalAmount,
-                    currency: 'ETB',
-                    email: email,
-                    first_name: firstName,
-                    last_name: lastName,
-                    tx_ref: txRef,
-                    callback_url: 'https://webhook.site/your-callback',
-                    return_url: window.location.href
-                };
-
-                for (const key in fields) {
-                    const hiddenField = document.createElement('input');
-                    hiddenField.type = 'hidden';
-                    hiddenField.name = key;
-                    hiddenField.value = fields[key];
-                    form.appendChild(hiddenField);
-                }
-
-                document.body.appendChild(form);
-                form.submit();
-
-            } catch (err) {
-                console.error('Checkout Error:', err);
-                alert('ስህተት ተፈጥሯል፡ ' + err.message);
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            const content = document.getElementById('cartContent');
+            
+            if (drawer.classList.contains('pointer-events-none')) {
+                drawer.classList.remove('pointer-events-none', 'opacity-0');
+                content.classList.remove('translate-x-full');
+            } else {
+                drawer.classList.add('pointer-events-none', 'opacity-0');
+                content.classList.add('translate-x-full');
             }
         }
 
-        fetchBooks();
+        function saveCartState() {
+            localStorage.setItem('yichalal_cart', JSON.stringify(cart));
+        }
+
+        // ==========================================
+        // CHAPA PAYMENT INTEGRATION HANDLER
+        // ==========================================
+        function processChapaCheckout() {
+            if (cart.length === 0) {
+                showToast('እባክዎ መጀመሪያ መጽሐፍ ወደ ቅርጫት ያስገቡ!', 'error');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const tx_ref = 'yichalal_tx_' + Date.now();
+
+            showToast('ወደ ቻፓ (Chapa) ክፍያ በመላክ ላይ...', 'info');
+
+            // Construct Chapa Inline / Direct Redirect Form Dynamic Submission
+            const chapaForm = document.createElement('form');
+            chapaForm.method = 'POST';
+            chapaForm.action = 'https://api.chapa.co/v1/hosted/pay';
+            chapaForm.target = '_blank';
+
+            const fields = {
+                'public_key': CHAPA_PUBLIC_KEY,
+                'tx_ref': tx_ref,
+                'amount': total,
+                'currency': 'ETB',
+                'email': 'customer@yichalalbooks.com',
+                'first_name': 'የመጽሐፍ',
+                'last_name': 'አንባቢ',
+                'title': 'ይቻላል የመጽሐፍት ክፍያ',
+                'description': `ለ ${cart.length} መጽሐፍት የተፈጸመ ክፍያ`,
+                'callback_url': window.location.href,
+                'return_url': window.location.href,
+                'customization[title]': 'ይቻላል መጽሐፍት መደብር',
+                'customization[description]': 'የክፍያ ማረጋገጫ'
+            };
+
+            for (const key in fields) {
+                const hiddenField = document.createElement('input');
+                hiddenField.type = 'hidden';
+                hiddenField.name = key;
+                hiddenField.value = fields[key];
+                chapaForm.appendChild(hiddenField);
+            }
+
+            document.body.appendChild(chapaForm);
+            
+            setTimeout(() => {
+                chapaForm.submit();
+                document.body.removeChild(chapaForm);
+                showToast('የቻፓ ክፍያ መስኮት ተከፍቷል!');
+            }, 1000);
+        }
+
+        // ==========================================
+        // FAVORITES / SAVED ITEMS
+        // ==========================================
+        function toggleFavorite(bookId) {
+            if (favorites.includes(bookId)) {
+                favorites = favorites.filter(id => id !== bookId);
+                showToast('ከየተወደዱ መጽሐፍት ዝርዝር ተወግዷል');
+            } else {
+                favorites.push(bookId);
+                showToast('ወደ የተወደዱ መጽሐፍት ዝርዝር ተጨምሯል!');
+            }
+            localStorage.setItem('yichalal_favs', JSON.stringify(favorites));
+            updateFavUI();
+            renderBooks();
+        }
+
+        function updateFavUI() {
+            const badge = document.getElementById('favBadge');
+            if (favorites.length > 0) {
+                badge.innerText = favorites.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function toggleFavoritesModal() {
+            if (favorites.length === 0) {
+                showToast('ምንም የተወደዱ መጽሐፍት የሉም');
+                return;
+            }
+            selectedCategory = 'all';
+            const favBooks = books.filter(b => favorites.includes(b.id));
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            
+            // Temporary render favorites
+            const grid = document.getElementById('booksGrid');
+            grid.scrollIntoView({ behavior: 'smooth' });
+            showToast(`${favorites.length} የተወደዱ መጽሐፍት በመታየት ላይ ናቸው`);
+        }
+
+        // ==========================================
+        // ADMIN & BOOK MODAL MANAGERS
+        // ==========================================
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        function handleAddNewBook(e) {
+            e.preventDefault();
+            const title = document.getElementById('bookTitle').value.trim();
+            const author = document.getElementById('bookAuthor').value.trim();
+            const price = parseFloat(document.getElementById('bookPrice').value);
+            const category = document.getElementById('bookCategory').value;
+            const rating = parseFloat(document.getElementById('bookRating').value);
+            const cover = document.getElementById('bookCover').value.trim();
+            const desc = document.getElementById('bookDesc').value.trim();
+
+            const newBook = {
+                id: 'b_' + Date.now(),
+                title, author, price, category, rating, cover, desc
+            };
+
+            books.unshift(newBook);
+            localStorage.setItem('yichalal_books', JSON.stringify(books));
+            renderBooks();
+            closeAdminModal();
+            document.getElementById('addBookForm').reset();
+            showToast('አዲስ መጽሐፍ በተሳካ ሁኔታ ተመዝግቧል!');
+        }
+
+        function openQuickView(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            const modal = document.getElementById('quickViewModal');
+            const content = document.getElementById('quickViewContent');
+
+            content.innerHTML = `
+                <div class="h-72 rounded-2xl overflow-hidden bg-slate-900 shadow-md">
+                    <img src="${book.cover}" class="w-full h-full object-cover">
+                </div>
+                <div class="space-y-3">
+                    <span class="px-2.5 py-0.5 rounded bg-brand-500/20 text-brand-300 text-[10px] font-bold uppercase">${book.category}</span>
+                    <h3 class="text-xl font-bold text-white">${book.title}</h3>
+                    <p class="text-xs text-slate-400">ደራሲ: ${book.author}</p>
+                    <p class="text-xs text-slate-300 leading-relaxed">${book.desc || 'ምንም መግለጫ አልተሰጠም።'}</p>
+                    <div class="pt-2 flex items-center justify-between">
+                        <span class="text-xl font-black text-amberGold">${book.price} ETB</span>
+                        <button onclick="addToCart('${book.id}'); closeQuickView();" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs">
+                            ወደ ቅርጫት ጨምር
+                        </button>
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        function closeQuickView() {
+            document.getElementById('quickViewModal').classList.add('hidden');
+        }
+
+        // ==========================================
+        // UI TOAST NOTIFICATIONS
+        // ==========================================
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === 'error' ? 'bg-red-600' : (type === 'info' ? 'bg-brand-600' : 'bg-slate-800');
+            const borderColor = type === 'error' ? 'border-red-500' : 'border-amberGold/50';
+
+            toast.className = `${bgColor} border ${borderColor} text-white px-4 py-3 rounded-2xl shadow-2xl text-xs font-semibold flex items-center gap-2 transform translate-y-4 opacity-0 transition-all duration-300 pointer-events-auto`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-check'} text-amberGold text-base"></i>
+                <span>${msg}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html>
