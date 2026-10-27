@@ -211,4 +211,29 @@
                     first_name: firstName,
                     last_name: lastName,
                     tx_ref: txRef,
-                    callback_
+                    callback_'https://webhook.site/your-callback',
+                    return_url: window.location.href
+                };
+
+                for (const key in fields) {
+                    const hiddenField = document.createElement('input');
+                    hiddenField.type = 'hidden';
+                    hiddenField.name = key;
+                    hiddenField.value = fields[key];
+                    form.appendChild(hiddenField);
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+
+            } catch (err) {
+                console.error('Checkout Error:', err);
+                alert('ስህተት ተፈጥሯል፡ ' + err.message);
+            }
+        }
+
+        fetchBooks();
+    </script>
+</body>
+</html>
+
