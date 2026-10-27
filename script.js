@@ -4,7 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 serve(async (req) => {
   try {
     const { tx_ref, order_id } = await req.json()
-    const CHAPA_SECRET_KEY = 'የእርስዎን_Chapa_Secret_Key_እዚህ_ያስገቡ';
+    const CHAPA_SECRET_KEY = 'CHAPA_TEST_PRIV_YpC-HdtSIl2sNkt5HDCDTdDzvCXqLsi8GELpofen';
 
     // 1. ከ Chapa ሰርቨር ጋር በመገናኘት ክፍያው መፈጸሙን ማረጋገጥ
     const chapaRes = await fetch(`https://api.chapa.co/v1/transaction/verify/${tx_ref}`, {
