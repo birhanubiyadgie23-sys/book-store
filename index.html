@@ -115,7 +115,7 @@
                     </div>
                 `).join('');
             } catch (err) {
-                grid.innerHTML = `<p class="text-rose-500 font-medium">የኮድ ስህተት ተፈጥሯል</p>`;
+                grid.innerHTML = `<p class="text-rose-500 font-medium">የኮድ ስህተት ተፈጥሯል: ${err.message}</p>`;
             }
         }
 
@@ -211,7 +211,7 @@
                     first_name: firstName,
                     last_name: lastName,
                     tx_ref: txRef,
-                    callback_'https://webhook.site/your-callback',
+                    callback_url: 'https://webhook.site/your-callback',
                     return_url: window.location.href
                 };
 
@@ -236,4 +236,3 @@
     </script>
 </body>
 </html>
-
