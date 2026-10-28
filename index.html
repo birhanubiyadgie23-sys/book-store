@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts - Inter & Noto Serif Ethiopic -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+Ethiopic:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -36,7 +36,11 @@
 </head>
 <body class="bg-amber-50/30 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-indigo-100 selection:text-indigo-900">
 
-    <!-- 1. ራስጌ (Header Navigation) -->
+    <!-- 1. HEADER & ANNOUNCEMENT BAR -->
+    <div id="announcement-bar" class="bg-indigo-600 text-white text-xs py-2 px-4 text-center font-medium shadow-sm transition-all duration-300">
+        🎉 እንኳን ወደ ይቻላል መጽሐፍት መደብር በደህና መጡ! የሚወዷቸውን መጽሐፍት በልዩ ቅናሽ ያግኙ።
+    </div>
+
     <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-amber-100/80 shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
             
@@ -60,14 +64,16 @@
 
             <!-- Actions -->
             <div class="flex items-center space-x-3">
-                <button onclick="openLoginModal()" class="px-3 py-2 text-xs font-semibold text-slate-600 hover:text-indigo-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-user-gear"></i>
-                    <span class="hidden sm:inline">አድሚን መግቢያ</span>
-                </button>
+                <div id="auth-action-area">
+                    <button onclick="openAuthModal()" class="px-3.5 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-sm flex items-center gap-1.5">
+                        <i class="fa-solid fa-user"></i>
+                        <span>ሎግ ኢን / ምዝገባ</span>
+                    </button>
+                </div>
 
                 <button onclick="toggleCartDrawer()" class="relative bg-slate-900 hover:bg-indigo-600 text-white px-4 py-2 rounded-xl transition font-medium text-sm flex items-center gap-2 shadow-md shadow-slate-200">
                     <i class="fa-solid fa-basket-shopping text-amber-400"></i>
-                    <span>ቅርጫት</span>
+                    <span class="hidden sm:inline">ቅርጫት</span>
                     <span id="cart-count" class="bg-indigo-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full ml-1">0</span>
                 </button>
             </div>
@@ -104,22 +110,6 @@
                         <button onclick="scrollToBooks()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium text-xs transition shadow-md">
                             ፈልግ
                         </button>
-                    </div>
-                </div>
-
-                <!-- Stats -->
-                <div class="pt-4 grid grid-cols-3 gap-4 max-w-md">
-                    <div class="bg-white/80 backdrop-blur-md p-3.5 rounded-2xl border border-amber-100 shadow-sm text-center">
-                        <span class="block text-xl font-extrabold text-indigo-600 font-serif">500+</span>
-                        <span class="text-xs text-slate-600 font-medium">መጽሐፍት</span>
-                    </div>
-                    <div class="bg-white/80 backdrop-blur-md p-3.5 rounded-2xl border border-amber-100 shadow-sm text-center">
-                        <span class="block text-xl font-extrabold text-amber-600 font-serif">4.9 ★</span>
-                        <span class="text-xs text-slate-600 font-medium">ደረጃ</span>
-                    </div>
-                    <div class="bg-white/80 backdrop-blur-md p-3.5 rounded-2xl border border-amber-100 shadow-sm text-center">
-                        <span class="block text-xl font-extrabold text-violet-600 font-serif">10k+</span>
-                        <span class="text-xs text-slate-600 font-medium">አንባቢዎች</span>
                     </div>
                 </div>
             </div>
@@ -227,27 +217,41 @@
         </div>
     </div>
 
-    <!-- 6. ADMIN LOGIN MODAL -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- 6. AUTHENTICATION MODAL (LOGIN / SIGNUP) -->
+    <div id="auth-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h3 class="font-serif font-bold text-slate-900 text-base flex items-center gap-2">
-                    <i class="fa-solid fa-lock text-indigo-600"></i> የአድሚን መግቢያ
+                <h3 id="auth-modal-title" class="font-serif font-bold text-slate-900 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-user-lock text-indigo-600"></i> መግቢያ / ምዝገባ
                 </h3>
-                <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
-            <p class="text-xs text-slate-500">እባክዎ በ Supabase 'admins' ሰንጠረዥ ውስጥ ያስገቡትን ስም እና የይለፍ ቃል ያስገቡ።</p>
-            <div class="space-y-3">
-                <input type="text" id="admin-user-input" placeholder="የአድሚን ስም (Username)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <input type="password" id="admin-pass-input" placeholder="የይለፍ ቃል (Password)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <button onclick="verifyAdminLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md">ግባ</button>
+            
+            <div class="flex gap-2 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+                <button id="tab-login-btn" onclick="switchAuthTab('login')" class="w-1/2 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition">ግባ (Login)</button>
+                <button id="tab-signup-btn" onclick="switchAuthTab('signup')" class="w-1/2 py-2 rounded-lg text-slate-600 transition">ተመዝገብ (Sign Up)</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="form-login" class="space-y-3 pt-2">
+                <input type="text" id="login-username" placeholder="የተጠቃሚ ስም (Username)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="password" id="login-password" placeholder="የይለፍ ቃል (Password)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md">ግባ</button>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="form-signup" class="space-y-3 pt-2 hidden">
+                <input type="text" id="signup-name" placeholder="ሙሉ ስም" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="signup-username" placeholder="የተጠቃሚ ስም (Username)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="password" id="signup-password" placeholder="የይለፍ ቃል (Password)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button onclick="handleSignup()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md">አካውንት ፍጠር</button>
             </div>
         </div>
     </div>
 
-    <!-- 7. ADMIN PORTAL MODAL -->
+    <!-- 7. ADMIN DASHBOARD MODAL (BOOKS, BG, ANNOUNCEMENT) -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-slate-100">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-slate-100">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
                 <h3 class="font-serif font-bold text-slate-900 text-lg flex items-center gap-2">
                     <i class="fa-solid fa-sliders text-indigo-600"></i> የአድሚን መቆጣጠሪያ ፓነል
@@ -255,8 +259,17 @@
                 <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
 
-            <div class="space-y-4">
-                <h4 class="font-bold text-sm text-slate-800">አዲስ መጽሐፍ በ Supabase መዝግብ</h4>
+            <!-- Admin Tabs -->
+            <div class="flex gap-2 border-b border-slate-100 pb-3 mb-4 overflow-x-auto">
+                <button onclick="switchAdminTab('books')" id="adm-tab-books-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-indigo-600 text-white">መጽሐፍት አስተዳደር</button>
+                <button onclick="switchAdminTab('bg')" id="adm-tab-bg-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">የጀርባ ስላይድ ምስሎች</button>
+                <button onclick="switchAdminTab('announcement')" id="adm-tab-ann-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ማስታወቂያ መለጠፍ</button>
+            </div>
+
+            <!-- Tab 1: Books Management -->
+            <div id="adm-tab-books" class="space-y-4">
+                <h4 class="font-bold text-sm text-slate-800" id="book-form-title">አዲስ መጽሐፍ መዝግብ</h4>
+                <input type="hidden" id="edit-book-id">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <input type="text" id="new-book-title" placeholder="የመጽሐፍ ርዕስ" class="p-3 border rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <input type="text" id="new-book-author" placeholder="ደራሲ" class="p-3 border rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -269,7 +282,32 @@
                     </select>
                     <input type="text" id="new-book-cover" placeholder="የሽፋን ምስል URL" class="col-span-full p-3 border rounded-xl bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
-                <button onclick="addNewBook()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:bg-indigo-700 transition">መጽሐፉን በዳታቤዝ መዝግብ</button>
+                <div class="flex gap-2">
+                    <button onclick="saveBook()" id="book-save-btn" class="flex-grow bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:bg-indigo-700 transition">መጽሐፉን መዝግብ</button>
+                    <button onclick="resetBookForm()" class="px-4 py-3 bg-slate-200 text-slate-700 rounded-xl font-bold text-xs">ሰርዝ / አዲስ</button>
+                </div>
+
+                <div class="mt-6">
+                    <h5 class="font-bold text-xs text-slate-700 mb-2">ነባር መጽሐፍት (ለማስተካከል ወይም ለመሰረዝ)</h5>
+                    <div id="admin-books-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Background Images -->
+            <div id="adm-tab-bg" class="space-y-4 hidden">
+                <h4 class="font-bold text-sm text-slate-800">የጀርባ ዙም ምስሎች ማስተካከያ</h4>
+                <div class="flex gap-2">
+                    <input type="text" id="new-bg-url" placeholder="አዲስ Image URL (https://...)" class="flex-grow p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
+                    <button onclick="addBgImage()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">ጨምር</button>
+                </div>
+                <div id="admin-bg-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+            </div>
+
+            <!-- Tab 3: Announcement Bar -->
+            <div id="adm-tab-announcement" class="space-y-4 hidden">
+                <h4 class="font-bold text-sm text-slate-800">የድረ-ገጽ ማስታወቂያ ማስተካከያ</h4>
+                <textarea id="announcement-input" rows="3" placeholder="ማስታወቂያውን እዚህ ይጻፉ..." class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none"></textarea>
+                <button onclick="updateAnnouncement()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs">ማስታወቂያውን አዘምን</button>
             </div>
         </div>
     </div>
@@ -280,29 +318,24 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtanBidWp0aHFwcnZwc3pnY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTA5ODgsImV4cCI6MjEwODU4Njk4OH0.1pciufqyTB71Q6qlYus3crxbs8pOqDYwWIyk72Kkico';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Restored Rich Demo Books Fallback
-        const defaultBooks = [
-            { id: '1', title: 'የስኬት ሚስጥራት', author: 'በቀደመጌን', price: 350, category: 'ራስን ማነፅ', cover_image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', rating: 4.9 },
-            { id: '2', title: 'የቴክኖሎጂ አብዮት', author: 'ብርሃኑ ቢያድጌ', price: 420, category: 'ቴክኖሎጂ', cover_image_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80', rating: 4.8 },
-            { id: '3', title: 'የኢትዮጵያ ታሪክ ገጾች', author: 'ተስፋዬ ገብሬ', price: 290, category: 'ታሪክ', cover_image_url: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=800&q=80', rating: 5.0 },
-            { id: '4', title: 'የፍቅር እና የህይወት ጉዞ', author: 'አልማዝ አበበ', price: 310, category: 'ልብወለድ', cover_image_url: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=800&q=80', rating: 4.7 }
-        ];
-
-        const defaultBackgrounds = [
+        let booksList = [];
+        let cart = [];
+        let currentUser = JSON.parse(localStorage.getItem('yichalal_user')) || null;
+        let backgroundImages = JSON.parse(localStorage.getItem('yichalal_hero_bgs')) || [
             'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1920&q=80',
             'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1920&q=80',
             'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1920&q=80'
         ];
-
-        let booksList = [];
-        let cart = [];
         let currentSlideIndex = 0;
 
         document.addEventListener('DOMContentLoaded', () => {
             initSlideshow();
             fetchBooks();
+            updateAuthUI();
+            loadAnnouncement();
         });
 
+        // 1. Slideshow
         function initSlideshow() {
             const container = document.getElementById('slideshow-container');
             const indicators = document.getElementById('slide-indicators');
@@ -311,7 +344,7 @@
             container.innerHTML = '';
             indicators.innerHTML = '';
 
-            defaultBackgrounds.forEach((url, idx) => {
+            backgroundImages.forEach((url, idx) => {
                 const slide = document.createElement('div');
                 slide.className = `absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${idx === 0 ? 'opacity-100 animate-kenburns' : 'opacity-0'}`;
                 slide.style.backgroundImage = `url('${url}')`;
@@ -326,13 +359,13 @@
             });
 
             setInterval(() => {
-                currentSlideIndex = (currentSlideIndex + 1) % defaultBackgrounds.length;
+                currentSlideIndex = (currentSlideIndex + 1) % backgroundImages.length;
                 setSlide(currentSlideIndex);
             }, 6000);
         }
 
         function setSlide(index) {
-            defaultBackgrounds.forEach((_, idx) => {
+            backgroundImages.forEach((_, idx) => {
                 const slide = document.getElementById(`hero-slide-${idx}`);
                 const dot = document.getElementById(`slide-dot-${idx}`);
                 if (slide && dot) {
@@ -348,19 +381,23 @@
             currentSlideIndex = index;
         }
 
+        // 2. Books Fetch & Render
         async function fetchBooks() {
-            const grid = document.getElementById('books-grid');
             try {
                 const { data, error } = await supabaseClient.from('books').select('*');
                 if (error || !data || data.length === 0) {
-                    booksList = defaultBooks;
+                    booksList = [
+                        { id: '1', title: 'የስኬት ሚስጥራት', author: 'በቀደመጌን', price: 350, category: 'ራስን ማነፅ', cover_image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', rating: 4.9 },
+                        { id: '2', title: 'የቴክኖሎጂ አብዮት', author: 'ብርሃኑ ቢያድጌ', price: 420, category: 'ቴክኖሎጂ', cover_image_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80', rating: 4.8 }
+                    ];
                 } else {
                     booksList = data;
                 }
             } catch (e) {
-                booksList = defaultBooks;
+                booksList = [];
             }
             renderBooks(booksList);
+            renderAdminBooksList();
         }
 
         function renderBooks(list) {
@@ -394,48 +431,253 @@
             `).join('');
         }
 
-        function handleSearch(term) {
-            const query = term.toLowerCase().trim();
-            const filtered = booksList.filter(b => 
-                b.title.toLowerCase().includes(query) || 
-                b.author.toLowerCase().includes(query)
-            );
-            renderBooks(filtered);
-        }
+        // 3. Auth Management (Login / Signup)
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
-        function filterCategory(cat) {
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.className = 'cat-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold px-4 py-2 rounded-xl transition';
-            });
-            event.target.className = 'cat-btn active bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm';
+        function switchAuthTab(tab) {
+            const loginBtn = document.getElementById('tab-login-btn');
+            const signupBtn = document.getElementById('tab-signup-btn');
+            const loginForm = document.getElementById('form-login');
+            const signupForm = document.getElementById('form-signup');
 
-            if (cat === 'all') {
-                renderBooks(booksList);
+            if (tab === 'login') {
+                loginBtn.className = 'w-1/2 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition';
+                signupBtn.className = 'w-1/2 py-2 rounded-lg text-slate-600 transition';
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
             } else {
-                const filtered = booksList.filter(b => b.category === cat);
-                renderBooks(filtered);
+                signupBtn.className = 'w-1/2 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition';
+                loginBtn.className = 'w-1/2 py-2 rounded-lg text-slate-600 transition';
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
             }
         }
 
-        function scrollToBooks() {
-            document.getElementById('books-section').scrollIntoView({ behavior: 'smooth' });
+        async function handleLogin() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            if (!username || !password) return alert('እባክዎ መረጃዎችን ይሙሉ');
+
+            try {
+                // Check Admins first
+                const { data: adminData } = await supabaseClient.from('admins').select('*').eq('username', username).eq('password', password).maybeSingle();
+                if (adminData) {
+                    currentUser = { username: adminData.username, role: 'admin' };
+                    localStorage.setItem('yichalal_user', JSON.stringify(currentUser));
+                    closeAuthModal();
+                    updateAuthUI();
+                    alert('እንኳን ደህና መጡ አድሚን!');
+                    return;
+                }
+
+                // Check Regular Users
+                const { data: userData } = await supabaseClient.from('users').select('*').eq('username', username).eq('password', password).maybeSingle();
+                if (userData) {
+                    currentUser = { username: userData.username, role: 'customer', name: userData.full_name };
+                    localStorage.setItem('yichalal_user', JSON.stringify(currentUser));
+                    closeAuthModal();
+                    updateAuthUI();
+                    alert(`እንኳን ደህና መጡ ${userData.full_name}!`);
+                    return;
+                }
+
+                alert('የተሳሳተ መረጃ!');
+            } catch (err) {
+                alert('ስህተት ተፈጥሯል: ' + err.message);
+            }
         }
 
+        async function handleSignup() {
+            const fullName = document.getElementById('signup-name').value.trim();
+            const username = document.getElementById('signup-username').value.trim();
+            const password = document.getElementById('signup-password').value.trim();
+
+            if (!fullName || !username || !password) return alert('እባክዎ ሁሉንም መስኮች ይሙሉ');
+
+            try {
+                const { error } = await supabaseClient.from('users').insert([{ full_name: fullName, username, password, role: 'customer' }]);
+                if (error) throw error;
+
+                currentUser = { username, role: 'customer', name: fullName };
+                localStorage.setItem('yichalal_user', JSON.stringify(currentUser));
+                closeAuthModal();
+                updateAuthUI();
+                alert('ምዝገባዎ ተሳክቷል!');
+            } catch (err) {
+                alert('ምዝገባ አልተሳካም (ስም ሊመሳሰል ይችላል): ' + err.message);
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('yichalal_user');
+            updateAuthUI();
+            alert('ውጣ መውጣት ተሳክቷል');
+        }
+
+        function updateAuthUI() {
+            const area = document.getElementById('auth-action-area');
+            if (!currentUser) {
+                area.innerHTML = `<button onclick="openAuthModal()" class="px-3.5 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-user"></i><span>ሎግ ኢን / ምዝገባ</span></button>`;
+            } else if (currentUser.role === 'admin') {
+                area.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <button onclick="openAdminModal()" class="px-3 py-2 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition border border-indigo-200"><i class="fa-solid fa-sliders"></i> ፓነል</button>
+                        <button onclick="logout()" class="px-2.5 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-xl"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    </div>`;
+            } else {
+                area.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-700 hidden sm:inline">👤 ${currentUser.name || currentUser.username}</span>
+                        <button onclick="logout()" class="px-2.5 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-xl"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    </div>`;
+            }
+        }
+
+        // 4. Admin Dashboard Management
+        function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
+        function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+
+        function switchAdminTab(tab) {
+            ['books', 'bg', 'announcement'].forEach(t => {
+                document.getElementById(`adm-tab-${t}`).classList.add('hidden');
+                document.getElementById(`adm-tab-${t}-btn`).className = 'px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700';
+            });
+            document.getElementById(`adm-tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`adm-tab-${tab}-btn`).className = 'px-3 py-1.5 rounded-xl font-semibold text-xs bg-indigo-600 text-white';
+        }
+
+        async function saveBook() {
+            const id = document.getElementById('edit-book-id').value;
+            const title = document.getElementById('new-book-title').value;
+            const author = document.getElementById('new-book-author').value;
+            const price = parseFloat(document.getElementById('new-book-price').value);
+            const category = document.getElementById('new-book-category').value;
+            const cover_image_url = document.getElementById('new-book-cover').value;
+
+            if (!title || !author || !price) return alert('እባክዎ አስፈላጊ መረጃዎችን ይሙሉ');
+
+            const bookData = { title, author, price, category, cover_image_url, rating: 5.0 };
+
+            try {
+                if (id) {
+                    await supabaseClient.from('books').update(bookData).eq('id', id);
+                    alert('መጽሐፉ ተስተካክሏል!');
+                } else {
+                    await supabaseClient.from('books').insert([bookData]);
+                    alert('መጽሐፉ ተመዝግቧል!');
+                }
+                resetBookForm();
+                fetchBooks();
+            } catch (err) {
+                alert('ስህተት: ' + err.message);
+            }
+        }
+
+        function editBook(id, title, author, price, category, cover) {
+            document.getElementById('edit-book-id').value = id;
+            document.getElementById('new-book-title').value = title;
+            document.getElementById('new-book-author').value = author;
+            document.getElementById('new-book-price').value = price;
+            document.getElementById('new-book-category').value = category;
+            document.getElementById('new-book-cover').value = cover;
+            document.getElementById('book-form-title').textContent = 'መጽሐፍ ማሻሻያ (Edit)';
+            document.getElementById('book-save-btn').textContent = 'ለውጦችን አዘምን';
+        }
+
+        function resetBookForm() {
+            document.getElementById('edit-book-id').value = '';
+            document.getElementById('new-book-title').value = '';
+            document.getElementById('new-book-author').value = '';
+            document.getElementById('new-book-price').value = '';
+            document.getElementById('new-book-cover').value = '';
+            document.getElementById('book-form-title').textContent = 'አዲስ መጽሐፍ መዝግብ';
+            document.getElementById('book-save-btn').textContent = 'መጽሐፉን መዝግብ';
+        }
+
+        async function deleteBook(id) {
+            if (!confirm('ይህን መጽሐፍ መሰረዝ ይፈልጋሉ?')) return;
+            try {
+                await supabaseClient.from('books').delete().eq('id', id);
+                fetchBooks();
+                alert('መጽሐፉ ተሰርዟል');
+            } catch (e) {
+                alert('መሰረዝ አልተቻለም');
+            }
+        }
+
+        function renderAdminBooksList() {
+            const list = document.getElementById('admin-books-list');
+            if (!list) return;
+            list.innerHTML = booksList.map(b => `
+                <div class="flex items-center justify-between p-2 bg-slate-50 rounded-xl border text-xs">
+                    <span class="font-bold truncate max-w-[200px]">${b.title} (${b.price} ብር)</span>
+                    <div class="flex gap-2">
+                        <button onclick="editBook('${b.id}', '${b.title}', '${b.author}', ${b.price}, '${b.category}', '${b.cover_image_url || ''}')" class="text-indigo-600 font-bold px-2">አስተካክል</button>
+                        <button onclick="deleteBook('${b.id}')" class="text-rose-500 font-bold px-2">ሰርዝ</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Background Manager
+        function addBgImage() {
+            const url = document.getElementById('new-bg-url').value.trim();
+            if (!url) return;
+            backgroundImages.push(url);
+            localStorage.setItem('yichalal_hero_bgs', JSON.stringify(backgroundImages));
+            document.getElementById('new-bg-url').value = '';
+            initSlideshow();
+            renderBgList();
+        }
+
+        function removeBgImage(idx) {
+            backgroundImages.splice(idx, 1);
+            localStorage.setItem('yichalal_hero_bgs', JSON.stringify(backgroundImages));
+            initSlideshow();
+            renderBgList();
+        }
+
+        function renderBgList() {
+            const list = document.getElementById('admin-bg-list');
+            if (!list) return;
+            list.innerHTML = backgroundImages.map((url, i) => `
+                <div class="flex justify-between items-center p-2 bg-slate-50 rounded-xl border text-xs">
+                    <span class="truncate max-w-[250px]">${url}</span>
+                    <button onclick="removeBgImage(${i})" class="text-rose-500 font-bold">ሰርዝ</button>
+                </div>
+            `).join('');
+        }
+
+        // Announcement Bar
+        function updateAnnouncement() {
+            const text = document.getElementById('announcement-input').value.trim();
+            localStorage.setItem('yichalal_announcement', text);
+            document.getElementById('announcement-bar').textContent = text;
+            alert('ማስታወቂያው ተዘምኗል!');
+        }
+
+        function loadAnnouncement() {
+            const saved = localStorage.getItem('yichalal_announcement');
+            if (saved) {
+                document.getElementById('announcement-bar').textContent = saved;
+                document.getElementById('announcement-input').value = saved;
+            }
+        }
+
+        // Cart & Checkout
         function toggleCartDrawer() {
             document.getElementById('cart-drawer').classList.toggle('translate-x-full');
             document.getElementById('cart-drawer-overlay').classList.toggle('hidden');
         }
 
-        function addToCart(bookId) {
-            const book = booksList.find(b => b.id === bookId);
+        function addToCart(id) {
+            const book = booksList.find(b => b.id === id);
             if (!book) return;
-
-            const existing = cart.find(item => item.id === bookId);
-            if (existing) {
-                existing.quantity += 1;
-            } else {
-                cart.push({ ...book, quantity: 1 });
-            }
+            const exist = cart.find(i => i.id === id);
+            if (exist) exist.quantity += 1;
+            else cart.push({ ...book, quantity: 1 });
             updateCartUI();
             toggleCartDrawer();
         }
@@ -445,8 +687,7 @@
             const countEl = document.getElementById('cart-count');
             const totalEl = document.getElementById('cart-total-amount');
 
-            countEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-
+            countEl.textContent = cart.reduce((s, i) => s + i.quantity, 0);
             if (cart.length === 0) {
                 container.innerHTML = '<p class="text-slate-400 text-sm py-12 text-center">ቅርጫቱ ባዶ ነው።</p>';
                 totalEl.textContent = '0.00 ብር';
@@ -457,149 +698,68 @@
             container.innerHTML = cart.map(item => {
                 total += item.price * item.quantity;
                 return `
-                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border text-xs">
                         <div class="flex items-center gap-3">
-                            <img src="${item.cover_image_url || 'https://via.placeholder.com/80'}" class="w-12 h-14 object-cover rounded-lg">
+                            <img src="${item.cover_image_url || ''}" class="w-10 h-12 object-cover rounded">
                             <div>
-                                <h4 class="font-bold text-slate-800 line-clamp-1">${item.title}</h4>
-                                <p class="text-slate-500 mt-0.5">${item.price} ብር × ${item.quantity}</p>
+                                <h4 class="font-bold text-slate-800">${item.title}</h4>
+                                <p>${item.price} ብር × ${item.quantity}</p>
                             </div>
                         </div>
-                        <button onclick="removeFromCart('${item.id}')" class="text-rose-500 hover:text-rose-700 font-bold p-2">✕</button>
+                        <button onclick="cart = cart.filter(i => i.id !== '${item.id}'); updateCartUI();" class="text-rose-500 font-bold">✕</button>
                     </div>
                 `;
             }).join('');
-
             totalEl.textContent = total.toFixed(2) + ' ብር';
         }
 
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCartUI();
-        }
-
         async function executeChapaCheckout() {
-            if (cart.length === 0) {
-                alert('እባክዎ መጀመሪያ መጽሐፍ ይምረጡ!');
-                return;
-            }
-
-            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const email = prompt("እባክዎ ኢሜይልዎን ያስገቡ:", "example@gmail.com");
+            if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
+            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const email = prompt("ኢሜይልዎን ያስገቡ:", "user@gmail.com");
             if (!email) return;
 
-            const firstName = prompt("የእርስዎን ስም ያስገቡ:", "ብርሃኑ");
-            if (!firstName) return;
-
-            const lastName = prompt("የአባትዎን ስም ያስገቡ:", "ቢያድጌ");
-            if (!lastName) return;
-
             try {
-                const CHAPA_PUBLIC_KEY = 'CHAPA_TEST_PUB_lySnQ7s0rqESvfkJyNtF-iHtrlK0A0RrkWaQKN7I';
-                const txRef = 'tx-' + Math.random().toString(36).substring(2, 15);
-
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = 'https://api.chapa.co/v1/hosted/pay';
-
                 const fields = {
-                    public_key: CHAPA_PUBLIC_KEY,
-                    amount: totalAmount,
+                    public_key: 'CHAPA_TEST_PUB_lySnQ7s0rqESvfkJyNtF-iHtrlK0A0RrkWaQKN7I',
+                    amount: total,
                     currency: 'ETB',
                     email: email,
-                    first_name: firstName,
-                    last_name: lastName,
-                    tx_ref: txRef,
-                    callback_url: 'https://webhook.site/your-callback',
+                    first_name: currentUser ? currentUser.name || currentUser.username : 'እንግዳ',
+                    last_name: 'አንባቢ',
+                    tx_ref: 'tx-' + Math.random().toString(36).substring(2, 10),
                     return_url: window.location.href
                 };
-
-                for (const key in fields) {
+                for (const k in fields) {
                     const input = document.createElement('input');
                     input.type = 'hidden';
-                    input.name = key;
-                    input.value = fields[key];
+                    input.name = k;
+                    input.value = fields[k];
                     form.appendChild(input);
                 }
-
                 document.body.appendChild(form);
                 form.submit();
-            } catch (err) {
-                alert('የክፍያ ስህተት ተፈጥሯል፡ ' + err.message);
+            } catch (e) {
+                alert('የክፍያ ስህተት: ' + e.message);
             }
         }
 
-        // --- SUPABASE ADMIN AUTHENTICATION LOGIC ---
-        function openLoginModal() {
-            document.getElementById('login-modal').classList.remove('hidden');
+        function handleSearch(term) {
+            const q = term.toLowerCase().trim();
+            renderBooks(booksList.filter(b => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)));
         }
 
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.add('hidden');
+        function filterCategory(cat) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn bg-white hover:bg-slate-100 text-slate-700 border text-xs font-semibold px-4 py-2 rounded-xl transition');
+            event.target.className = 'cat-btn active bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition';
+            if (cat === 'all') renderBooks(booksList);
+            else renderBooks(booksList.filter(b => b.category === cat));
         }
 
-        function openAdminModal() {
-            document.getElementById('admin-modal').classList.remove('hidden');
-        }
-
-        function closeAdminModal() {
-            document.getElementById('admin-modal').classList.add('hidden');
-        }
-
-        async function verifyAdminLogin() {
-            const usernameInput = document.getElementById('admin-user-input').value.trim();
-            const passwordInput = document.getElementById('admin-pass-input').value.trim();
-
-            if (!usernameInput || !passwordInput) {
-                alert('እባክዎ ስም እና የይለፍ ቃል ያስገቡ');
-                return;
-            }
-
-            try {
-                // ከ Supabase 'admins' ሰንጠረዥ ማረጋገጥ
-                const { data, error } = await supabaseClient
-                    .from('admins')
-                    .select('*')
-                    .eq('username', usernameInput)
-                    .eq('password', passwordInput)
-                    .single();
-
-                if (error || !data) {
-                    alert('የተሳሳተ ስም ወይም የይለፍ ቃል!');
-                    return;
-                }
-
-                // መረጃው ትክክል ከሆነ
-                closeLoginModal();
-                openAdminModal();
-            } catch (err) {
-                alert('የግንኙነት ስህተት ተፈጥሯል፡ ' + err.message);
-            }
-        }
-
-        async function addNewBook() {
-            const title = document.getElementById('new-book-title').value;
-            const author = document.getElementById('new-book-author').value;
-            const price = parseFloat(document.getElementById('new-book-price').value);
-            const category = document.getElementById('new-book-category').value;
-            const cover = document.getElementById('new-book-cover').value;
-
-            if (!title || !author || !price) {
-                alert('እባክዎ የተሟላ መረጃ ያስገቡ');
-                return;
-            }
-
-            const newBook = { title, author, price, category, cover_image_url: cover, rating: 5.0 };
-            
-            try {
-                await supabaseClient.from('books').insert([newBook]);
-            } catch (e) {}
-
-            booksList.unshift(newBook);
-            renderBooks(booksList);
-            closeAdminModal();
-            alert('መጽሐፉ በተሳካ ሁኔታ በዳታቤዝ ተመዝግቧል!');
-        }
+        function scrollToBooks() { document.getElementById('books-section').scrollIntoView({ behavior: 'smooth' }); }
     </script>
 </body>
 </html>
