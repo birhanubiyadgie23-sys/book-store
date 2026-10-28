@@ -44,9 +44,10 @@
     <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-amber-100/80 shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
             
+            <!-- Logo & Brand -->
             <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-serif font-bold text-xl shadow-md shadow-indigo-200">
-                    ይ
+                <div id="brand-logo-container" class="w-10 h-10 rounded-xl overflow-hidden shadow-md shadow-indigo-200 flex items-center justify-center bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-serif font-bold text-xl">
+                    <span id="brand-logo-text">ይ</span>
                 </div>
                 <div>
                     <h1 class="text-lg font-bold font-serif text-slate-900 leading-none">ይቻላል መደብር</h1>
@@ -54,10 +55,11 @@
                 </div>
             </div>
 
+            <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
                 <a href="#hero" class="hover:text-indigo-600 transition">መነሻ</a>
                 <a href="#books-section" class="hover:text-indigo-600 transition">መጽሐፍት</a>
-                <a href="#about" class="hover:text-indigo-600 transition">ስለ እኛ</a>
+                <button onclick="openAboutModal()" class="hover:text-indigo-600 transition bg-transparent border-none cursor-pointer font-medium text-sm text-slate-600">ስለ እኛ</button>
             </div>
 
             <div class="flex items-center space-x-3">
@@ -162,7 +164,7 @@
         <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
 
-    <!-- 4. FOOTER -->
+    <!-- 4. FOOTER (Dynamic Social Links) -->
     <footer id="about" class="bg-white border-t border-slate-200 py-8 text-center text-slate-500 text-xs">
         <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-2">
@@ -170,10 +172,28 @@
                 <span class="font-bold text-slate-800">ይቻላል መጽሐፍት መደብር</span>
             </div>
             <p>© 2026 ይቻላል መጽሐፍት መደብር። መብቱ በህግ የተጠበቀ ነው።</p>
+            <div id="footer-social-icons" class="flex space-x-4 text-slate-600 text-base">
+                <!-- Dynamically injected social links -->
+            </div>
         </div>
     </footer>
 
-    <!-- 5. CART DRAWER -->
+    <!-- 5. ABOUT US MODAL -->
+    <div id="about-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-serif font-bold text-slate-900 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-indigo-600"></i> ስለ እኛ (About Us)
+                </h3>
+                <button onclick="closeAboutModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            </div>
+            <div id="about-content-text" class="text-slate-700 text-sm leading-relaxed space-y-3">
+                <!-- Dynamic About content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. CART DRAWER -->
     <div id="cart-drawer-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden transition-opacity duration-300" onclick="toggleCartDrawer()"></div>
     
     <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
@@ -202,7 +222,7 @@
         </div>
     </div>
 
-    <!-- 6. CHECKOUT MODAL (BANK SELECTION & QR CODE) -->
+    <!-- 7. CHECKOUT MODAL -->
     <div id="checkout-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -214,15 +234,10 @@
 
             <div class="space-y-3 text-xs">
                 <label class="block font-bold text-slate-700">የባንክ/የክፍያ አካውንት ይምረጡ፡</label>
-                <select id="selected-payment-method" onchange="updatePaymentDetails()" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none font-medium">
-                    <!-- Dynamically populated from settings -->
-                </select>
+                <select id="selected-payment-method" onchange="updatePaymentDetails()" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none font-medium"></select>
 
-                <div id="payment-instruction-box" class="p-3 bg-indigo-50 border border-indigo-100 rounded-xl space-y-2 text-slate-700">
-                    <!-- Dynamic Account details -->
-                </div>
+                <div id="payment-instruction-box" class="p-3 bg-indigo-50 border border-indigo-100 rounded-xl space-y-2 text-slate-700"></div>
 
-                <!-- QR Code Display for Desktop Users -->
                 <div id="qrcode-container" class="text-center pt-2 hidden">
                     <p class="text-[11px] font-bold text-slate-600 mb-1">ስልክዎ ላይ በካሜራ በመቃኘት በቀላሉ ይክፈሉ (QR Code)</p>
                     <div class="inline-block p-2 bg-white border rounded-xl shadow-sm">
@@ -233,14 +248,14 @@
                 <div class="pt-2 border-t">
                     <button onclick="completeBankCheckout()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md flex items-center justify-center gap-2">
                         <i class="fa-brands fa-telegram text-base"></i>
-                        <span>ክፍያ ፈጽሜ ደረሰኝ በ Telegram ላክ (@Ychalal1)</span>
+                        <span>ክፍያ ፈጽሜ ደረሰኝ በ Telegram ላክ (@Ychalal2)</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 7. AUTHENTICATION MODAL -->
+    <!-- 8. AUTHENTICATION MODAL -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -270,7 +285,7 @@
         </div>
     </div>
 
-    <!-- 8. ADMIN DASHBOARD MODAL -->
+    <!-- 9. ADMIN DASHBOARD MODAL (WITH SOCIAL, LOGO, ABOUT US SETTINGS) -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-slate-100">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
@@ -280,14 +295,15 @@
                 <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
 
-            <div class="flex gap-2 border-b border-slate-100 pb-3 mb-4 overflow-x-auto">
-                <button onclick="switchAdminTab('books')" id="adm-tab-books-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-indigo-600 text-white">መጽሐፍት</button>
-                <button onclick="switchAdminTab('banks')" id="adm-tab-banks-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">የባንክ አካውንቶች</button>
-                <button onclick="switchAdminTab('orders')" id="adm-tab-orders-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ትዕዛዞች</button>
-                <button onclick="switchAdminTab('bg')" id="adm-tab-bg-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ስላይድ</button>
+            <div class="flex gap-2 border-b border-slate-100 pb-3 mb-4 overflow-x-auto text-xs font-semibold">
+                <button onclick="switchAdminTab('books')" id="adm-tab-books-btn" class="px-3 py-1.5 rounded-xl bg-indigo-600 text-white">መጽሐፍት</button>
+                <button onclick="switchAdminTab('banks')" id="adm-tab-banks-btn" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700">ባንኮች</button>
+                <button onclick="switchAdminTab('social')" id="adm-tab-social-btn" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700">ሶሻል ሚዲያ እና ሎጎ</button>
+                <button onclick="switchAdminTab('orders')" id="adm-tab-orders-btn" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700">ትዕዛዞች</button>
+                <button onclick="switchAdminTab('bg')" id="adm-tab-bg-btn" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700">ስላይድ</button>
             </div>
 
-            <!-- Tab 1: Books Management -->
+            <!-- Tab 1: Books -->
             <div id="adm-tab-books" class="space-y-4">
                 <h4 class="font-bold text-sm text-slate-800" id="book-form-title">አዲስ መጽሐፍ በዳታቤዝ መዝግብ</h4>
                 <input type="hidden" id="edit-book-id">
@@ -307,31 +323,60 @@
                     <button onclick="saveBookToSupabase()" id="book-save-btn" class="flex-grow bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:bg-indigo-700 transition">መጽሐፉን መዝግብ</button>
                     <button onclick="resetBookForm()" class="px-4 py-3 bg-slate-200 text-slate-700 rounded-xl font-bold text-xs">ሰርዝ / አዲስ</button>
                 </div>
-
                 <div class="mt-6">
                     <h5 class="font-bold text-xs text-slate-700 mb-2">የተመዘገቡ መጽሐፍት ዝርዝር</h5>
                     <div id="admin-books-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                 </div>
             </div>
 
-            <!-- Tab 2: Bank Accounts Management -->
+            <!-- Tab 2: Banks -->
             <div id="adm-tab-banks" class="space-y-4 hidden">
-                <h4 class="font-bold text-sm text-slate-800">የባንክ እና የክፍያ አካውንቶች ማስተካከያ</h4>
+                <h4 class="font-bold text-sm text-slate-800">የባንክ እና የክፍያ አካውንቶች</h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <input type="text" id="bank-name" placeholder="የባንክ ስም (ለምሳሌ፡ Telebirr)" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
-                    <input type="text" id="bank-acc-no" placeholder="የአካውንት ቁጥር / ስልክ" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                    <input type="text" id="bank-acc-no" placeholder="አካውንት ቁጥር / ስልክ" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
                     <input type="text" id="bank-holder" placeholder="የሂሳብ ባለቤቱ ስም" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
                     <input type="text" id="bank-qr" placeholder="QR Code Image URL (አማራጭ)" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
                 </div>
-                <button onclick="saveBankAccount()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs">አካውንቱን ጨምር / አዘምን</button>
+                <button onclick="saveBankAccount()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs">አካውንቱን ጨምር</button>
+                <div id="admin-banks-list" class="space-y-2 max-h-48 overflow-y-auto pr-1 mt-4"></div>
+            </div>
 
-                <div class="mt-4">
-                    <h5 class="font-bold text-xs text-slate-700 mb-2">ነባር የክፍያ አካውንቶች</h5>
-                    <div id="admin-banks-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+            <!-- Tab 3: Social Links, Logo & About Us Settings -->
+            <div id="adm-tab-social" class="space-y-4 hidden">
+                <h4 class="font-bold text-sm text-slate-800">የሶሻል ሚዲያ ሊንኮች፣ ሎጎ እና «ስለ እኛ» ማስተካከያ</h4>
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">የሎጎ ምስል URL (Logo Image URL):</label>
+                        <input type="text" id="setting-logo-url" placeholder="https://... (የሎጎ ሊንክ ያስገቡ)" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1"><i class="fa-brands fa-facebook text-blue-600"></i> የፌስቡክ አድራሻ (Facebook URL):</label>
+                            <input type="text" id="setting-fb" placeholder="https://facebook.com/..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1"><i class="fa-brands fa-telegram text-sky-500"></i> የቴሌግራም አድራሻ (Telegram URL):</label>
+                            <input type="text" id="setting-tg" placeholder="https://t.me/..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1"><i class="fa-brands fa-youtube text-red-600"></i> የዩቲዩብ አድራሻ (YouTube URL):</label>
+                            <input type="text" id="setting-yt" placeholder="https://youtube.com/..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1"><i class="fa-brands fa-tiktok text-black"></i> የቲክቶክ አድራሻ (TikTok URL):</label>
+                            <input type="text" id="setting-tk" placeholder="https://tiktok.com/@..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">የ «ስለ እኛ» (About Us) ዝርዝር መግለጫ:</label>
+                        <textarea id="setting-about-text" rows="4" placeholder="ስለ ድርጅቱ ወይም መደብሩ የሚገልጽ ጽሁፍ እዚህ ይጻፉ..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none"></textarea>
+                    </div>
+                    <button onclick="saveSiteSettings()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs">ለውጦቹን በሙሉ አዘምን</button>
                 </div>
             </div>
 
-            <!-- Tab 3: Orders -->
+            <!-- Tab 4: Orders -->
             <div id="adm-tab-orders" class="space-y-4 hidden">
                 <h4 class="font-bold text-sm text-slate-800">የተደረጉ ትዕዛዞች (Orders)</h4>
                 <div id="admin-orders-list" class="space-y-3 max-h-60 overflow-y-auto">
@@ -339,14 +384,14 @@
                 </div>
             </div>
 
-            <!-- Tab 4: Backgrounds -->
+            <!-- Tab 5: Backgrounds -->
             <div id="adm-tab-bg" class="space-y-4 hidden">
                 <h4 class="font-bold text-sm text-slate-800">የጀርባ ዙም ምስሎች ማስተካከያ</h4>
                 <div class="flex gap-2">
                     <input type="text" id="new-bg-url" placeholder="አዲስ Image URL (https://...)" class="flex-grow p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
                     <button onclick="addBgImage()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">ጨምር</button>
                 </div>
-                <div id="admin-bg-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                <div id="admin-bg-list" class="space-y-2 max-h-48 overflow-y-auto pr-1 mt-4"></div>
             </div>
         </div>
     </div>
@@ -361,12 +406,21 @@
         let cart = [];
         let currentUser = JSON.parse(localStorage.getItem('yichalal_user')) || null;
         
-        // Default Bank Accounts (Telebirr & CBE as requested)
         let defaultBanks = [
             { id: '1', name: 'Telebirr', accNo: '0930836065', holder: 'ይቻላል መጽሐፍት', qr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=tel:0930836065' },
             { id: '2', name: 'የኢትዮጵያ ንግድ ባንክ (CBE)', accNo: '1000324406461', holder: 'ብርሃኑ ቢያድጌ', qr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CBE-1000324406461' }
         ];
         let bankAccounts = JSON.parse(localStorage.getItem('yichalal_banks')) || defaultBanks;
+
+        // Site Settings (Logo, Social URLs, About Us)
+        let siteSettings = JSON.parse(localStorage.getItem('yichalal_site_settings')) || {
+            logoUrl: '',
+            facebook: 'https://facebook.com',
+            telegram: 'https://t.me/Ychalal2',
+            youtube: 'https://youtube.com',
+            tiktok: 'https://tiktok.com',
+            aboutText: 'ይቻላል መጽሐፍት መደብር ተወዳጅ የሀገር ውስጥ እና የውጭ መጽሐፍትን በዲጂታል እና የታተሙ አማራጮች እያቀረበ የሚገኝ ታማኝ ተቋም ነው። የእውቀት ብርሃንን ለሁሉም እናደርሳለን!'
+        };
 
         let backgroundImages = JSON.parse(localStorage.getItem('yichalal_hero_bgs')) || [
             'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1920&q=80',
@@ -381,6 +435,7 @@
             loadAnnouncement();
             renderBgList();
             renderAdminBanksList();
+            applySiteSettings();
         });
 
         // Slideshow
@@ -428,6 +483,54 @@
             });
             currentSlideIndex = index;
         }
+
+        // Apply Logo, Social Links & About Us
+        function applySiteSettings() {
+            // Logo
+            const logoContainer = document.getElementById('brand-logo-container');
+            if (siteSettings.logoUrl) {
+                logoContainer.innerHTML = `<img src="${siteSettings.logoUrl}" alt="Logo" class="w-full h-full object-cover">`;
+            } else {
+                logoContainer.innerHTML = `<span id="brand-logo-text">ይ</span>`;
+            }
+
+            // Footer Social Icons
+            const socialBox = document.getElementById('footer-social-icons');
+            let socialHtml = '';
+            if (siteSettings.facebook) socialHtml += `<a href="${siteSettings.facebook}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-facebook"></i></a>`;
+            if (siteSettings.telegram) socialHtml += `<a href="${siteSettings.telegram}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-telegram"></i></a>`;
+            if (siteSettings.youtube) socialHtml += `<a href="${siteSettings.youtube}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-youtube"></i></a>`;
+            if (siteSettings.tiktok) socialHtml += `<a href="${siteSettings.tiktok}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-tiktok"></i></a>`;
+            socialBox.innerHTML = socialHtml;
+
+            // About Us text in Modal
+            document.getElementById('about-content-text').innerHTML = `<p>${siteSettings.aboutText}</p>`;
+
+            // Populate Admin Form Fields
+            document.getElementById('setting-logo-url').value = siteSettings.logoUrl || '';
+            document.getElementById('setting-fb').value = siteSettings.facebook || '';
+            document.getElementById('setting-tg').value = siteSettings.telegram || '';
+            document.getElementById('setting-yt').value = siteSettings.youtube || '';
+            document.getElementById('setting-tk').value = siteSettings.tiktok || '';
+            document.getElementById('setting-about-text').value = siteSettings.aboutText || '';
+        }
+
+        function saveSiteSettings() {
+            siteSettings.logoUrl = document.getElementById('setting-logo-url').value.trim();
+            siteSettings.facebook = document.getElementById('setting-fb').value.trim();
+            siteSettings.telegram = document.getElementById('setting-tg').value.trim();
+            siteSettings.youtube = document.getElementById('setting-yt').value.trim();
+            siteSettings.tiktok = document.getElementById('setting-tk').value.trim();
+            siteSettings.aboutText = document.getElementById('setting-about-text').value.trim();
+
+            localStorage.setItem('yichalal_site_settings', JSON.stringify(siteSettings));
+            applySiteSettings();
+            alert('የሶሻል ሚዲያ ሊንኮች፣ ሎጎ እና «ስለ እኛ» መግለጫው በተሳካ ሁኔታ ተዘምነዋል!');
+        }
+
+        // About Modal Control
+        function openAboutModal() { document.getElementById('about-modal').classList.remove('hidden'); }
+        function closeAboutModal() { document.getElementById('about-modal').classList.add('hidden'); }
 
         async function fetchBooksFromSupabase() {
             try {
@@ -586,7 +689,7 @@
             }
         }
 
-        // Checkout & Bank Selection Modal
+        // Checkout & Bank Selection
         function openCheckoutModal() {
             if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
             populateBankDropdown();
@@ -616,7 +719,6 @@
                 <p>የሂሳብ ባለቤት፡ <span class="font-semibold text-slate-900">${bank.holder}</span></p>
             `;
 
-            // Check if Desktop or has QR
             if (bank.qr) {
                 qrImg.src = bank.qr;
                 qrContainer.classList.remove('hidden');
@@ -633,7 +735,6 @@
 
             const bookNames = cart.map(i => `${i.title} (${i.quantity} በራ)`).join(', ');
 
-            // Save Order to Supabase
             try {
                 await supabaseClient.from('orders').insert([{
                     customer_name: customerName,
@@ -645,11 +746,13 @@
                 console.error(e);
             }
 
-            // Construct Telegram Text Message
             const telegramMsg = `ሰላም! መጽሐፍ ልገዛ ፈልጌ ነበር።\n\n👤 ስም: ${customerName}\n📚 መጽሐፍት: ${bookNames}\n💰 ጠቅላላ ዋጋ: ${total} ብር\n🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\nየክፍያ ደረሰኝ ምስል ከዚህ ጋር አያይዤ ልኬአለሁ።`;
             
             const encodedMsg = encodeURIComponent(telegramMsg);
-            window.open(`https://t.me/Ychalal2?text=${encodedMsg}`, '_blank');
+            
+            // Telegram Username (@Ychalal2)
+            let tgUsername = siteSettings.telegram ? siteSettings.telegram.replace('https://t.me/', '').replace('@', '') : 'Ychalal2';
+            window.open(`https://t.me/${tgUsername}?text=${encodedMsg}`, '_blank');
         }
 
         // Admin Dashboard
@@ -657,7 +760,7 @@
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
 
         function switchAdminTab(tab) {
-            ['books', 'banks', 'orders', 'bg'].forEach(t => {
+            ['books', 'banks', 'social', 'orders', 'bg'].forEach(t => {
                 const el = document.getElementById(`adm-tab-${t}`);
                 const btn = document.getElementById(`adm-tab-${t}-btn`);
                 if (el) el.classList.add('hidden');
