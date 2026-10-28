@@ -733,17 +733,81 @@
             }
         }
 
-        <!-- 7. CHECKOUT MODAL (የተስተካከለ - ቁልፉ እንዳይጠፋ ማሸብለል የሚችል) -->
-    <div id="checkout-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] flex flex-col justify-between">
-            
-            <!-- 头的 (Header) -->
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-3">
-                <h3 class="font-serif font-bold text-slate-900 text-base flex items-center gap-2">
-                    <i class="fa-solid fa-wallet text-indigo-600"></i> የመጨረሻ ማረጋገጫ እና ክፍያ
-                </h3>
-                <button onclick="closeCheckoutModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
-            </div>
+        // Checkout & Bank Selection
+        function openCheckoutModal() {
+            if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
+            if (currentUser && currentUser.name) {
+                document.getElementById('order-customer-name').value = currentUser.name;
+            } else if (currentUser && currentUser.username) {
+                document.getElementById('order-customer-name').value = currentUser.username;
+            }
+            populateBankDropdown();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            toggleCartDrawer();
+        }
+        function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
+
+        function populateBankDropdown() {
+            const select = document.getElementById('selected-payment-method');
+            select.innerHTML = bankAccounts.map((b, idx) => `<option value="${idx}">${b.name} - ${b.accNo}</option>`).join('');
+            updatePaymentDetails();
+        }
+
+        function updatePaymentDetails() {
+            const idx = document.getElementById('selected-payment-method').value;
+            const bank = bankAccounts[idx];
+            const box = document.getElementById('payment-instruction-box');
+            const qrContainer = document.getElementById('qrcode-container');
+            const qrImg = document.getElementById('dynamic-qrcode');
+
+            if (!bank) return;
+
+            box.innerHTML = `
+                <p class="font-bold text-indigo-900">${bank.name}</p>
+                <p>አካውንት / ስልክ፡ <span class="font-extrabold text-slate-900">${bank.accNo}</span></p>
+                <p>የሂሳብ ባለቤት፡ <span class="font-semibold text-slate-900">${bank.holder}</span></p>
+            `;
+
+            if (bank.qr) {
+                qrImg.src = bank.qr;
+                qrContainer.classList.remove('hidden');
+            } else {
+                qrContainer.classList.add('hidden');
+            }
+        }
+
+        async function completeBankCheckout() {
+            const customerName = document.getElementById('order-customer-name').value.trim();
+            const customerPhone = document.getElementById('order-customer-phone').value.trim();
+
+            if (!customerName || !customerPhone) {
+                return alert('እባክዎ ሙሉ ስምዎን እና ስልክ ቁጥርዎን ያስገቡ!');
+            }
+
+            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const idx = document.getElementById('selected-payment-method').value;
+            const bank = bankAccounts[idx];
+            const bookNames = cart.map(i => `${i.title} (${i.quantity} በራ)`).join(', ');
+
+            try {
+                await supabaseClient.from('orders').insert([{
+                    customer_name: `${customerName} (${customerPhone})`,
+                    customer_email: bank.name,
+                    total_amount: total,
+                    items: cart
+                }]);
+            } catch (e) {
+                console.error(e);
+            }
+
+            const telegramMsg = `ሰላም! አዲስ መጽሐፍ ግዢ ተፈጽሟል።\n\n👤 ስም: ${customerName}\n📱 ስልክ ቁጥር: ${customerPhone}\n📚 መጽሐፍት: ${bookNames}\n💰 ጠቅላላ ዋጋ: ${total} ብር\n🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\nየክፍያ ደረሰኝ ምስል ከዚህ ጋር አያይዤ ልኬአለሁ።`;
+            
+            const encodedMsg = encodeURIComponent(telegramMsg);
+            let tgUsername = siteSettings.telegram ? siteSettings.telegram.replace('https://t.me/', '').replace('@', '') : 'Ychalal2';
+            
+            closeCheckoutModal();
+            window.open(`https://t.me/${tgUsername}?text=${encodedMsg}`, '_blank');
+        }
 
             <!-- የሚሸብለል አካል (Scrollable Body) -->
             <div class="space-y-3 text-xs overflow-y-auto pr-1 flex-grow">
