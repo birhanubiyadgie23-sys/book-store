@@ -56,7 +56,7 @@
             
             <!-- Logo & Brand -->
             <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <div id="brand-logo-container" class="w-20 h-20 flex items-center justify-center bg-transparent">
+                <div id="brand-logo-container" class="w-12 h-12 flex items-center justify-center bg-transparent">
                     <span id="brand-logo-text" class="text-3xl font-bold gold-ethiopian-logo">ይ</span>
                 </div>
                 <div>
@@ -127,18 +127,18 @@
                     <div class="absolute -inset-1 bg-gradient-to-r from-amber-400 via-indigo-500 to-violet-600 rounded-3xl blur-xl opacity-20 animate-pulse"></div>
                     <div class="relative bg-white/90 backdrop-blur-xl p-5 rounded-3xl border border-white shadow-2xl shadow-indigo-950/10 text-slate-800">
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-100">የተወደዱ መጽሐፍት</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-100">የሳምንቱ ተወደደ</span>
                             <span class="text-xs text-amber-600 font-semibold flex items-center gap-1"><i class="fa-solid fa-star"></i> 4.9</span>
                         </div>
                         <div class="h-60 rounded-2xl overflow-hidden bg-slate-100 mb-4 shadow-inner">
-                            <img src="https://tse3.mm.bing.net/th/id/OIP.uUl54wkXU1H9kNdyqPh17QAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="አንድ ለእናቱ" class="w-full h-full object-cover">
+                            <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80" alt="የስኬት ሚስጥራት" class="w-full h-full object-cover">
                         </div>
-                        <h3 class="font-bold font-serif text-lg text-slate-900 mb-1">አንድ ለእናቱ</h3>
-                        <p class="text-xs text-slate-500 mb-3">የአጼ ቲወድሮስ ታሪክ በአቤ ጉበኛ</p>
+                        <h3 class="font-bold font-serif text-lg text-slate-900 mb-1">የስኬት ሚስጥራት</h3>
+                        <p class="text-xs text-slate-500 mb-3">በቀደመጌን የተዘጋጀ የህይወት መሪ</p>
                         <div class="flex items-center justify-between pt-2 border-t border-slate-100">
                             <div>
                                 <span class="text-xs text-slate-400 block">ዋጋ</span>
-                                <span class="text-base font-extrabold text-indigo-600">1000.00 ብር</span>
+                                <span class="text-base font-extrabold text-indigo-600">350.00 ብር</span>
                             </div>
                             <button onclick="scrollToBooks()" class="bg-slate-900 hover:bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition">
                                 መጽሐፍቱን ይመልከቱ ↓
@@ -734,118 +734,81 @@
         }
 
         // Checkout & Bank Selection
-        function openCheckoutModal() {
-            if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
-            if (currentUser && currentUser.name) {
-                document.getElementById('order-customer-name').value = currentUser.name;
-            } else if (currentUser && currentUser.username) {
-                document.getElementById('order-customer-name').value = currentUser.username;
-            }
-            populateBankDropdown();
-            document.getElementById('checkout-modal').classList.remove('hidden');
-            toggleCartDrawer();
-        }
-        function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
+        function openCheckoutModal() {
+            if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
+            if (currentUser && currentUser.name) {
+                document.getElementById('order-customer-name').value = currentUser.name;
+            } else if (currentUser && currentUser.username) {
+                document.getElementById('order-customer-name').value = currentUser.username;
+            }
+            populateBankDropdown();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            toggleCartDrawer();
+        }
+        function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
 
-        function populateBankDropdown() {
-            const select = document.getElementById('selected-payment-method');
-            select.innerHTML = bankAccounts.map((b, idx) => `<option value="${idx}">${b.name} - ${b.accNo}</option>`).join('');
-            updatePaymentDetails();
-        }
+        function populateBankDropdown() {
+            const select = document.getElementById('selected-payment-method');
+            select.innerHTML = bankAccounts.map((b, idx) => `<option value="${idx}">${b.name} - ${b.accNo}</option>`).join('');
+            updatePaymentDetails();
+        }
 
-        function updatePaymentDetails() {
-            const idx = document.getElementById('selected-payment-method').value;
-            const bank = bankAccounts[idx];
-            const box = document.getElementById('payment-instruction-box');
-            const qrContainer = document.getElementById('qrcode-container');
-            const qrImg = document.getElementById('dynamic-qrcode');
+        function updatePaymentDetails() {
+            const idx = document.getElementById('selected-payment-method').value;
+            const bank = bankAccounts[idx];
+            const box = document.getElementById('payment-instruction-box');
+            const qrContainer = document.getElementById('qrcode-container');
+            const qrImg = document.getElementById('dynamic-qrcode');
 
-            if (!bank) return;
+            if (!bank) return;
 
-            box.innerHTML = `
-                <p class="font-bold text-indigo-900">${bank.name}</p>
-                <p>አካውንት / ስልክ፡ <span class="font-extrabold text-slate-900">${bank.accNo}</span></p>
-                <p>የሂሳብ ባለቤት፡ <span class="font-semibold text-slate-900">${bank.holder}</span></p>
-            `;
+            box.innerHTML = `
+                <p class="font-bold text-indigo-900">${bank.name}</p>
+                <p>አካውንት / ስልክ፡ <span class="font-extrabold text-slate-900">${bank.accNo}</span></p>
+                <p>የሂሳብ ባለቤት፡ <span class="font-semibold text-slate-900">${bank.holder}</span></p>
+            `;
 
-            if (bank.qr) {
-                qrImg.src = bank.qr;
-                qrContainer.classList.remove('hidden');
-            } else {
-                qrContainer.classList.add('hidden');
-            }
-        }
+            if (bank.qr) {
+                qrImg.src = bank.qr;
+                qrContainer.classList.remove('hidden');
+            } else {
+                qrContainer.classList.add('hidden');
+            }
+        }
 
-        async function completeBankCheckout() {
-            const customerName = document.getElementById('order-customer-name').value.trim();
-            const customerPhone = document.getElementById('order-customer-phone').value.trim();
+        async function completeBankCheckout() {
+            const customerName = document.getElementById('order-customer-name').value.trim();
+            const customerPhone = document.getElementById('order-customer-phone').value.trim();
 
-            if (!customerName || !customerPhone) {
-                return alert('እባክዎ ሙሉ ስምዎን እና ስልክ ቁጥርዎን ያስገቡ!');
-            }
+            if (!customerName || !customerPhone) {
+                return alert('እባክዎ ሙሉ ስምዎን እና ስልክ ቁጥርዎን ያስገቡ!');
+            }
 
-            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
-            const idx = document.getElementById('selected-payment-method').value;
-            const bank = bankAccounts[idx];
-            const bookNames = cart.map(i => `${i.title} (${i.quantity} በራ)`).join(', ');
+            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const idx = document.getElementById('selected-payment-method').value;
+            const bank = bankAccounts[idx];
+            const bookNames = cart.map(i => `${i.title} (${i.quantity} በራ)`).join(', ');
 
-            try {
-                await supabaseClient.from('orders').insert([{
-                    customer_name: `${customerName} (${customerPhone})`,
-                    customer_email: bank.name,
-                    total_amount: total,
-                    items: cart
-                }]);
-            } catch (e) {
-                console.error(e);
-            }
+            try {
+                await supabaseClient.from('orders').insert([{
+                    customer_name: `${customerName} (${customerPhone})`,
+                    customer_email: bank.name,
+                    total_amount: total,
+                    items: cart
+                }]);
+            } catch (e) {
+                console.error(e);
+            }
 
-            const telegramMsg = `ሰላም! አዲስ መጽሐፍ ግዢ ተፈጽሟል።\n\n👤 ስም: ${customerName}\n📱 ስልክ ቁጥር: ${customerPhone}\n📚 መጽሐፍት: ${bookNames}\n💰 ጠቅላላ ዋጋ: ${total} ብር\n🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\nየክፍያ ደረሰኝ ምስል ከዚህ ጋር አያይዤ ልኬአለሁ።`;
-            
-            const encodedMsg = encodeURIComponent(telegramMsg);
-            let tgUsername = siteSettings.telegram ? siteSettings.telegram.replace('https://t.me/', '').replace('@', '') : 'Ychalal2';
-            
-            closeCheckoutModal();
-            window.open(`https://t.me/${tgUsername}?text=${encodedMsg}`, '_blank');
-        }
+            const telegramMsg = `ሰላም! አዲስ መጽሐፍ ግዢ ተፈጽሟል።\n\n👤 ስም: ${customerName}\n📱 ስልክ ቁጥር: ${customerPhone}\n📚 መጽሐፍት: ${bookNames}\n💰 ጠቅላላ ዋጋ: ${total} ብር\n🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\nየክፍያ ደረሰኝ ምስል ከዚህ ጋር አያይዤ ልኬአለሁ።`;
+            
+            const encodedMsg = encodeURIComponent(telegramMsg);
+            let tgUsername = siteSettings.telegram ? siteSettings.telegram.replace('https://t.me/', '').replace('@', '') : 'Ychalal2';
+            
+            closeCheckoutModal();
+            window.open(`https://t.me/${tgUsername}?text=${encodedMsg}`, '_blank');
+        }
 
-            <!-- የሚሸብለል አካል (Scrollable Body) -->
-            <div class="space-y-3 text-xs overflow-y-auto pr-1 flex-grow">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">ሙሉ ስምዎ፡</label>
-                    <input type="text" id="order-customer-name" placeholder="እባክዎ ስምዎን ያስገቡ" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">ስልክ ቁጥርዎ (ለማስተባበር)፡</label>
-                    <input type="tel" id="order-customer-phone" placeholder="09... ወይም 07..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">የባንክ/የክፍያ አካውንት ይምረጡ፡</label>
-                    <select id="selected-payment-method" onchange="updatePaymentDetails()" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none font-medium"></select>
-                </div>
-
-                <div id="payment-instruction-box" class="p-3 bg-indigo-50 border border-indigo-100 rounded-xl space-y-2 text-slate-700"></div>
-
-                <div id="qrcode-container" class="text-center pt-2 hidden">
-                    <p class="text-[11px] font-bold text-slate-600 mb-1">ስልክዎ ላይ በካሜራ በመቃኘት በቀላሉ ይክፈሉ (QR Code)</p>
-                    <div class="inline-block p-2 bg-white border rounded-xl shadow-sm">
-                        <img id="dynamic-qrcode" src="" alt="Payment QR Code" class="w-28 h-28 mx-auto object-contain">
-                    </div>
-                </div>
-            </div>
-
-            <!-- ከታች ሁልጊዜ የሚታየው የማስተላለፊያ ቁልፍ (Fixed Footer Button) -->
-            <div class="pt-3 border-t mt-3">
-                <button onclick="completeBankCheckout()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-telegram text-base"></i>
-                    <span>ትዕዛዝ አስተላልፍ እና ደረሰኝ ላክ (@Ychalal2)</span>
-                </button>
-            </div>
-
-        </div>
-    </div>
         // Admin Dashboard
         function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
