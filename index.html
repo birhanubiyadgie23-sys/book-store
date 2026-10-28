@@ -159,7 +159,12 @@
             </div>
         </div>
 
-        <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="col-span-full py-12 text-center text-slate-400">
+                <i class="fa-solid fa-spinner fa-spin text-2xl text-indigo-600 mb-2"></i>
+                <p class="text-sm">መጽሐፍት በመጫን ላይ ናቸው...</p>
+            </div>
+        </div>
     </main>
 
     <!-- 4. FOOTER -->
@@ -202,7 +207,7 @@
         </div>
     </div>
 
-    <!-- 6. AUTHENTICATION MODAL (SUPABASE) -->
+    <!-- 6. AUTHENTICATION MODAL -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -217,14 +222,12 @@
                 <button id="tab-signup-btn" onclick="switchAuthTab('signup')" class="w-1/2 py-2 rounded-lg text-slate-600 transition">ተመዝገብ (Sign Up)</button>
             </div>
 
-            <!-- Login Form -->
             <div id="form-login" class="space-y-3 pt-2">
                 <input type="text" id="login-username" placeholder="የተጠቃሚ ስም (Username)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
                 <input type="password" id="login-password" placeholder="የይለፍ ቃል (Password)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
                 <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md">ግባ</button>
             </div>
 
-            <!-- Signup Form -->
             <div id="form-signup" class="space-y-3 pt-2 hidden">
                 <input type="text" id="signup-name" placeholder="ሙሉ ስም" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
                 <input type="text" id="signup-username" placeholder="የተጠቃሚ ስም (Username)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
@@ -234,7 +237,7 @@
         </div>
     </div>
 
-    <!-- 7. ADMIN DASHBOARD MODAL (ORDERS & LOCAL BOOKS) -->
+    <!-- 7. ADMIN DASHBOARD MODAL -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-slate-100">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
@@ -245,15 +248,15 @@
             </div>
 
             <div class="flex gap-2 border-b border-slate-100 pb-3 mb-4 overflow-x-auto">
-                <button onclick="switchAdminTab('books')" id="adm-tab-books-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-indigo-600 text-white">መጽሐፍት (Local)</button>
-                <button onclick="switchAdminTab('orders')" id="adm-tab-orders-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">የተደረጉ ትዕዛዞች (Supabase)</button>
+                <button onclick="switchAdminTab('books')" id="adm-tab-books-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-indigo-600 text-white">መጽሐፍት አስተዳደር</button>
+                <button onclick="switchAdminTab('orders')" id="adm-tab-orders-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ትዕዛዞች (Orders)</button>
                 <button onclick="switchAdminTab('bg')" id="adm-tab-bg-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">የጀርባ ስላይድ</button>
                 <button onclick="switchAdminTab('announcement')" id="adm-tab-ann-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ማስታወቂያ</button>
             </div>
 
-            <!-- Tab 1: Books Management (Local Storage) -->
+            <!-- Tab 1: Books Management (Supabase DB) -->
             <div id="adm-tab-books" class="space-y-4">
-                <h4 class="font-bold text-sm text-slate-800" id="book-form-title">አዲስ መጽሐፍ በሎካል መዝግብ</h4>
+                <h4 class="font-bold text-sm text-slate-800" id="book-form-title">አዲስ መጽሐፍ በዳታቤዝ መዝግብ</h4>
                 <input type="hidden" id="edit-book-id">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <input type="text" id="new-book-title" placeholder="የመጽሐፍ ርዕስ" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
@@ -268,17 +271,17 @@
                     <input type="text" id="new-book-cover" placeholder="የሽፋን ምስል URL" class="col-span-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="saveLocalBook()" id="book-save-btn" class="flex-grow bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:bg-indigo-700 transition">መጽሐፉን መዝግብ</button>
+                    <button onclick="saveBookToSupabase()" id="book-save-btn" class="flex-grow bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:bg-indigo-700 transition">መጽሐፉን መዝግብ</button>
                     <button onclick="resetBookForm()" class="px-4 py-3 bg-slate-200 text-slate-700 rounded-xl font-bold text-xs">ሰርዝ / አዲስ</button>
                 </div>
 
                 <div class="mt-6">
-                    <h5 class="font-bold text-xs text-slate-700 mb-2">የተመዘገቡ መጽሐፍት ዝርዝር</h5>
+                    <h5 class="font-bold text-xs text-slate-700 mb-2">የተመዘገቡ መጽሐፍት ዝርዝር (Database)</h5>
                     <div id="admin-books-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                 </div>
             </div>
 
-            <!-- Tab 2: Supabase Orders -->
+            <!-- Tab 2: Orders -->
             <div id="adm-tab-orders" class="space-y-4 hidden">
                 <h4 class="font-bold text-sm text-slate-800">ከ Supabase የመጡ ትዕዛዞች (Orders)</h4>
                 <div id="admin-orders-list" class="space-y-3 max-h-60 overflow-y-auto">
@@ -286,7 +289,7 @@
                 </div>
             </div>
 
-            <!-- Tab 3: Background Images -->
+            <!-- Tab 3: Backgrounds -->
             <div id="adm-tab-bg" class="space-y-4 hidden">
                 <h4 class="font-bold text-sm text-slate-800">የጀርባ ዙም ምስሎች ማስተካከያ</h4>
                 <div class="flex gap-2">
@@ -296,7 +299,7 @@
                 <div id="admin-bg-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
             </div>
 
-            <!-- Tab 4: Announcement Bar -->
+            <!-- Tab 4: Announcement -->
             <div id="adm-tab-announcement" class="space-y-4 hidden">
                 <h4 class="font-bold text-sm text-slate-800">የድረ-ገጽ ማስታወቂያ ማስተካከያ</h4>
                 <textarea id="announcement-input" rows="3" placeholder="ማስታወቂያውን እዚህ ይጻፉ..." class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none"></textarea>
@@ -311,15 +314,7 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtanBidWp0aHFwcnZwc3pnY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTA5ODgsImV4cCI6MjEwODU4Njk4OH0.1pciufqyTB71Q6qlYus3crxbs8pOqDYwWIyk72Kkico';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 1. መጽሐፍት በ LocalStorage ይቀመጣሉ (ምንም ዘገባ ወይም መዘግየት የለውም)
-        let defaultBooks = [
-            { id: '1', title: 'የስኬት ሚስጥራት', author: 'በቀደመጌን', price: 350, category: 'ራስን ማነፅ', cover_image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', rating: 4.9 },
-            { id: '2', title: 'የቴክኖሎጂ አብዮት', author: 'ብርሃኑ ቢያድጌ', price: 420, category: 'ቴክኖሎጂ', cover_image_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80', rating: 4.8 },
-            { id: '3', title: 'የኢትዮጵያ ታሪክ ገጾች', author: 'ተስፋዬ ገብሬ', price: 290, category: 'ታሪክ', cover_image_url: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=800&q=80', rating: 5.0 },
-            { id: '4', title: 'የፍቅር እና የህይወት ጉዞ', author: 'አልማዝ አበበ', price: 310, category: 'ልብወለድ', cover_image_url: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=800&q=80', rating: 4.7 }
-        ];
-
-        let booksList = JSON.parse(localStorage.getItem('yichalal_local_books')) || defaultBooks;
+        let booksList = [];
         let cart = [];
         let currentUser = JSON.parse(localStorage.getItem('yichalal_user')) || null;
         let backgroundImages = JSON.parse(localStorage.getItem('yichalal_hero_bgs')) || [
@@ -331,8 +326,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initSlideshow();
-            renderBooks(booksList);
-            renderAdminBooksList();
+            fetchBooksFromSupabase();
             updateAuthUI();
             loadAnnouncement();
             renderBgList();
@@ -384,7 +378,32 @@
             currentSlideIndex = index;
         }
 
-        // Render Books (Instant Load)
+        // Fetch Books from Supabase Database
+        async function fetchBooksFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient.from('books').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    // ነባሪ መጽሐፍትን ማስገባት (ዳታቤዙ ባዶ ከሆነ)
+                    const initialBooks = [
+                        { title: 'የስኬት ሚስጥራት', author: 'በቀደመጌን', price: 350, category: 'ራስን ማነፅ', cover_image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', rating: 4.9 },
+                        { title: 'የቴክኖሎጂ አብዮት', author: 'ብርሃኑ ቢያድጌ', price: 420, category: 'ቴክኖሎጂ', cover_image_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80', rating: 4.8 }
+                    ];
+                    await supabaseClient.from('books').insert(initialBooks);
+                    fetchBooksFromSupabase();
+                    return;
+                }
+
+                booksList = data;
+                renderBooks(booksList);
+                renderAdminBooksList();
+            } catch (e) {
+                console.error('Error fetching books:', e);
+            }
+        }
+
+        // Render Books
         function renderBooks(list) {
             const grid = document.getElementById('books-grid');
             if (!grid) return;
@@ -417,7 +436,7 @@
             `).join('');
         }
 
-        // 2. SUPABASE AUTHENTICATION (Database)
+        // Auth
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
@@ -446,7 +465,6 @@
             if (!username || !password) return alert('እባክዎ መረጃዎችን ይሙሉ');
 
             try {
-                // Check Admin Table in Supabase
                 const { data: adminData } = await supabaseClient.from('admins').select('*').eq('username', username).eq('password', password).maybeSingle();
                 if (adminData) {
                     currentUser = { username: adminData.username, role: 'admin' };
@@ -457,7 +475,6 @@
                     return;
                 }
 
-                // Check Users Table in Supabase
                 const { data: userData } = await supabaseClient.from('users').select('*').eq('username', username).eq('password', password).maybeSingle();
                 if (userData) {
                     currentUser = { username: userData.username, role: 'customer', name: userData.full_name };
@@ -489,7 +506,7 @@
                 localStorage.setItem('yichalal_user', JSON.stringify(currentUser));
                 closeAuthModal();
                 updateAuthUI();
-                alert('ምዝገባዎ በ Supabase ተሳክቷል!');
+                alert('ምዝገባዎ ተሳክቷል!');
             } catch (err) {
                 alert('ምዝገባ አልተሳካም (ስም ሊመሳሰል ይችላል): ' + err.message);
             }
@@ -521,7 +538,7 @@
             }
         }
 
-        // 3. ADMIN DASHBOARD & ORDERS
+        // Admin Dashboard & Books DB Management
         function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
 
@@ -541,8 +558,7 @@
             if (tab === 'orders') fetchSupabaseOrders();
         }
 
-        // Local Books Manager
-        function saveLocalBook() {
+        async function saveBookToSupabase() {
             const id = document.getElementById('edit-book-id').value;
             const title = document.getElementById('new-book-title').value;
             const author = document.getElementById('new-book-author').value;
@@ -552,22 +568,21 @@
 
             if (!title || !author || !price) return alert('እባክዎ መረጃዎችን ይሙሉ');
 
-            if (id) {
-                const index = booksList.findIndex(b => b.id === id);
-                if (index !== -1) {
-                    booksList[index] = { ...booksList[index], title, author, price, category, cover_image_url };
-                }
-                alert('መጽሐፉ ተስተካክሏል!');
-            } else {
-                const newBook = { id: 'b-' + Date.now(), title, author, price, category, cover_image_url, rating: 5.0 };
-                booksList.unshift(newBook);
-                alert('መጽሐፉ በሎካል ተመዝግቧል!');
-            }
+            const bookPayload = { title, author, price, category, cover_image_url, rating: 5.0 };
 
-            localStorage.setItem('yichalal_local_books', JSON.stringify(booksList));
-            resetBookForm();
-            renderBooks(booksList);
-            renderAdminBooksList();
+            try {
+                if (id) {
+                    await supabaseClient.from('books').update(bookPayload).eq('id', id);
+                    alert('መጽሐፉ ተስተካክሏል!');
+                } else {
+                    await supabaseClient.from('books').insert([bookPayload]);
+                    alert('መጽሐፉ በዳታቤዝ ተመዝግቧል!');
+                }
+                resetBookForm();
+                fetchBooksFromSupabase();
+            } catch (err) {
+                alert('ስህተት: ' + err.message);
+            }
         }
 
         function editBook(id, title, author, price, category, cover) {
@@ -587,17 +602,19 @@
             document.getElementById('new-book-author').value = '';
             document.getElementById('new-book-price').value = '';
             document.getElementById('new-book-cover').value = '';
-            document.getElementById('book-form-title').textContent = 'አዲስ መጽሐፍ በሎካል መዝግብ';
+            document.getElementById('book-form-title').textContent = 'አዲስ መጽሐፍ በዳታቤዝ መዝግብ';
             document.getElementById('book-save-btn').textContent = 'መጽሐፉን መዝግብ';
         }
 
-        function deleteLocalBook(id) {
-            if (!confirm('ይህን መጽሐፍ መሰረዝ ይፈልጋሉ?')) return;
-            booksList = booksList.filter(b => b.id !== id);
-            localStorage.setItem('yichalal_local_books', JSON.stringify(booksList));
-            renderBooks(booksList);
-            renderAdminBooksList();
-            alert('መጽሐፉ ተሰርዟል');
+        async function deleteSupabaseBook(id) {
+            if (!confirm('ይህን መጽሐፍ ከዳታቤዝ መሰረዝ ይፈልጋሉ?')) return;
+            try {
+                await supabaseClient.from('books').delete().eq('id', id);
+                fetchBooksFromSupabase();
+                alert('መጽሐፉ ተሰርዟል');
+            } catch (e) {
+                alert('መሰረዝ አልተቻለም');
+            }
         }
 
         function renderAdminBooksList() {
@@ -608,13 +625,12 @@
                     <span class="font-bold truncate max-w-[200px]">${b.title} (${b.price} ብር)</span>
                     <div class="flex gap-2">
                         <button onclick="editBook('${b.id}', '${b.title}', '${b.author}', ${b.price}, '${b.category}', '${b.cover_image_url || ''}')" class="text-indigo-600 font-bold px-2">አስተካክል</button>
-                        <button onclick="deleteLocalBook('${b.id}')" class="text-rose-500 font-bold px-2">ሰርዝ</button>
+                        <button onclick="deleteSupabaseBook('${b.id}')" class="text-rose-500 font-bold px-2">ሰርዝ</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Fetch Supabase Orders
         async function fetchSupabaseOrders() {
             const container = document.getElementById('admin-orders-list');
             try {
@@ -722,7 +738,6 @@
             totalEl.textContent = total.toFixed(2) + ' ብር';
         }
 
-        // Execute Payment & Save Order to Supabase
         async function executeChapaCheckout() {
             if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
             const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
@@ -730,7 +745,6 @@
             if (!email) return;
 
             try {
-                // Save Order to Supabase Database
                 await supabaseClient.from('orders').insert([{
                     customer_name: currentUser ? currentUser.name || currentUser.username : 'እንግዳ',
                     customer_email: email,
@@ -738,7 +752,6 @@
                     items: cart
                 }]);
 
-                // Redirect to Chapa Payment Gateway
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = 'https://api.chapa.co/v1/hosted/pay';
