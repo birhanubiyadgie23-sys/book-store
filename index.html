@@ -558,32 +558,42 @@
             if (tab === 'orders') fetchSupabaseOrders();
         }
 
-        async function saveBookToSupabase() {
-            const id = document.getElementById('edit-book-id').value;
-            const title = document.getElementById('new-book-title').value;
-            const author = document.getElementById('new-book-author').value;
-            const price = parseFloat(document.getElementById('new-book-price').value);
-            const category = document.getElementById('new-book-category').value;
-            const cover_image_url = document.getElementById('new-book-cover').value;
+      async function saveBookToSupabase() {
+    const id = document.getElementById('edit-book-id').value;
+    const title = document.getElementById('new-book-title').value;
+    const author = document.getElementById('new-book-author').value;
+    const price = parseFloat(document.getElementById('new-book-price').value);
+    const category = document.getElementById('new-book-category').value;
+    const cover_image_url = document.getElementById('new-book-cover').value;
 
-            if (!title || !author || !price) return alert('እባክዎ መረጃዎችን ይሙሉ');
+    if (!title || !author || !price) return alert('እባክዎ መረጃዎችን ይሙሉ');
 
-            const bookPayload = { title, author, price, category, cover_image_url, rating: 5.0 };
+    // category-ን ጨምሮ መረጃውን ወደ Supabase መላክ
+    const bookPayload = { 
+        title, 
+        author, 
+        price, 
+        category: category || 'ልብወለድ', 
+        cover_image_url, 
+        rating: 5.0 
+    };
 
-            try {
-                if (id) {
-                    await supabaseClient.from('books').update(bookPayload).eq('id', id);
-                    alert('መጽሐፉ ተስተካክሏል!');
-                } else {
-                    await supabaseClient.from('books').insert([bookPayload]);
-                    alert('መጽሐፉ በዳታቤዝ ተመዝግቧል!');
-                }
-                resetBookForm();
-                fetchBooksFromSupabase();
-            } catch (err) {
-                alert('ስህተት: ' + err.message);
-            }
+    try {
+        if (id) {
+            const { error } = await supabaseClient.from('books').update(bookPayload).eq('id', id);
+            if (error) throw error;
+            alert('መጽሐፉ ተስተካክሏል!');
+        } else {
+            const { error } = await supabaseClient.from('books').insert([bookPayload]);
+            if (error) throw error;
+            alert('መጽሐፉ በምድቡ (Category) ተመዝግቧል!');
         }
+        resetBookForm();
+        fetchBooksFromSupabase();
+    } catch (err) {
+        alert('ስህተት: ' + err.message);
+    }
+}
 
         function editBook(id, title, author, price, category, cover) {
             document.getElementById('edit-book-id').value = id;
