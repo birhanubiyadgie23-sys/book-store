@@ -113,55 +113,50 @@ serve(async (req) => {
             currentSlideIndex = index;
         }
 
-        // 2. Books Fetch & Render
         async function fetchBooks() {
-            try {
-                const { data, error } = await supabaseClient.from('books').select('*');
-                if (error || !data || data.length === 0) {
-                    booksList = [
-                        { id: '1', title: 'የስኬት ሚስጥራት', author: 'በቀደመጌን', price: 350, category: 'ራስን ማነፅ', cover_image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', rating: 4.9 },
-                        { id: '2', title: 'የቴክኖሎጂ አብዮት', author: 'ብርሃኑ ቢያድጌ', price: 420, category: 'ቴክኖሎጂ', cover_image_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80', rating: 4.8 }
-                    ];
-                } else {
-                    booksList = data;
-                }
-            } catch (e) {
-                booksList = [];
-            }
-            renderBooks(booksList);
-            renderAdminBooksList();
-        }
+    const grid = document.getElementById('books-grid');
+    
+    // 1. መጀመሪያ በ LocalStorage የተቀመጡ ካሉ በቅጽበት ማሳየት (ለፍጥነት)
+    const cachedBooks = localStorage.getItem('yichalal_cached_books');
+    if (cachedBooks) {
+        booksList = JSON.parse(cachedBooks);
+        renderBooks(booksList);
+        renderAdminBooksList();
+    } else {
+        // ካልተቀመጡ የሎዲንግ ጽሁፍ ማሳየት
+        grid.innerHTML = `
+            <div class="col-span-full py-12 text-center text-slate-400">
+                <i class="fa-solid fa-spinner fa-spin text-2xl text-indigo-600 mb-2"></i>
+                <p class="text-sm">መጽሐፍት በመጫን ላይ ናቸው...</p>
+            </div>
+        `;
+    }
 
-        function renderBooks(list) {
-            const grid = document.getElementById('books-grid');
-            if (list.length === 0) {
-                grid.innerHTML = '<p class="col-span-full py-12 text-center text-slate-400">ምንም መጽሐፍ አልተገኘም።</p>';
-                return;
+    try {
+        // 2. ከ Supabase ዳታቤዝ መረጃውን ማምጣት
+        const { data, error } = await supabaseClient.from('books').select('*');
+        
+        if (error || !data || data.length === 0) {
+            if (!cachedBooks) {
+                // ዳታ ከሌለ የዴሞ መጽሐፍትን መጠቀም
+                booksList = [
+                    { id: '1', title: 'የስኬት ሚስጥራት', author: 'በቀደመጌን', price: 350, category: 'ራስን ማነፅ', cover_image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', rating: 4.9 },
+                    { id: '2', title: 'የቴክኖሎጂ አብዮት', author: 'ብርሃኑ ቢያድጌ', price: 420, category: 'ቴክኖሎጂ', cover_image_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80', rating: 4.8 }
+                ];
             }
-
-            grid.innerHTML = list.map(book => `
-                <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
-                    <div>
-                        <div class="overflow-hidden rounded-xl mb-3 bg-slate-100 h-52 relative">
-                            <img src="${book.cover_image_url || 'https://via.placeholder.com/300'}" alt="${book.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <span class="absolute top-2 right-2 bg-white/90 backdrop-blur-md text-amber-600 font-bold text-[10px] px-2 py-0.5 rounded-full border border-amber-100 shadow-sm">
-                                ★ ${book.rating || 4.8}
-                            </span>
-                        </div>
-                        <span class="text-[10px] font-bold uppercase text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">${book.category || 'መጽሐፍ'}</span>
-                        <h3 class="font-bold font-serif text-slate-900 text-base mt-2 line-clamp-1">${book.title}</h3>
-                        <p class="text-xs text-slate-500 mb-3">ደራሲ፡ ${book.author}</p>
-                    </div>
-                    <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                        <span class="font-extrabold text-slate-900 text-sm">${book.price} ብር</span>
-                        <button onclick="addToCart('${book.id}')" class="bg-slate-900 hover:bg-indigo-600 text-white px-3 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-cart-plus text-amber-400"></i>
-                            <span>ወደ ቅርጫት</span>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+        } else {
+            booksList = data;
+            // የተገኘውን መረጃ በ LocalStorage ማስቀመጥ ለቀጣይ ፈጣን ክፍትነት
+            localStorage.setItem('yichalal_cached_books', JSON.stringify(booksList));
         }
+    } catch (e) {
+        console.error('Network error:', e);
+    }
+
+    // በስተመጨረሻ ማሳየት
+    renderBooks(booksList);
+    renderAdminBooksList();
+}
 
         // 3. Auth Management (Login / Signup)
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
