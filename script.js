@@ -50,7 +50,12 @@ serve(async (req) => {
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtanBidWp0aHFwcnZwc3pnY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTA5ODgsImV4cCI6MjEwODU4Njk4OH0.1pciufqyTB71Q6qlYus3crxbs8pOqDYwWIyk72Kkico';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let booksList = [];
+       // 1. መጀመሪያ ሲከፈት ባዶ እንዳይሆን እና ወዲያውኑ እንዲታይ ነባሪ መጽሐፍትን ማስቀመጥ
+let booksList = [
+    { id: '1', title: 'የስኬት ሚስጥራት', author: 'በቀደመጌን', price: 350, category: 'ራስን ማነፅ', cover_image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', rating: 4.9 },
+    { id: '2', title: 'የቴክኖሎጂ አብዮት', author: 'ብርሃኑ ቢያድጌ', price: 420, category: 'ቴክኖሎጂ', cover_image_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80', rating: 4.8 }
+];
+let cart = [];
         let cart = [];
         let currentUser = JSON.parse(localStorage.getItem('yichalal_user')) || null;
         let backgroundImages = JSON.parse(localStorage.getItem('yichalal_hero_bgs')) || [
