@@ -38,7 +38,7 @@
 
     <!-- 1. HEADER & ANNOUNCEMENT BAR -->
     <div id="announcement-bar" class="bg-indigo-600 text-white text-xs py-2 px-4 text-center font-medium shadow-sm transition-all duration-300">
-        🎉 እንኳን ወደ ይቻላል መጽሐፍት መደብር በደህና መጡ! የሚወዷቸውን መጽሐፍት በልዩ ቅናሽ ያግኙ።
+        🎉 እንኳን ወደ ይቻላል መጽሐፍት መደብር በደህና መጡ! የሚወዷቸውን መጽሐፍት በባንክ እና ቴሌብር ይግዙ።
     </div>
 
     <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-amber-100/80 shadow-sm transition-all duration-300">
@@ -96,7 +96,7 @@
                 </h1>
 
                 <p class="text-slate-700 text-base sm:text-lg max-w-xl font-medium leading-relaxed">
-                    ተወዳጅ የሀገር ውስጥ እና የውጭ መጽሐፍትን በዲጂታል እና የታተሙ አማራጮች ያግኙ። በ Chapa በቀላሉ ይክፈሉ፣ ወዲያውኑ የንባብ ጉዞዎን ይጀምሩ!
+                    ተወዳጅ መጽሐፍትን በቴሌብር እና በንግድ ባንክ በቀላሉ ይግዙ፤ ክፍያዎን ፈጽመው ደረሰኙን በቴሌግራም ይላኩ!
                 </p>
 
                 <div class="max-w-md relative">
@@ -159,12 +159,7 @@
             </div>
         </div>
 
-        <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div class="col-span-full py-12 text-center text-slate-400">
-                <i class="fa-solid fa-spinner fa-spin text-2xl text-indigo-600 mb-2"></i>
-                <p class="text-sm">መጽሐፍት በመጫን ላይ ናቸው...</p>
-            </div>
-        </div>
+        <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
 
     <!-- 4. FOOTER -->
@@ -200,14 +195,52 @@
                 <span id="cart-total-amount" class="text-xl font-extrabold text-indigo-600">0.00 ብር</span>
             </div>
 
-            <button onclick="executeChapaCheckout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-semibold text-sm transition shadow-lg flex items-center justify-center gap-2">
+            <button onclick="openCheckoutModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-semibold text-sm transition shadow-lg flex items-center justify-center gap-2">
                 <i class="fa-solid fa-lock"></i>
-                <span>በ Chapa ክፍያ ይፈጽሙ</span>
+                <span>ክፍያ ለመፈጸም ቀጥል</span>
             </button>
         </div>
     </div>
 
-    <!-- 6. AUTHENTICATION MODAL -->
+    <!-- 6. CHECKOUT MODAL (BANK SELECTION & QR CODE) -->
+    <div id="checkout-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-serif font-bold text-slate-900 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-wallet text-indigo-600"></i> የክፍያ አማራጭ ይምረጡ
+                </h3>
+                <button onclick="closeCheckoutModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <label class="block font-bold text-slate-700">የባንክ/የክፍያ አካውንት ይምረጡ፡</label>
+                <select id="selected-payment-method" onchange="updatePaymentDetails()" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none font-medium">
+                    <!-- Dynamically populated from settings -->
+                </select>
+
+                <div id="payment-instruction-box" class="p-3 bg-indigo-50 border border-indigo-100 rounded-xl space-y-2 text-slate-700">
+                    <!-- Dynamic Account details -->
+                </div>
+
+                <!-- QR Code Display for Desktop Users -->
+                <div id="qrcode-container" class="text-center pt-2 hidden">
+                    <p class="text-[11px] font-bold text-slate-600 mb-1">ስልክዎ ላይ በካሜራ በመቃኘት በቀላሉ ይክፈሉ (QR Code)</p>
+                    <div class="inline-block p-2 bg-white border rounded-xl shadow-sm">
+                        <img id="dynamic-qrcode" src="" alt="Payment QR Code" class="w-32 h-32 mx-auto object-contain">
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t">
+                    <button onclick="completeBankCheckout()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-telegram text-base"></i>
+                        <span>ክፍያ ፈጽሜ ደረሰኝ በ Telegram ላክ (@Ychalal1)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. AUTHENTICATION MODAL -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -237,7 +270,7 @@
         </div>
     </div>
 
-    <!-- 7. ADMIN DASHBOARD MODAL -->
+    <!-- 8. ADMIN DASHBOARD MODAL -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-slate-100">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
@@ -248,13 +281,13 @@
             </div>
 
             <div class="flex gap-2 border-b border-slate-100 pb-3 mb-4 overflow-x-auto">
-                <button onclick="switchAdminTab('books')" id="adm-tab-books-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-indigo-600 text-white">መጽሐፍት አስተዳደር</button>
-                <button onclick="switchAdminTab('orders')" id="adm-tab-orders-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ትዕዛዞች (Orders)</button>
-                <button onclick="switchAdminTab('bg')" id="adm-tab-bg-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">የጀርባ ስላይድ</button>
-                <button onclick="switchAdminTab('announcement')" id="adm-tab-ann-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ማስታወቂያ</button>
+                <button onclick="switchAdminTab('books')" id="adm-tab-books-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-indigo-600 text-white">መጽሐፍት</button>
+                <button onclick="switchAdminTab('banks')" id="adm-tab-banks-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">የባንክ አካውንቶች</button>
+                <button onclick="switchAdminTab('orders')" id="adm-tab-orders-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ትዕዛዞች</button>
+                <button onclick="switchAdminTab('bg')" id="adm-tab-bg-btn" class="px-3 py-1.5 rounded-xl font-semibold text-xs bg-slate-100 text-slate-700">ስላይድ</button>
             </div>
 
-            <!-- Tab 1: Books Management (Supabase DB) -->
+            <!-- Tab 1: Books Management -->
             <div id="adm-tab-books" class="space-y-4">
                 <h4 class="font-bold text-sm text-slate-800" id="book-form-title">አዲስ መጽሐፍ በዳታቤዝ መዝግብ</h4>
                 <input type="hidden" id="edit-book-id">
@@ -276,20 +309,37 @@
                 </div>
 
                 <div class="mt-6">
-                    <h5 class="font-bold text-xs text-slate-700 mb-2">የተመዘገቡ መጽሐፍት ዝርዝር (Database)</h5>
+                    <h5 class="font-bold text-xs text-slate-700 mb-2">የተመዘገቡ መጽሐፍት ዝርዝር</h5>
                     <div id="admin-books-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
                 </div>
             </div>
 
-            <!-- Tab 2: Orders -->
+            <!-- Tab 2: Bank Accounts Management -->
+            <div id="adm-tab-banks" class="space-y-4 hidden">
+                <h4 class="font-bold text-sm text-slate-800">የባንክ እና የክፍያ አካውንቶች ማስተካከያ</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <input type="text" id="bank-name" placeholder="የባንክ ስም (ለምሳሌ፡ Telebirr)" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                    <input type="text" id="bank-acc-no" placeholder="የአካውንት ቁጥር / ስልክ" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                    <input type="text" id="bank-holder" placeholder="የሂሳብ ባለቤቱ ስም" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                    <input type="text" id="bank-qr" placeholder="QR Code Image URL (አማራጭ)" class="p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                </div>
+                <button onclick="saveBankAccount()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs">አካውንቱን ጨምር / አዘምን</button>
+
+                <div class="mt-4">
+                    <h5 class="font-bold text-xs text-slate-700 mb-2">ነባር የክፍያ አካውንቶች</h5>
+                    <div id="admin-banks-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Orders -->
             <div id="adm-tab-orders" class="space-y-4 hidden">
-                <h4 class="font-bold text-sm text-slate-800">ከ Supabase የመጡ ትዕዛዞች (Orders)</h4>
+                <h4 class="font-bold text-sm text-slate-800">የተደረጉ ትዕዛዞች (Orders)</h4>
                 <div id="admin-orders-list" class="space-y-3 max-h-60 overflow-y-auto">
                     <p class="text-xs text-slate-400 text-center py-4">ትዕዛዞች በመጫን ላይ ናቸው...</p>
                 </div>
             </div>
 
-            <!-- Tab 3: Backgrounds -->
+            <!-- Tab 4: Backgrounds -->
             <div id="adm-tab-bg" class="space-y-4 hidden">
                 <h4 class="font-bold text-sm text-slate-800">የጀርባ ዙም ምስሎች ማስተካከያ</h4>
                 <div class="flex gap-2">
@@ -297,13 +347,6 @@
                     <button onclick="addBgImage()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">ጨምር</button>
                 </div>
                 <div id="admin-bg-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
-            </div>
-
-            <!-- Tab 4: Announcement -->
-            <div id="adm-tab-announcement" class="space-y-4 hidden">
-                <h4 class="font-bold text-sm text-slate-800">የድረ-ገጽ ማስታወቂያ ማስተካከያ</h4>
-                <textarea id="announcement-input" rows="3" placeholder="ማስታወቂያውን እዚህ ይጻፉ..." class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none"></textarea>
-                <button onclick="updateAnnouncement()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs">ማስታወቂያውን አዘምን</button>
             </div>
         </div>
     </div>
@@ -317,10 +360,17 @@
         let booksList = [];
         let cart = [];
         let currentUser = JSON.parse(localStorage.getItem('yichalal_user')) || null;
+        
+        // Default Bank Accounts (Telebirr & CBE as requested)
+        let defaultBanks = [
+            { id: '1', name: 'Telebirr', accNo: '0930836065', holder: 'ይቻላል መጽሐፍት', qr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=tel:0930836065' },
+            { id: '2', name: 'የኢትዮጵያ ንግድ ባንክ (CBE)', accNo: '1000324406461', holder: 'ብርሃኑ ቢያድጌ', qr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CBE-1000324406461' }
+        ];
+        let bankAccounts = JSON.parse(localStorage.getItem('yichalal_banks')) || defaultBanks;
+
         let backgroundImages = JSON.parse(localStorage.getItem('yichalal_hero_bgs')) || [
             'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1920&q=80',
-            'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1920&q=80',
-            'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1920&q=80'
+            'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1920&q=80'
         ];
         let currentSlideIndex = 0;
 
@@ -330,6 +380,7 @@
             updateAuthUI();
             loadAnnouncement();
             renderBgList();
+            renderAdminBanksList();
         });
 
         // Slideshow
@@ -378,14 +429,12 @@
             currentSlideIndex = index;
         }
 
-        // Fetch Books from Supabase Database
         async function fetchBooksFromSupabase() {
             try {
                 const { data, error } = await supabaseClient.from('books').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
 
                 if (!data || data.length === 0) {
-                    // ነባሪ መጽሐፍትን ማስገባት (ዳታቤዙ ባዶ ከሆነ)
                     const initialBooks = [
                         { title: 'የስኬት ሚስጥራት', author: 'በቀደመጌን', price: 350, category: 'ራስን ማነፅ', cover_image_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80', rating: 4.9 },
                         { title: 'የቴክኖሎጂ አብዮት', author: 'ብርሃኑ ቢያድጌ', price: 420, category: 'ቴክኖሎጂ', cover_image_url: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80', rating: 4.8 }
@@ -403,7 +452,6 @@
             }
         }
 
-        // Render Books
         function renderBooks(list) {
             const grid = document.getElementById('books-grid');
             if (!grid) return;
@@ -538,12 +586,78 @@
             }
         }
 
-        // Admin Dashboard & Books DB Management
+        // Checkout & Bank Selection Modal
+        function openCheckoutModal() {
+            if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
+            populateBankDropdown();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            toggleCartDrawer();
+        }
+        function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
+
+        function populateBankDropdown() {
+            const select = document.getElementById('selected-payment-method');
+            select.innerHTML = bankAccounts.map((b, idx) => `<option value="${idx}">${b.name} - ${b.accNo}</option>`).join('');
+            updatePaymentDetails();
+        }
+
+        function updatePaymentDetails() {
+            const idx = document.getElementById('selected-payment-method').value;
+            const bank = bankAccounts[idx];
+            const box = document.getElementById('payment-instruction-box');
+            const qrContainer = document.getElementById('qrcode-container');
+            const qrImg = document.getElementById('dynamic-qrcode');
+
+            if (!bank) return;
+
+            box.innerHTML = `
+                <p class="font-bold text-indigo-900">${bank.name}</p>
+                <p>አካውንት / ስልክ፡ <span class="font-extrabold text-slate-900">${bank.accNo}</span></p>
+                <p>የሂሳብ ባለቤት፡ <span class="font-semibold text-slate-900">${bank.holder}</span></p>
+            `;
+
+            // Check if Desktop or has QR
+            if (bank.qr) {
+                qrImg.src = bank.qr;
+                qrContainer.classList.remove('hidden');
+            } else {
+                qrContainer.classList.add('hidden');
+            }
+        }
+
+        async function completeBankCheckout() {
+            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const idx = document.getElementById('selected-payment-method').value;
+            const bank = bankAccounts[idx];
+            const customerName = currentUser ? currentUser.name || currentUser.username : 'እንግዳ ተጠቃሚ';
+
+            const bookNames = cart.map(i => `${i.title} (${i.quantity} በራ)`).join(', ');
+
+            // Save Order to Supabase
+            try {
+                await supabaseClient.from('orders').insert([{
+                    customer_name: customerName,
+                    customer_email: bank.name,
+                    total_amount: total,
+                    items: cart
+                }]);
+            } catch (e) {
+                console.error(e);
+            }
+
+            // Construct Telegram Text Message
+            const telegramMsg = `ሰላም! መጽሐፍ ልገዛ ፈልጌ ነበር።\n\n👤 ስም: ${customerName}\n📚 መጽሐፍት: ${bookNames}\n💰 ጠቅላላ ዋጋ: ${total} ብር\n🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\nየክፍያ ደረሰኝ ምስል ከዚህ ጋር አያይዤ ልኬአለሁ።`;
+            
+            const encodedMsg = encodeURIComponent(telegramMsg);
+            window.open(`https://t.me/Ychalal1?text=${encodedMsg}`, '_blank');
+        }
+
+        // Admin Dashboard
         function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
 
         function switchAdminTab(tab) {
-            ['books', 'orders', 'bg', 'announcement'].forEach(t => {
+            ['books', 'banks', 'orders', 'bg'].forEach(t => {
                 const el = document.getElementById(`adm-tab-${t}`);
                 const btn = document.getElementById(`adm-tab-${t}-btn`);
                 if (el) el.classList.add('hidden');
@@ -556,44 +670,35 @@
             if (activeBtn) activeBtn.className = 'px-3 py-1.5 rounded-xl font-semibold text-xs bg-indigo-600 text-white';
 
             if (tab === 'orders') fetchSupabaseOrders();
+            if (tab === 'banks') renderAdminBanksList();
         }
 
-      async function saveBookToSupabase() {
-    const id = document.getElementById('edit-book-id').value;
-    const title = document.getElementById('new-book-title').value;
-    const author = document.getElementById('new-book-author').value;
-    const price = parseFloat(document.getElementById('new-book-price').value);
-    const category = document.getElementById('new-book-category').value;
-    const cover_image_url = document.getElementById('new-book-cover').value;
+        async function saveBookToSupabase() {
+            const id = document.getElementById('edit-book-id').value;
+            const title = document.getElementById('new-book-title').value;
+            const author = document.getElementById('new-book-author').value;
+            const price = parseFloat(document.getElementById('new-book-price').value);
+            const category = document.getElementById('new-book-category').value;
+            const cover_image_url = document.getElementById('new-book-cover').value;
 
-    if (!title || !author || !price) return alert('እባክዎ መረጃዎችን ይሙሉ');
+            if (!title || !author || !price) return alert('እባክዎ መረጃዎችን ይሙሉ');
 
-    // category-ን ጨምሮ መረጃውን ወደ Supabase መላክ
-    const bookPayload = { 
-        title, 
-        author, 
-        price, 
-        category: category || 'ልብወለድ', 
-        cover_image_url, 
-        rating: 5.0 
-    };
+            const bookPayload = { title, author, price, category, cover_image_url, rating: 5.0 };
 
-    try {
-        if (id) {
-            const { error } = await supabaseClient.from('books').update(bookPayload).eq('id', id);
-            if (error) throw error;
-            alert('መጽሐፉ ተስተካክሏል!');
-        } else {
-            const { error } = await supabaseClient.from('books').insert([bookPayload]);
-            if (error) throw error;
-            alert('መጽሐፉ በምድቡ (Category) ተመዝግቧል!');
+            try {
+                if (id) {
+                    await supabaseClient.from('books').update(bookPayload).eq('id', id);
+                    alert('መጽሐፉ ተስተካክሏል!');
+                } else {
+                    await supabaseClient.from('books').insert([bookPayload]);
+                    alert('መጽሐፉ በዳታቤዝ ተመዝግቧል!');
+                }
+                resetBookForm();
+                fetchBooksFromSupabase();
+            } catch (err) {
+                alert('ስህተት: ' + err.message);
+            }
         }
-        resetBookForm();
-        fetchBooksFromSupabase();
-    } catch (err) {
-        alert('ስህተት: ' + err.message);
-    }
-}
 
         function editBook(id, title, author, price, category, cover) {
             document.getElementById('edit-book-id').value = id;
@@ -641,6 +746,39 @@
             `).join('');
         }
 
+        // Bank Accounts Management
+        function saveBankAccount() {
+            const name = document.getElementById('bank-name').value.trim();
+            const accNo = document.getElementById('bank-acc-no').value.trim();
+            const holder = document.getElementById('bank-holder').value.trim();
+            let qr = document.getElementById('bank-qr').value.trim();
+
+            if (!name || !accNo || !holder) return alert('እባክዎ የባንክ መረጃዎችን ይሙሉ');
+            if (!qr) {
+                qr = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(name + '-' + accNo)}`;
+            }
+
+            bankAccounts.push({ id: 'b-' + Date.now(), name, accNo, holder, qr });
+            localStorage.setItem('yichalal_banks', JSON.stringify(bankAccounts));
+            document.getElementById('bank-name').value = '';
+            document.getElementById('bank-acc-no').value = '';
+            document.getElementById('bank-holder').value = '';
+            document.getElementById('bank-qr').value = '';
+            renderAdminBanksList();
+            alert('የባንክ አካውንት ተጨምሯል!');
+        }
+
+        function renderAdminBanksList() {
+            const list = document.getElementById('admin-banks-list');
+            if (!list) return;
+            list.innerHTML = bankAccounts.map((b, idx) => `
+                <div class="flex items-center justify-between p-2 bg-slate-50 rounded-xl border text-xs">
+                    <span class="font-bold">${b.name}: ${b.accNo} (${b.holder})</span>
+                    <button onclick="bankAccounts.splice(${idx},1); localStorage.setItem('yichalal_banks', JSON.stringify(bankAccounts)); renderAdminBanksList();" class="text-rose-500 font-bold">ሰርዝ</button>
+                </div>
+            `).join('');
+        }
+
         async function fetchSupabaseOrders() {
             const container = document.getElementById('admin-orders-list');
             try {
@@ -653,7 +791,7 @@
                 container.innerHTML = data.map(ord => `
                     <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
                         <div class="flex justify-between font-bold text-slate-800">
-                            <span>👤 ${ord.customer_name} (${ord.customer_email})</span>
+                            <span>👤 ${ord.customer_name} (ባንክ፡ ${ord.customer_email})</span>
                             <span class="text-indigo-600">${ord.total_amount} ብር</span>
                         </div>
                         <p class="text-slate-500">ቀን፡ ${new Date(ord.created_at).toLocaleString('am-ET')}</p>
@@ -686,22 +824,12 @@
             `).join('');
         }
 
-        function updateAnnouncement() {
-            const text = document.getElementById('announcement-input').value.trim();
-            localStorage.setItem('yichalal_announcement', text);
-            document.getElementById('announcement-bar').textContent = text;
-            alert('ማስታወቂያው ተዘምኗል!');
-        }
-
         function loadAnnouncement() {
             const saved = localStorage.getItem('yichalal_announcement');
-            if (saved) {
-                document.getElementById('announcement-bar').textContent = saved;
-                document.getElementById('announcement-input').value = saved;
-            }
+            if (saved) document.getElementById('announcement-bar').textContent = saved;
         }
 
-        // Cart & Chapa Checkout
+        // Cart
         function toggleCartDrawer() {
             document.getElementById('cart-drawer').classList.toggle('translate-x-full');
             document.getElementById('cart-drawer-overlay').classList.toggle('hidden');
@@ -746,47 +874,6 @@
                 `;
             }).join('');
             totalEl.textContent = total.toFixed(2) + ' ብር';
-        }
-
-        async function executeChapaCheckout() {
-            if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
-            const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
-            const email = prompt("ኢሜይልዎን ያስገቡ:", "user@gmail.com");
-            if (!email) return;
-
-            try {
-                await supabaseClient.from('orders').insert([{
-                    customer_name: currentUser ? currentUser.name || currentUser.username : 'እንግዳ',
-                    customer_email: email,
-                    total_amount: total,
-                    items: cart
-                }]);
-
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'https://api.chapa.co/v1/hosted/pay';
-                const fields = {
-                    public_key: 'CHAPA_TEST_PUB_lySnQ7s0rqESvfkJyNtF-iHtrlK0A0RrkWaQKN7I',
-                    amount: total,
-                    currency: 'ETB',
-                    email: email,
-                    first_name: currentUser ? currentUser.name || currentUser.username : 'እንግዳ',
-                    last_name: 'አንባቢ',
-                    tx_ref: 'tx-' + Math.random().toString(36).substring(2, 10),
-                    return_url: window.location.href
-                };
-                for (const k in fields) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = k;
-                    input.value = fields[k];
-                    form.appendChild(input);
-                }
-                document.body.appendChild(form);
-                form.submit();
-            } catch (e) {
-                alert('የክፍያ ስህተት: ' + e.message);
-            }
         }
 
         function handleSearch(term) {
