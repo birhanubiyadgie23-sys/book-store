@@ -164,7 +164,7 @@
         <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
 
-    <!-- 4. FOOTER (Dynamic Social Links) -->
+    <!-- 4. FOOTER -->
     <footer id="about" class="bg-white border-t border-slate-200 py-8 text-center text-slate-500 text-xs">
         <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-2">
@@ -172,9 +172,7 @@
                 <span class="font-bold text-slate-800">ይቻላል መጽሐፍት መደብር</span>
             </div>
             <p>© 2026 ይቻላል መጽሐፍት መደብር። መብቱ በህግ የተጠበቀ ነው።</p>
-            <div id="footer-social-icons" class="flex space-x-4 text-slate-600 text-base">
-                <!-- Dynamically injected social links -->
-            </div>
+            <div id="footer-social-icons" class="flex space-x-4 text-slate-600 text-base"></div>
         </div>
     </footer>
 
@@ -187,9 +185,7 @@
                 </h3>
                 <button onclick="closeAboutModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
-            <div id="about-content-text" class="text-slate-700 text-sm leading-relaxed space-y-3">
-                <!-- Dynamic About content -->
-            </div>
+            <div id="about-content-text" class="text-slate-700 text-sm leading-relaxed space-y-3"></div>
         </div>
     </div>
 
@@ -222,19 +218,31 @@
         </div>
     </div>
 
-    <!-- 7. CHECKOUT MODAL -->
+    <!-- 7. CHECKOUT MODAL (NAME, PHONE & BANK) -->
     <div id="checkout-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 class="font-serif font-bold text-slate-900 text-base flex items-center gap-2">
-                    <i class="fa-solid fa-wallet text-indigo-600"></i> የክፍያ አማራጭ ይምረጡ
+                    <i class="fa-solid fa-wallet text-indigo-600"></i> የመጨረሻ ማረጋገጫ እና ክፍያ
                 </h3>
                 <button onclick="closeCheckoutModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
 
             <div class="space-y-3 text-xs">
-                <label class="block font-bold text-slate-700">የባንክ/የክፍያ አካውንት ይምረጡ፡</label>
-                <select id="selected-payment-method" onchange="updatePaymentDetails()" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none font-medium"></select>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">ሙሉ ስምዎ፡</label>
+                    <input type="text" id="order-customer-name" placeholder="እባክዎ ስምዎን ያስገቡ" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">ስልክ ቁጥርዎ (ለማስተባበር)፡</label>
+                    <input type="tel" id="order-customer-phone" placeholder="09... ወይም 07..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">የባንክ/የክፍያ አካውንት ይምረጡ፡</label>
+                    <select id="selected-payment-method" onchange="updatePaymentDetails()" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none font-medium"></select>
+                </div>
 
                 <div id="payment-instruction-box" class="p-3 bg-indigo-50 border border-indigo-100 rounded-xl space-y-2 text-slate-700"></div>
 
@@ -248,7 +256,7 @@
                 <div class="pt-2 border-t">
                     <button onclick="completeBankCheckout()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md flex items-center justify-center gap-2">
                         <i class="fa-brands fa-telegram text-base"></i>
-                        <span>ክፍያ ፈጽሜ ደረሰኝ በ Telegram ላክ (@Ychalal2)</span>
+                        <span>ትዕዛዝ አስተላልፍ እና ደረሰኝ ላክ (@Ychalal2)</span>
                     </button>
                 </div>
             </div>
@@ -285,7 +293,7 @@
         </div>
     </div>
 
-    <!-- 9. ADMIN DASHBOARD MODAL (WITH SOCIAL, LOGO, ABOUT US SETTINGS) -->
+    <!-- 9. ADMIN DASHBOARD MODAL -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-slate-100">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
@@ -342,14 +350,15 @@
                 <div id="admin-banks-list" class="space-y-2 max-h-48 overflow-y-auto pr-1 mt-4"></div>
             </div>
 
-            <!-- Tab 3: Social Links, Logo & About Us Settings -->
+            <!-- Tab 3: Social Links, Logo & About Us -->
             <div id="adm-tab-social" class="space-y-4 hidden">
                 <h4 class="font-bold text-sm text-slate-800">የሶሻል ሚዲያ ሊንኮች፣ ሎጎ እና «ስለ እኛ» ማስተካከያ</h4>
                 <div class="space-y-3 text-xs">
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">የሎጎ ምስል URL (Logo Image URL):</label>
-                        <input type="text" id="setting-logo-url" placeholder="https://... (የሎጎ ሊንክ ያስገቡ)" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                        <label class="block font-bold text-slate-700 mb-1">ሎጎ ምስል ከኮምፒውተር/ስልክ ይምረጡ (Upload Logo):</label>
+                        <input type="file" id="setting-logo-file" accept="image/*" class="w-full p-2 border rounded-xl bg-slate-50 focus:outline-none text-xs">
                     </div>
+                    
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block font-bold text-slate-700 mb-1"><i class="fa-brands fa-facebook text-blue-600"></i> የፌስቡክ አድራሻ (Facebook URL):</label>
@@ -367,12 +376,18 @@
                             <label class="block font-bold text-slate-700 mb-1"><i class="fa-brands fa-tiktok text-black"></i> የቲክቶክ አድራሻ (TikTok URL):</label>
                             <input type="text" id="setting-tk" placeholder="https://tiktok.com/@..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
                         </div>
+                        <div class="col-span-full">
+                            <label class="block font-bold text-slate-700 mb-1"><i class="fa-solid fa-link text-indigo-600"></i> ሌላ ተጨማሪ የሶሻል ሚዲያ / ዌብሳይት ሊንክ:</label>
+                            <input type="text" id="setting-extra-link" placeholder="https://..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
+                        </div>
                     </div>
+
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">የ «ስለ እኛ» (About Us) ዝርዝር መግለጫ:</label>
                         <textarea id="setting-about-text" rows="4" placeholder="ስለ ድርጅቱ ወይም መደብሩ የሚገልጽ ጽሁፍ እዚህ ይጻፉ..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none"></textarea>
                     </div>
-                    <button onclick="saveSiteSettings()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs">ለውጦቹን በሙሉ አዘምን</button>
+
+                    <button onclick="saveSiteSettings()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs shadow-md hover:bg-indigo-700 transition">ለውጦቹን በሙሉ አዘምን</button>
                 </div>
             </div>
 
@@ -412,13 +427,13 @@
         ];
         let bankAccounts = JSON.parse(localStorage.getItem('yichalal_banks')) || defaultBanks;
 
-        // Site Settings (Logo, Social URLs, About Us)
         let siteSettings = JSON.parse(localStorage.getItem('yichalal_site_settings')) || {
             logoUrl: '',
             facebook: 'https://facebook.com',
             telegram: 'https://t.me/Ychalal2',
             youtube: 'https://youtube.com',
             tiktok: 'https://tiktok.com',
+            extraLink: '',
             aboutText: 'ይቻላል መጽሐፍት መደብር ተወዳጅ የሀገር ውስጥ እና የውጭ መጽሐፍትን በዲጂታል እና የታተሙ አማራጮች እያቀረበ የሚገኝ ታማኝ ተቋም ነው። የእውቀት ብርሃንን ለሁሉም እናደርሳለን!'
         };
 
@@ -486,7 +501,6 @@
 
         // Apply Logo, Social Links & About Us
         function applySiteSettings() {
-            // Logo
             const logoContainer = document.getElementById('brand-logo-container');
             if (siteSettings.logoUrl) {
                 logoContainer.innerHTML = `<img src="${siteSettings.logoUrl}" alt="Logo" class="w-full h-full object-cover">`;
@@ -494,41 +508,51 @@
                 logoContainer.innerHTML = `<span id="brand-logo-text">ይ</span>`;
             }
 
-            // Footer Social Icons
             const socialBox = document.getElementById('footer-social-icons');
             let socialHtml = '';
             if (siteSettings.facebook) socialHtml += `<a href="${siteSettings.facebook}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-facebook"></i></a>`;
             if (siteSettings.telegram) socialHtml += `<a href="${siteSettings.telegram}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-telegram"></i></a>`;
             if (siteSettings.youtube) socialHtml += `<a href="${siteSettings.youtube}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-youtube"></i></a>`;
             if (siteSettings.tiktok) socialHtml += `<a href="${siteSettings.tiktok}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-tiktok"></i></a>`;
+            if (siteSettings.extraLink) socialHtml += `<a href="${siteSettings.extraLink}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-solid fa-globe"></i></a>`;
             socialBox.innerHTML = socialHtml;
 
-            // About Us text in Modal
             document.getElementById('about-content-text').innerHTML = `<p>${siteSettings.aboutText}</p>`;
 
-            // Populate Admin Form Fields
-            document.getElementById('setting-logo-url').value = siteSettings.logoUrl || '';
             document.getElementById('setting-fb').value = siteSettings.facebook || '';
             document.getElementById('setting-tg').value = siteSettings.telegram || '';
             document.getElementById('setting-yt').value = siteSettings.youtube || '';
             document.getElementById('setting-tk').value = siteSettings.tiktok || '';
+            document.getElementById('setting-extra-link').value = siteSettings.extraLink || '';
             document.getElementById('setting-about-text').value = siteSettings.aboutText || '';
         }
 
         function saveSiteSettings() {
-            siteSettings.logoUrl = document.getElementById('setting-logo-url').value.trim();
+            const fileInput = document.getElementById('setting-logo-file');
+            
             siteSettings.facebook = document.getElementById('setting-fb').value.trim();
             siteSettings.telegram = document.getElementById('setting-tg').value.trim();
             siteSettings.youtube = document.getElementById('setting-yt').value.trim();
             siteSettings.tiktok = document.getElementById('setting-tk').value.trim();
+            siteSettings.extraLink = document.getElementById('setting-extra-link').value.trim();
             siteSettings.aboutText = document.getElementById('setting-about-text').value.trim();
 
-            localStorage.setItem('yichalal_site_settings', JSON.stringify(siteSettings));
-            applySiteSettings();
-            alert('የሶሻል ሚዲያ ሊንኮች፣ ሎጎ እና «ስለ እኛ» መግለጫው በተሳካ ሁኔታ ተዘምነዋል!');
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    siteSettings.logoUrl = e.target.result;
+                    localStorage.setItem('yichalal_site_settings', JSON.stringify(siteSettings));
+                    applySiteSettings();
+                    alert('ሎጎ እና ሴቲንግ በተሳካ ሁኔታ ተዘምነዋል!');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                localStorage.setItem('yichalal_site_settings', JSON.stringify(siteSettings));
+                applySiteSettings();
+                alert('ሴቲንግ በተሳካ ሁኔታ ተዘምኗል!');
+            }
         }
 
-        // About Modal Control
         function openAboutModal() { document.getElementById('about-modal').classList.remove('hidden'); }
         function closeAboutModal() { document.getElementById('about-modal').classList.add('hidden'); }
 
@@ -692,6 +716,11 @@
         // Checkout & Bank Selection
         function openCheckoutModal() {
             if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
+            if (currentUser && currentUser.name) {
+                document.getElementById('order-customer-name').value = currentUser.name;
+            } else if (currentUser && currentUser.username) {
+                document.getElementById('order-customer-name').value = currentUser.username;
+            }
             populateBankDropdown();
             document.getElementById('checkout-modal').classList.remove('hidden');
             toggleCartDrawer();
@@ -728,16 +757,21 @@
         }
 
         async function completeBankCheckout() {
+            const customerName = document.getElementById('order-customer-name').value.trim();
+            const customerPhone = document.getElementById('order-customer-phone').value.trim();
+
+            if (!customerName || !customerPhone) {
+                return alert('እባክዎ ሙሉ ስምዎን እና ስልክ ቁጥርዎን ያስገቡ!');
+            }
+
             const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
             const idx = document.getElementById('selected-payment-method').value;
             const bank = bankAccounts[idx];
-            const customerName = currentUser ? currentUser.name || currentUser.username : 'እንግዳ ተጠቃሚ';
-
             const bookNames = cart.map(i => `${i.title} (${i.quantity} በራ)`).join(', ');
 
             try {
                 await supabaseClient.from('orders').insert([{
-                    customer_name: customerName,
+                    customer_name: `${customerName} (${customerPhone})`,
                     customer_email: bank.name,
                     total_amount: total,
                     items: cart
@@ -746,12 +780,12 @@
                 console.error(e);
             }
 
-            const telegramMsg = `ሰላም! መጽሐፍ ልገዛ ፈልጌ ነበር።\n\n👤 ስም: ${customerName}\n📚 መጽሐፍት: ${bookNames}\n💰 ጠቅላላ ዋጋ: ${total} ብር\n🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\nየክፍያ ደረሰኝ ምስል ከዚህ ጋር አያይዤ ልኬአለሁ።`;
+            const telegramMsg = `ሰላም! አዲስ መጽሐፍ ግዢ ተፈጽሟል።\n\n👤 ስም: ${customerName}\n📱 ስልክ ቁጥር: ${customerPhone}\n📚 መጽሐፍት: ${bookNames}\n💰 ጠቅላላ ዋጋ: ${total} ብር\n🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\nየክፍያ ደረሰኝ ምስል ከዚህ ጋር አያይዤ ልኬአለሁ።`;
             
             const encodedMsg = encodeURIComponent(telegramMsg);
-            
-            // Telegram Username (@Ychalal2)
             let tgUsername = siteSettings.telegram ? siteSettings.telegram.replace('https://t.me/', '').replace('@', '') : 'Ychalal2';
+            
+            closeCheckoutModal();
             window.open(`https://t.me/${tgUsername}?text=${encodedMsg}`, '_blank');
         }
 
@@ -894,10 +928,10 @@
                 container.innerHTML = data.map(ord => `
                     <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
                         <div class="flex justify-between font-bold text-slate-800">
-                            <span>👤 ${ord.customer_name} (ባንክ፡ ${ord.customer_email})</span>
+                            <span>👤 ደንበኛ: ${ord.customer_name}</span>
                             <span class="text-indigo-600">${ord.total_amount} ብር</span>
                         </div>
-                        <p class="text-slate-500">ቀን፡ ${new Date(ord.created_at).toLocaleString('am-ET')}</p>
+                        <p class="text-slate-500">ባንክ: ${ord.customer_email} | ቀን: ${new Date(ord.created_at).toLocaleString('am-ET')}</p>
                     </div>
                 `).join('');
             } catch (e) {
