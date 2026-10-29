@@ -858,7 +858,7 @@ async function loadSiteSettingsFromSupabase() {
             }
         }
 
-        async function completeBankCheckout() {
+  async function completeBankCheckout() {
             const customerName = document.getElementById('order-customer-name').value.trim();
             const customerPhone = document.getElementById('order-customer-phone').value.trim();
 
@@ -869,7 +869,9 @@ async function loadSiteSettingsFromSupabase() {
             const total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
             const idx = document.getElementById('selected-payment-method').value;
             const bank = bankAccounts[idx];
-            const bookNames = cart.map(i => `${i.title} (${i.quantity} በራ)`).join(', ');
+            
+            // 👈 (በራ) የሚለው ወደ (ቅጂ) ተስተካክሏል
+            const bookNames = cart.map(i => `${i.title} (${i.quantity} ቅጂ)`).join(', ');
 
             try {
                 await supabaseClient.from('orders').insert([{
@@ -882,7 +884,17 @@ async function loadSiteSettingsFromSupabase() {
                 console.error(e);
             }
 
-            const telegramMsg = `ሰላም! አዲስ መጽሐፍ ግዢ ተፈጽሟል።\n\n👤 ስም: ${customerName}\n📱 ስልክ ቁጥር: ${customerPhone}\n📚 መጽሐፍት: ${bookNames}\n💰 ጠቅላላ ዋጋ: ${total} ብር\n🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\nየክፍያ ደረሰኝ ምስል ከዚህ ጋር አያይዤ ልኬአለሁ።`;
+            // 👈 የቴሌግራም መልዕክት ማሳሰቢያ እና የምስጋና መልዕክት ተስተካክሎ ታክሏል
+            const telegramMsg = 
+                `ሰላም! አዲስ መጽሐፍ ግዢ ተፈጽሟል።\n\n` +
+                `👤 ስም: ${customerName}\n` +
+                `📱 ስልክ ቁጥር: ${customerPhone}\n` +
+                `📚 መጽሐፍት: ${bookNames}\n` +
+                `💰 ጠቅላላ ዋጋ: ${total} ብር\n` +
+                `🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\n` +
+                `━━━━━━━━━━━━━━━\n` +
+                `⚠️ ማሳሰቢያ: እባክዎ ሂሳብ የከፈሉበትን የባንክ ደረሰኝ (ስክሪንሹት) ወይም የክፍያ ማረጋገጫ ቴክስት ከዚህ ጋር አያይዘው ይላኩ።\n\n` +
+                `🙏 አክብረውንና አምነውን ቋሚ ደንበኛችን ስለሆኑ እናመሰግናለን!`;
             
             const encodedMsg = encodeURIComponent(telegramMsg);
             let tgUsername = siteSettings.telegram ? siteSettings.telegram.replace('https://t.me/', '').replace('@', '') : 'Ychalal2';
