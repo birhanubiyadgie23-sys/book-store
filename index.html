@@ -1010,17 +1010,34 @@ async function loadSiteSettingsFromSupabase() {
             if (tab === 'banks') renderAdminBanksList();
         }
 
-        async function saveBookToSupabase() {
+     async function saveBookToSupabase() {
             const id = document.getElementById('edit-book-id').value;
             const title = document.getElementById('new-book-title').value;
             const author = document.getElementById('new-book-author').value;
             const price = parseFloat(document.getElementById('new-book-price').value);
             const category = document.getElementById('new-book-category').value;
             const cover_image_url = document.getElementById('new-book-cover').value;
+            
+            // 1. ማብራሪያውን እና የደራሲውን ሌሎች ስራዎች ከኢንፑት መቀበል
+            const description = document.getElementById('new-book-description').value;
+            const otherTitle = document.getElementById('author-other-book-title').value;
+            const otherCover = document.getElementById('author-other-book-cover').value;
 
+            // 2. የቼኪንግ ፓርት
             if (!title || !author || !price) return alert('እባክዎ መረጃዎችን ይሙሉ');
 
-            const bookPayload = { title, author, price, category, cover_image_url, rating: 5.0 };
+            // 3. ወደ ዳታቤዝ የሚላከው የተሟላ Payload (የጠየቋት ክፍል እዚህ ተካቷል)
+            const bookPayload = { 
+                title, 
+                author, 
+                price, 
+                category, 
+                cover_image_url, 
+                description,
+                author_other_book_title: otherTitle,
+                author_other_book_cover: otherCover,
+                rating: 5.0 
+            };
 
             try {
                 if (id) {
