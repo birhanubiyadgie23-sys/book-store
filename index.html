@@ -511,37 +511,57 @@
             currentSlideIndex = index;
         }
 
-        // Apply Logo, Social Links & About Us
+     // Apply Logo, Social Links & About Us
         function applySiteSettings() {
+            // 1. የናቪጌሽን (ከላይ ያለው) ሎጎ
             const logoContainer = document.getElementById('brand-logo-container');
-            if (siteSettings.logoUrl) {
-                // አድሚኑ የምስል ሊንክ ወይም ፎቶ ካስገባ
-                logoContainer.innerHTML = `<img src="${siteSettings.logoUrl}" alt="Logo" class="w-full h-full object-contain">`;
-            } else {
-                // ነባሪው ወርቃማ እና ዳራ የሌለው «ይ» ፊደል
-                logoContainer.innerHTML = `<span class="text-3xl font-bold gold-ethiopian-logo">ይ</span>`;
+            if (logoContainer) {
+                if (siteSettings.logoUrl) {
+                    // አድሚኑ የምስል ሊንክ ወይም ፎቶ ካስገባ
+                    logoContainer.innerHTML = `<img src="${siteSettings.logoUrl}" alt="Logo" class="w-full h-full object-contain">`;
+                } else {
+                    // ነባሪው ወርቃማ እና ዳራ የሌለው «ይ» ፊደል
+                    logoContainer.innerHTML = `<span class="text-3xl font-bold gold-ethiopian-logo">ይ</span>`;
+                }
             }
 
+            // 2. 👈 የዌብሳይቱ ግርጌ (Footer ላይ) ያለው ሎጎ እንዲቀየር ይህንን ይጨምሩ
+            const footerLogoContainer = document.getElementById('footer-logo-container');
+            if (footerLogoContainer) {
+                if (siteSettings.logoUrl) {
+                    footerLogoContainer.innerHTML = `<img src="${siteSettings.logoUrl}" alt="Logo" class="w-full h-full object-contain">`;
+                } else {
+                    footerLogoContainer.innerHTML = `<span class="text-2xl font-bold gold-ethiopian-logo">ይ</span>`;
+                }
+            }
+
+            // 3. የሶሻል ሚዲያ ሊንኮች
             const socialBox = document.getElementById('footer-social-icons');
-            let socialHtml = '';
-            if (siteSettings.facebook) socialHtml += `<a href="${siteSettings.facebook}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-facebook"></i></a>`;
-            if (siteSettings.telegram) socialHtml += `<a href="${siteSettings.telegram}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-telegram"></i></a>`;
-            if (siteSettings.youtube) socialHtml += `<a href="${siteSettings.youtube}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-youtube"></i></a>`;
-            if (siteSettings.tiktok) socialHtml += `<a href="${siteSettings.tiktok}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-tiktok"></i></a>`;
-            if (siteSettings.extraLink) socialHtml += `<a href="${siteSettings.extraLink}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-solid fa-globe"></i></a>`;
-            socialBox.innerHTML = socialHtml;
+            if (socialBox) {
+                let socialHtml = '';
+                if (siteSettings.facebook) socialHtml += `<a href="${siteSettings.facebook}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-facebook"></i></a>`;
+                if (siteSettings.telegram) socialHtml += `<a href="${siteSettings.telegram}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-telegram"></i></a>`;
+                if (siteSettings.youtube) socialHtml += `<a href="${siteSettings.youtube}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-youtube"></i></a>`;
+                if (siteSettings.tiktok) socialHtml += `<a href="${siteSettings.tiktok}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-brands fa-tiktok"></i></a>`;
+                if (siteSettings.extraLink) socialHtml += `<a href="${siteSettings.extraLink}" target="_blank" class="hover:text-indigo-600 transition"><i class="fa-solid fa-globe"></i></a>`;
+                socialBox.innerHTML = socialHtml;
+            }
 
-            document.getElementById('about-content-text').innerHTML = `<p>${siteSettings.aboutText}</p>`;
+            // 4. ስለ እኛ ጽሁፍ
+            const aboutTextEl = document.getElementById('about-content-text');
+            if (aboutTextEl) {
+                aboutTextEl.innerHTML = `<p>${siteSettings.aboutText || ''}</p>`;
+            }
 
-            document.getElementById('setting-fb').value = siteSettings.facebook || '';
-            document.getElementById('setting-tg').value = siteSettings.telegram || '';
-            document.getElementById('setting-yt').value = siteSettings.youtube || '';
-            document.getElementById('setting-tk').value = siteSettings.tiktok || '';
-            document.getElementById('setting-extra-link').value = siteSettings.extraLink || '';
-            document.getElementById('setting-about-text').value = siteSettings.aboutText || '';
-            document.getElementById('setting-logo-url').value = siteSettings.logoUrl && siteSettings.logoUrl.startsWith('http') ? siteSettings.logoUrl : '';
+            // 5. የአድሚን ፓናል ኢንፑቶችን መሙላት
+            if (document.getElementById('setting-fb')) document.getElementById('setting-fb').value = siteSettings.facebook || '';
+            if (document.getElementById('setting-tg')) document.getElementById('setting-tg').value = siteSettings.telegram || '';
+            if (document.getElementById('setting-yt')) document.getElementById('setting-yt').value = siteSettings.youtube || '';
+            if (document.getElementById('setting-tk')) document.getElementById('setting-tk').value = siteSettings.tiktok || '';
+            if (document.getElementById('setting-extra-link')) document.getElementById('setting-extra-link').value = siteSettings.extraLink || '';
+            if (document.getElementById('setting-about-text')) document.getElementById('setting-about-text').value = siteSettings.aboutText || '';
+            if (document.getElementById('setting-logo-url')) document.getElementById('setting-logo-url').value = siteSettings.logoUrl && siteSettings.logoUrl.startsWith('http') ? siteSettings.logoUrl : '';
         }
-
        // ሎጎ እና ሴቲንጎችን ወደ Supabase ዳታቤዝ የሚያስቀምጠው የተስተካከለው ፊንክሽን
         async function saveSiteSettings() {
             const fileInput = document.getElementById('setting-logo-file');
