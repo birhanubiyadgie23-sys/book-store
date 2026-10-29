@@ -541,35 +541,72 @@
             document.getElementById('setting-logo-url').value = siteSettings.logoUrl && siteSettings.logoUrl.startsWith('http') ? siteSettings.logoUrl : '';
         }
 
-        function saveSiteSettings() {
+       // ሎጎ እና ሴቲንጎችን ወደ Supabase ዳታቤዝ የሚያስቀምጠው የተስተካከለው ፊንክሽን
+        async function saveSiteSettings() {
             const fileInput = document.getElementById('setting-logo-file');
             const urlInput = document.getElementById('setting-logo-url').value.trim();
             
-            siteSettings.facebook = document.getElementById('setting-fb').value.trim();
-            siteSettings.telegram = document.getElementById('setting-tg').value.trim();
-            siteSettings.youtube = document.getElementById('setting-yt').value.trim();
-            siteSettings.tiktok = document.getElementById('setting-tk').value.trim();
-            siteSettings.extraLink = document.getElementById('setting-extra-link').value.trim();
-            siteSettings.aboutText = document.getElementById('setting-about-text').value.trim();
+            // ከኢንፑት ሳጥኖች መረጃዎችን መቀበል
+            const facebook = document.getElementById('setting-fb').value.trim();
+            const telegram = document.getElementById('setting-tg').value.trim();
+            const youtube = document.getElementById('setting-yt').value.trim();
+            const tiktok = document.getElementById('setting-tk').value.trim();
+            const extraLink = document.getElementById('setting-extra-link').value.trim();
+            const aboutText = document.getElementById('setting-about-text').value.trim();
 
+            let logoUrl = siteSettings.logoUrl; // አሁን ያለው ሎጎ
+
+            // መረጃውን ወደ Supabase ለመላክ የሚያስችል አጋዥ (Helper) ፊንክሽን
+            const saveToSupabase = async (finalLogoUrl) => {
+                const payload = {
+                    id: 1, // ሁልጊዜ በ id 1 ረድፍ ላይ እንዲዘመን
+                    logo_url: finalLogoUrl,
+                    facebook: facebook,
+                    telegram: telegram,
+                    youtube: youtube,
+                    tiktok: tiktok,
+                    extra_link: extraLink,
+                    about_text: aboutText
+                };
+
+                // መረጃውን ወደ Supabase 'site_settings' ቴብል መዝገብ/አዘምን (Upsert)
+                const { error } = await supabaseClient
+                    .from('site_settings')
+                    .upsert(payload);
+
+                if (error) {
+                    console.error('ማስቀመጥ ላይ ስህተት ተፈጥሯል:', error.message);
+                    alert('ማስቀመጥ አልተቻለም: ' + error.message);
+                } else {
+                    // የ global variable እሴቶችን ማዘመን
+                    siteSettings = {
+                        logoUrl: finalLogoUrl,
+                        facebook, telegram, youtube, tiktok, extraLink, aboutText
+                    };
+                    
+                    // እንዲሁም እንደ ምትኬ በ localStorage መያዝ ይቻላል
+                    localStorage.setItem('yichalal_site_settings', JSON.stringify(siteSettings));
+                    
+                    applySiteSettings();
+                    alert('ሴቲንጉ እና ሎጎው በተሳካ ሁኔታ ወደ ሱፓቤዝ ዳታቤዝ ተመዝግበዋል!');
+                }
+            };
+
+            // ፎቶ ከኮምፒውተር ተመርጦ ከሆነ
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    siteSettings.logoUrl = e.target.result;
-                    localStorage.setItem('yichalal_site_settings', JSON.stringify(siteSettings));
-                    applySiteSettings();
-                    alert('ሎጎ እና ሴቲንግ በተሳካ ሁኔታ ተዘምነዋል!');
+                reader.onload = async function(e) {
+                    await saveToSupabase(e.target.result);
                 };
                 reader.readAsDataURL(fileInput.files[0]);
-            } else if (urlInput) {
-                siteSettings.logoUrl = urlInput;
-                localStorage.setItem('yichalal_site_settings', JSON.stringify(siteSettings));
-                applySiteSettings();
-                alert('ሎጎ ሊንክ እና ሴቲንግ በተሳካ ሁኔታ ተዘምነዋል!');
-            } else {
-                localStorage.setItem('yichalal_site_settings', JSON.stringify(siteSettings));
-                applySiteSettings();
-                alert('ሴቲንግ በተሳካ ሁኔታ ተዘምኗል!');
+            } 
+            // ወይም የፎቶ ሊንክ ከገባ
+            else if (urlInput) {
+                await saveToSupabase(urlInput);
+            } 
+            // ፎቶ ካልተቀየረ በቀድሞው ሎጎ መቀጠል
+            else {
+                await saveToSupabase(logoUrl);
             }
         }
 
