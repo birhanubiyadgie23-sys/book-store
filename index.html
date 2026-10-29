@@ -1054,13 +1054,19 @@ async function loadSiteSettingsFromSupabase() {
             }
         }
 
-        function editBook(id, title, author, price, category, cover) {
+        function editBook(id, title, author, price, category, cover, description, otherTitle, otherCover) {
             document.getElementById('edit-book-id').value = id;
             document.getElementById('new-book-title').value = title;
             document.getElementById('new-book-author').value = author;
             document.getElementById('new-book-price').value = price;
             document.getElementById('new-book-category').value = category;
             document.getElementById('new-book-cover').value = cover;
+            
+            // 📌 አዳዲሶቹን መረጃዎች ወደ ሳጥኖቹ መመለስ
+            document.getElementById('new-book-description').value = description || '';
+            document.getElementById('author-other-book-title').value = otherTitle || '';
+            document.getElementById('author-other-book-cover').value = otherCover || '';
+            
             document.getElementById('book-form-title').textContent = 'መጽሐፍ ማሻሻያ (Edit)';
             document.getElementById('book-save-btn').textContent = 'ለውጦችን አዘምን';
         }
@@ -1071,10 +1077,13 @@ async function loadSiteSettingsFromSupabase() {
             document.getElementById('new-book-author').value = '';
             document.getElementById('new-book-price').value = '';
             document.getElementById('new-book-cover').value = '';
+            document.getElementById('new-book-description').value = '';
+            document.getElementById('author-other-book-title').value = '';
+            document.getElementById('author-other-book-cover').value = '';
+            
             document.getElementById('book-form-title').textContent = 'አዲስ መጽሐፍ በዳታቤዝ መዝግብ';
             document.getElementById('book-save-btn').textContent = 'መጽሐፉን መዝግብ';
         }
-
         async function deleteSupabaseBook(id) {
             if (!confirm('ይህን መጽሐፍ ከዳታቤዝ መሰረዝ ይፈልጋሉ?')) return;
             try {
