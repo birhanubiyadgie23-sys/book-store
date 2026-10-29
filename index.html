@@ -1174,24 +1174,27 @@ async function loadSiteSettingsFromSupabase() {
             document.getElementById('new-book-author').value = author || '';
             document.getElementById('new-book-price').value = price || '';
             
-            // 📌 ካታጎሪውን ማስተካከል (ከተዘረዘሩት ውስጥ ከሆነ ያንን ይመርጣል፣ ካልሆነ ግን 'other' ብሎ በኢንፑቱ ይጽፈዋል)
+            // 📌 ካታጎሪውን በትክክል ማስተካከል (የተጻፈውን Custom Category ጭምር መሙላት)
             const selectElement = document.getElementById('new-book-category');
             const customInputElement = document.getElementById('new-book-category-custom');
             
             const options = Array.from(selectElement.options).map(opt => opt.value);
+            
             if (options.includes(category)) {
+                // ከነበሩት 4ቱ ውስጥ ከሆነ
                 selectElement.value = category;
                 customInputElement.classList.add('hidden');
                 customInputElement.value = '';
             } else {
+                // አድሚኑ በራሱ የጻፈው አዲስ ካታጎሪ ከሆነ
                 selectElement.value = 'other';
                 customInputElement.classList.remove('hidden');
-                customInputElement.value = category || '';
+                customInputElement.value = category || ''; // <--- የጻፈውን ቃል እዚህ ላይ በኢንፑቱ ውስጥ ይሞላዋል!
             }
 
             document.getElementById('new-book-cover').value = cover || '';
             
-            // 📌 አዳዲሶቹን መረጃዎች ወደ ሳጥኖቹ መመለስ
+            // 📌 ማብራሪያ እና የደራሲ ሌሎች ስራዎች
             document.getElementById('new-book-description').value = description || '';
             document.getElementById('author-other-book-title').value = otherTitle || '';
             document.getElementById('author-other-book-cover').value = otherCover || '';
