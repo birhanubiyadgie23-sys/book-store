@@ -635,7 +635,30 @@
                 console.error('Error fetching books:', e);
             }
         }
+async function loadSiteSettingsFromSupabase() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('site_settings')
+                    .select('*')
+                    .eq('id', 1)
+                    .maybeSingle();
 
+                if (data) {
+                    siteSettings = {
+                        logoUrl: data.logo_url || '',
+                        facebook: data.facebook || '',
+                        telegram: data.telegram || '',
+                        youtube: data.youtube || '',
+                        tiktok: data.tiktok || '',
+                        extraLink: data.extra_link || '',
+                        aboutText: data.about_text || ''
+                    };
+                }
+                applySiteSettings();
+            } catch (err) {
+                console.error('ሴቲንጎችን ከዳታቤዝ ማምጣት አልተቻለም:', err);
+            }
+        }
         function renderBooks(list) {
             const grid = document.getElementById('books-grid');
             if (!grid) return;
