@@ -870,7 +870,6 @@ async function loadSiteSettingsFromSupabase() {
             const idx = document.getElementById('selected-payment-method').value;
             const bank = bankAccounts[idx];
             
-            // 👈 (በራ) የሚለው ወደ (ቅጂ) ተስተካክሏል
             const bookNames = cart.map(i => `${i.title} (${i.quantity} ቅጂ)`).join(', ');
 
             try {
@@ -884,16 +883,17 @@ async function loadSiteSettingsFromSupabase() {
                 console.error(e);
             }
 
-            // 👈 የቴሌግራም መልዕክት ማሳሰቢያ እና የምስጋና መልዕክት ተስተካክሎ ታክሏል
+            // 👈 እዚህ ጋር ማሳሰቢያው እና የምስጋና መልዕክቱ በታላቅ ውበት ተካተዋል
             const telegramMsg = 
-                `ሰላም! አዲስ መጽሐፍ ግዢ ፈጽሚያለሁ።\n\n` +
+                `ሰላም! አዲስ መጽሐፍ ግዢ ተፈጽሟል።\n\n` +
                 `👤 ስም: ${customerName}\n` +
                 `📱 ስልክ ቁጥር: ${customerPhone}\n` +
                 `📚 መጽሐፍት: ${bookNames}\n` +
                 `💰 ጠቅላላ ዋጋ: ${total} ብር\n` +
                 `🏦 የተከፈለበት ባንክ: ${bank.name} (${bank.accNo})\n\n` +
                 `━━━━━━━━━━━━━━━\n` +
-                `⚠️ ማሳሰቢያ: እባክዎ ሂሳብ የከፈሉበትን የባንክ ደረሰኝ (ስክሪንሹት) ወይም የክፍያ ማረጋገጫ ቴክስት ከዚህ ጋር አያይዘው ይላኩ።\n\n` +
+                `💡 ማሳሰቢያ: የሚያስገቡት ስልክ ቁጥር ትክክለኛነት ግዥ የፈጸሙት መጽሃፍ ቶሎ እጅዎ እንዲደርስ መሸጋገሪያ ድልድይ ነው።\n` +
+                `⚠️ እባክዎ ሂሳብ የከፈሉበትን የባንክ ደረሰኝ (ስክሪንሹት) ወይም የክፍያ ማረጋገጫ ቴክስት ከዚህ ጋር አያይዘው ይላኩ።\n\n` +
                 `🙏 አክብረውንና አምነውን ቋሚ ደንበኛችን ስለሆኑ እናመሰግናለን!`;
             
             const encodedMsg = encodeURIComponent(telegramMsg);
