@@ -1093,50 +1093,81 @@ async function loadSiteSettingsFromSupabase() {
             if (tab === 'banks') renderAdminBanksList();
         }
 
-     async function saveBookToSupabase() {
-            const id = document.getElementById('edit-book-id').value;
-            const title = document.getElementById('new-book-title').value;
-            const author = document.getElementById('new-book-author').value;
-            const price = parseFloat(document.getElementById('new-book-price').value);
-            const category = document.getElementById('new-book-category').value;
-            const cover_image_url = document.getElementById('new-book-cover').value;
-            
-            // 1. ማብራሪያውን እና የደራሲውን ሌሎች ስራዎች ከኢንፑት መቀበል
-            const description = document.getElementById('new-book-description').value;
-            const otherTitle = document.getElementById('author-other-book-title').value;
-            const otherCover = document.getElementById('author-other-book-cover').value;
+    // 1. ካታጎሪው 'ሌላ' ሲመረጥ የጽሁፍ ሳጥኑን ማሳያ/መደበቂያ ፊንክሽን
+    function handleCategoryChange() {
+        const select = document.getElementById('new-book-category');
+        const customInput = document.getElementById('new-book-category-custom');
+        
+        if (select.value === 'other') {
+            customInput.classList.remove('hidden'); // የጽሁፍ ሳጥኑን አሳይ
+            customInput.focus();
+        } else {
+            customInput.classList.add('hidden');    // የጽሁፍ ሳጥኑን ደብቅ
+            customInput.value = '';
+        }
+    }
 
-            // 2. የቼኪንግ ፓርት
-            if (!title || !author || !price) return alert('እባክዎ መረጃዎችን ይሙሉ');
-
-            // 3. ወደ ዳታቤዝ የሚላከው የተሟላ Payload (የጠየቋት ክፍል እዚህ ተካቷል)
-            const bookPayload = { 
-                title, 
-                author, 
-                price, 
-                category, 
-                cover_image_url, 
-                description,
-                author_other_book_title: otherTitle,
-                author_other_book_cover: otherCover,
-                rating: 5.0 
-            };
-
-            try {
-                if (id) {
-                    await supabaseClient.from('books').update(bookPayload).eq('id', id);
-                    alert('መጽሐፉ ተስተካክሏል!');
-                } else {
-                    await supabaseClient.from('books').insert([bookPayload]);
-                    alert('መጽሐፉ በዳታቤዝ ተመዝግቧል!');
-                }
-                resetBookForm();
-                fetchBooksFromSupabase();
-            } catch (err) {
-                alert('ስህተት: ' + err.message);
-            }
+    // 2. መጽሐፉን ወደ ሱፓቤዝ መመዝገቢያ/ማስተካከያ ፊንክሽን
+    async function saveBookToSupabase() {
+        const id = document.getElementById('edit-book-id').value;
+        const title = document.getElementById('new-book-title').value.trim();
+        const author = document.getElementById('new-book-author').value.trim();
+        const price = parseFloat(document.getElementById('new-book-price').value);
+        
+        // ካታጎሪውን ከሴሌክቱ ወይም አድሚኑ ከጻፈው Custom Input መቀበል
+        const selectElement = document.getElementById('new-book-category');
+        const customInputElement = document.getElementById('new-book-category-custom');
+        let category = selectElement.value;
+        
+        if (category === 'other') {
+            category = customInputElement.value.trim();
         }
 
+        const cover_image_url = document.getElementById('new-book-cover').value.trim();
+        
+        // ማብራሪያውን እና የደራሲውን ሌሎች ስራዎች ከኢንፑት መቀበል
+        const description = document.getElementById('new-book-description').value.trim();
+        const otherTitle = document.getElementById('author-other-book-title').value.trim();
+        const otherCover = document.getElementById('author-other-book-cover').value.trim();
+
+        // የቼኪንግ ፓርት
+        if (!title || !author || isNaN(price)) {
+            alert('እባክዎ ትክክለኛ የመጽሐፍ ርዕስ፣ ደራሲ እና ዋጋ ይሙሉ!');
+            return;
+        }
+
+        if (!category) {
+            alert('እባክዎ የካታጎሪ ስም ይምረጡ ወይም እራስዎ ይጻፉ!');
+            return;
+        }
+
+        // ወደ ዳታቤዝ የሚላከው የተሟላ Payload
+        const bookPayload = { 
+            title, 
+            author, 
+            price, 
+            category, 
+            cover_image_url, 
+            description,
+            author_other_book_title: otherTitle,
+            author_other_book_cover: otherCover,
+            rating: 5.0 
+        };
+
+        try {
+            if (id) {
+                await supabaseClient.from('books').update(bookPayload).eq('id', id);
+                alert('መጽሐፉ ተስተካክሏል!');
+            } else {
+                await supabaseClient.from('books').insert([bookPayload]);
+                alert('መጽሐፉ በዳታቤዝ ተመዝግቧል!');
+            }
+            resetBookForm();
+            fetchBooksFromSupabase();
+        } catch (err) {
+            alert('ስህተት: ' + err.message);
+        }
+    }
         function editBook(id, title, author, price, category, cover, description, otherTitle, otherCover) {
             document.getElementById('edit-book-id').value = id;
             document.getElementById('new-book-title').value = title;
