@@ -1168,13 +1168,28 @@ async function loadSiteSettingsFromSupabase() {
             alert('ስህተት: ' + err.message);
         }
     }
-        function editBook(id, title, author, price, category, cover, description, otherTitle, otherCover) {
+       function editBook(id, title, author, price, category, cover, description, otherTitle, otherCover) {
             document.getElementById('edit-book-id').value = id;
-            document.getElementById('new-book-title').value = title;
-            document.getElementById('new-book-author').value = author;
-            document.getElementById('new-book-price').value = price;
-            document.getElementById('new-book-category').value = category;
-            document.getElementById('new-book-cover').value = cover;
+            document.getElementById('new-book-title').value = title || '';
+            document.getElementById('new-book-author').value = author || '';
+            document.getElementById('new-book-price').value = price || '';
+            
+            // 📌 ካታጎሪውን ማስተካከል (ከተዘረዘሩት ውስጥ ከሆነ ያንን ይመርጣል፣ ካልሆነ ግን 'other' ብሎ በኢንፑቱ ይጽፈዋል)
+            const selectElement = document.getElementById('new-book-category');
+            const customInputElement = document.getElementById('new-book-category-custom');
+            
+            const options = Array.from(selectElement.options).map(opt => opt.value);
+            if (options.includes(category)) {
+                selectElement.value = category;
+                customInputElement.classList.add('hidden');
+                customInputElement.value = '';
+            } else {
+                selectElement.value = 'other';
+                customInputElement.classList.remove('hidden');
+                customInputElement.value = category || '';
+            }
+
+            document.getElementById('new-book-cover').value = cover || '';
             
             // 📌 አዳዲሶቹን መረጃዎች ወደ ሳጥኖቹ መመለስ
             document.getElementById('new-book-description').value = description || '';
@@ -1183,8 +1198,10 @@ async function loadSiteSettingsFromSupabase() {
             
             document.getElementById('book-form-title').textContent = 'መጽሐፍ ማሻሻያ (Edit)';
             document.getElementById('book-save-btn').textContent = 'ለውጦችን አዘምን';
-        }
 
+            // ወደ ፎርሙ አናት ሸብረክ ማድረግ
+            document.getElementById('book-form-title').scrollIntoView({ behavior: 'smooth' });
+        }
         function resetBookForm() {
             document.getElementById('edit-book-id').value = '';
             document.getElementById('new-book-title').value = '';
