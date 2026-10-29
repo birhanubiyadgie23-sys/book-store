@@ -73,14 +73,40 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* የወርቃማ ከለር እና ግልጽ ዳራ ስታይል ለ«ይ» ፊደል */
-        .gold-ethiopian-logo {
-            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-family: 'Noto Serif Ethiopic', serif;
-            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
-        }
+  /* የ«ይ» ፊደል ወርቃማ ከለር ስታይል */
+  .gold-ethiopian-logo {
+      background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: 'Noto Serif Ethiopic', serif;
+      filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
+  }
+
+  /* የባክግራውንድ ሳጥኑ ከሚፈለገው በላይ እንዳይሰፋ መያዣ (Container) */
+  .hero-background-wrapper {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  /* በአድሚኑ የሚጨመረው ምስል ላይ የሚተገበር Zoom Effect */
+  .animated-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: smoothZoom 12s infinite alternate ease-in-out;
+  }
+
+  /* ምስሉን በስላሳ ሁኔታ 15% Zoom የሚያደርግ Animation */
+  @keyframes smoothZoom {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.15);
+    }
+  }
     </style>
 </head>
 <body class="bg-amber-50/30 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-indigo-100 selection:text-indigo-900">
