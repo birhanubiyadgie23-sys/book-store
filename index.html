@@ -602,28 +602,32 @@
 
         let booksList = [];
         
-        // ሞዳሉን ከፍቶ መረጃዎችን የሚሞላው ፊንክሽን
         function openBookDetailModal(id) {
             const book = booksList.find(b => b.id == id);
             if (!book) return;
 
+            // 1. መደበኛ መረጃዎችን መሙላት
             document.getElementById('modal-book-title').textContent = book.title;
-            document.getElementById('modal-book-author').textContent = 'ደራሲ፡ ' + book.author;
-            document.getElementById('modal-book-price').textContent = book.price + ' ብር';
+            document.getElementById('modal-book-author').textContent = 'ደራሲ፡ ' + (book.author || '');
+            document.getElementById('modal-book-price').textContent = (book.price || 0) + ' ብር';
             document.getElementById('modal-book-category').textContent = book.category || 'መጽሐፍ';
             document.getElementById('modal-book-cover').src = book.cover_image_url || 'https://via.placeholder.com/300';
             document.getElementById('modal-book-desc').textContent = book.description || 'ስለመጽሐፉ የተሰጠ ማብራሪያ የለም።';
 
-            // የደራሲውን ሌሎች ስራዎች መፈተሽ እና ማሳየት
-            const authorWorksBox = document.getElementById('modal-author-works-section');
-            if (book.author_other_book_title) {
-                document.getElementById('modal-author-title').textContent = book.author_other_book_title;
-                document.getElementById('modal-author-cover').src = book.author_other_book_cover || 'https://via.placeholder.com/100';
-                authorWorksBox.classList.remove('hidden');
+            // 2. 📌 የደራሲውን ሌሎች ስራዎች ማስተዳደር
+            const authorWorksBox = document.getElementById('author-other-books-section');
+            const authorTitleEl = document.getElementById('modal-other-book-title');
+            const authorCoverEl = document.getElementById('modal-other-book-cover');
+
+            if (book.author_other_book_title && book.author_other_book_title.trim() !== '') {
+                authorTitleEl.textContent = book.author_other_book_title;
+                authorCoverEl.src = book.author_other_book_cover || 'https://via.placeholder.com/100';
+                authorWorksBox.classList.remove('hidden'); // ክፍሉን አሳይ
             } else {
-                authorWorksBox.classList.add('hidden');
+                authorWorksBox.classList.add('hidden'); // መረጃ ከሌለ ደብቅ
             }
 
+            // 3. ሞዳሉን መክፈት
             document.getElementById('book-detail-modal').classList.remove('hidden');
         }
 
@@ -631,7 +635,6 @@
         function closeBookDetailModal() {
             document.getElementById('book-detail-modal').classList.add('hidden');
         }
-
         let cart = [];
         let currentUser = JSON.parse(localStorage.getItem('yichalal_user')) || null;
         
