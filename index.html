@@ -1060,27 +1060,31 @@ async function loadSiteSettingsFromSupabase() {
             }
         }
 
-        // Checkout & Bank Selection
-        function openCheckoutModal() {
-            if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
-            if (currentUser && currentUser.name) {
-                document.getElementById('order-customer-name').value = currentUser.name;
-            } else if (currentUser && currentUser.username) {
-                document.getElementById('order-customer-name').value = currentUser.username;
-            }
-            populateBankDropdown();
-            document.getElementById('checkout-modal').classList.remove('hidden');
-            toggleCartDrawer();
-        }
-        function closeCheckoutModal() {
+ // Checkout & Bank Selection
+function openCheckoutModal() {
+    if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
+    if (currentUser && currentUser.name) {
+        document.getElementById('order-customer-name').value = currentUser.name;
+    } else if (currentUser && currentUser.username) {
+        document.getElementById('order-customer-name').value = currentUser.username;
+    }
+    populateBankDropdown();
+    
     const modal = document.getElementById('checkout-modal');
     if (modal) {
-        // 1. ቪዚብል እንዳይሆን እና ከስክሪኑ እንዲጠፋ በዲዛይን ደረጃ እንሰውራለን
-        modal.classList.add('hidden');
-        modal.style.display = 'none'; // ብለር ዳራውን ጨምሮ ሙሉ በሙሉ እንዲጠፋ ያደርጋል
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex'; // ሲከፈት በግልጽ እንዲታይ ያደርጋል
     }
+    toggleCartDrawer();
 }
 
+function closeCheckoutModal() {
+    const modal = document.getElementById('checkout-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none'; // ብለር ዳራውን ጨምሮ ሙሉ በሙሉ ይደብቀዋል
+    }
+}
         function populateBankDropdown() {
             const select = document.getElementById('selected-payment-method');
             select.innerHTML = bankAccounts.map((b, idx) => `<option value="${idx}">${b.name} - ${b.accNo}</option>`).join('');
