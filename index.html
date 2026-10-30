@@ -309,13 +309,13 @@
         <!-- ለሞባይል የሚሆን መጎተቻ ምልክት (Drag Handle) -->
         <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto md:hidden -mt-1"></div>
 
-        <!-- የዝጋ (Close) ቁልፍ -->
-        <button onclick="closeModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-1.5 rounded-full transition-all shadow-inner hover:scale-105 active:scale-95 z-10">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <!-- 🔴 የተስተካከለችው የዝጋ (Close) ቁልፍ - pointer-events-auto እና z-20 ተጨምሮላታል -->
+        <button type="button" onclick="closeModal()" aria-label="Close" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-1.5 rounded-full transition-all shadow-inner hover:scale-110 active:scale-95 z-20 cursor-pointer pointer-events-auto">
+            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
         <!-- የርዕስ ክፍል -->
-        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-2.5">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-2.5 pr-8">
             <div class="bg-indigo-50 p-2 rounded-xl border border-indigo-100 shadow-sm text-sm">
                 💳
             </div>
@@ -338,33 +338,29 @@
             </div>
         </div>
 
-        <!-- 2. የክፍያ አማራጭ እና ትክክለኛው የ QR ኮድ (Dynamic) -->
+        <!-- 2. የክፍያ አማራጭ እና የ QR ኮድ -->
         <div class="bg-gradient-to-b from-indigo-50/50 to-slate-50 p-3 rounded-xl border border-indigo-100/80 shadow-sm space-y-2.5 text-center">
             
-            <!-- የክፍያ አማራጭ Dropdown (onchange ተጨምሯል) -->
             <div class="space-y-1 text-left">
                 <label for="payment-method-select" class="block font-bold text-slate-700 text-[10px]">የክፍያ አማራጭ/የባንክ አካውንት ይምረጡ፡</label>
                 <select id="payment-method-select" onchange="updatePaymentDetails()" class="w-full p-2 border border-slate-200 rounded-lg bg-white text-[11px] font-semibold text-slate-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/30">
                     <option value="telebirr">Telebirr - 0930836065 (ይቻላል መጽሐፍት)</option>
-                    <option value="cbe">የኢትዮጵያ ንግድ ባንክ - 1000123456789</option>
-                    <option value="abyssinia">የአቢሲኒያ ባንክ - 987654321001</option>
+                    <option value="cbe">የኢትዮጵያ ንግድ ባንክ (CBE)</option>
+                    <option value="abyssinia">የአቢሲኒያ ባንክ</option>
                 </select>
             </div>
 
             <div class="space-y-0.5">
                 <span id="payment-provider-badge" class="inline-block px-2 py-0.5 bg-indigo-600 text-white font-black text-[8px] rounded-full uppercase tracking-wider shadow-sm">Telebirr</span>
                 <div class="inline-block bg-white border border-indigo-100 px-3 py-1 rounded-lg shadow-sm my-0.5">
-                    <!-- ቁጥሩ በ JavaScript እንዲቀየር id ተሰጥቶታል -->
                     <p id="payment-account-number" class="font-mono font-black text-indigo-700 text-xs tracking-wider">0930836065</p>
                 </div>
                 <p class="text-[9px] text-slate-500">የሂሳብ ባለቤት፡ <span id="payment-account-owner" class="font-bold text-slate-800">ይቻላል መጽሐፍት</span></p>
             </div>
 
-            <!-- የ QR ኮድ ምስል (በ JavaScript አማካኝነት ቁጥሩን እየቀየረ አዲስ QR ያመነጫል) -->
             <div class="flex justify-center pt-1">
                 <div class="bg-white p-2 rounded-xl shadow-md border-2 border-indigo-100/80 inline-block transform hover:scale-105 transition-transform duration-300 relative group">
                     <div class="absolute -top-2 -right-2 bg-indigo-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full shadow">Scan</div>
-                    
                     <img id="payment-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=0930836065" alt="Payment QR Code" class="w-20 h-20 rounded-md object-contain">
                 </div>
             </div>
