@@ -602,7 +602,7 @@
 
         let booksList = [];
         
-        function openBookDetailModal(id) {
+function openBookDetailModal(id) {
             const book = booksList.find(b => b.id == id);
             if (!book) return;
 
@@ -614,7 +614,7 @@
             document.getElementById('modal-book-cover').src = book.cover_image_url || 'https://via.placeholder.com/300';
             document.getElementById('modal-book-desc').textContent = book.description || 'ስለመጽሐፉ የተሰጠ ማብራሪያ የለም።';
 
-            // 2. 📌 የደራሲውን ሌሎች ስራዎች ማስተዳደር
+            // 2. 📌 የደራሲውን ሌሎች ስራዎች ማስተዳደር (ከኤችቲኤምኤል ID 'author-other-books-section' ጋር የተጣጣመ)
             const authorWorksBox = document.getElementById('author-other-books-section');
             const authorTitleEl = document.getElementById('modal-other-book-title');
             const authorCoverEl = document.getElementById('modal-other-book-cover');
