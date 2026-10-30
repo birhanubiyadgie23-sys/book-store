@@ -1072,16 +1072,16 @@ function openCheckoutModal() {
     
     const modal = document.getElementById('checkout-modal');
     if (modal) {
-        modal.classList.remove('hidden'); // hidden የሚለውን በማጥፋት ሞዳሉ እንዲታይ ያደርጋል
+        modal.classList.remove('hidden'); // hidden የሚለውን ክላስ በማንሳት ሞዳሉ እንዲታይ ያደርጋል
     }
     toggleCartDrawer();
 }
 
-// ሞዳሉን በ 'X' ወይም በሌላ የሚዘጋው
+// ሞዳሉን በ 'X' ቁልፍ የሚዘጋው
 function closeCheckoutModal() {
     const modal = document.getElementById('checkout-modal');
     if (modal) {
-        modal.classList.add('hidden'); // hidden የሚለውን በመጨመር ሞዳሉን እና ብለሩን ይደብቃል
+        modal.classList.add('hidden'); // hidden የሚለውን ክላስ በመጨመር ሞዳሉን እና የብለር ዳራውን ይደብቃል
     }
 }
         function populateBankDropdown() {
