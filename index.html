@@ -302,16 +302,20 @@
     </div>
 
 <div class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/70 backdrop-blur-md p-0 md:p-3 overflow-y-auto">
+ <!-- 1. ዋናው የሞዳል ማቀፊያ (id="checkout-modal" መኖሩን ያረጋግጡ) -->
+<div id="checkout-modal" class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/70 backdrop-blur-md p-0 md:p-3 overflow-y-auto">
     
-    <!-- ዋናው የታመቀ እና ዘመናዊ 3D Popup ሳጥን -->
+    <!-- ዋናው 3D Popup ሳጥን -->
     <div class="bg-white rounded-t-[2rem] md:rounded-2xl border-t md:border border-slate-100 shadow-[0_-10px_30px_rgba(0,0,0,0.15)] md:shadow-[0_15px_35px_rgba(8,_112,_184,_0.15)] transition-all duration-300 w-full max-w-sm overflow-hidden relative p-4 space-y-3 max-h-[85vh] overflow-y-auto">
         
         <!-- ለሞባይል የሚሆን መጎተቻ ምልክት (Drag Handle) -->
         <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto md:hidden -mt-1"></div>
 
-        <!-- 🔴 የተስተካከለችው የዝጋ (Close) ቁልፍ - pointer-events-auto እና z-20 ተጨምሮላታል -->
-        <button type="button" onclick="closeModal()" aria-label="Close" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-1.5 rounded-full transition-all shadow-inner hover:scale-110 active:scale-95 z-20 cursor-pointer pointer-events-auto">
-            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <!-- 🔴 የተስተካከለችው X ቁልፍ (onclick ላይ በቀጥታ ለመዝጋት ተዘጋጅታለች) -->
+        <button type="button" onclick="closeModal()" aria-label="Close" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all shadow-inner hover:scale-110 active:scale-95 z-50 cursor-pointer pointer-events-auto">
+            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
         </button>
 
         <!-- የርዕስ ክፍል -->
@@ -340,7 +344,6 @@
 
         <!-- 2. የክፍያ አማራጭ እና የ QR ኮድ -->
         <div class="bg-gradient-to-b from-indigo-50/50 to-slate-50 p-3 rounded-xl border border-indigo-100/80 shadow-sm space-y-2.5 text-center">
-            
             <div class="space-y-1 text-left">
                 <label for="payment-method-select" class="block font-bold text-slate-700 text-[10px]">የክፍያ አማራጭ/የባንክ አካውንት ይምረጡ፡</label>
                 <select id="payment-method-select" onchange="updatePaymentDetails()" class="w-full p-2 border border-slate-200 rounded-lg bg-white text-[11px] font-semibold text-slate-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/30">
@@ -364,7 +367,6 @@
                     <img id="payment-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=0930836065" alt="Payment QR Code" class="w-20 h-20 rounded-md object-contain">
                 </div>
             </div>
-            <p class="text-[8px] text-slate-400">ካሜራ በመጠቀም ሲቃኝ ቁጥሩ በቀጥታ ይመጣል</p>
         </div>
 
         <!-- የማስጠንቀቂያ መልእክት -->
