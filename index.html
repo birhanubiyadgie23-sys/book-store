@@ -305,19 +305,25 @@
  <!-- 1. ዋናው የሞዳል ማቀፊያ (id="checkout-modal" መኖሩን ያረጋግጡ) -->
 <div id="checkout-modal" class="hidden fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/70 backdrop-blur-md p-0 md:p-3 overflow-y-auto">   <!-- የሞዳሉ ይዘት እዚህ ውስጥ ይገባል -->
 </div>
-    <!-- ዋናው 3D Popup ሳጥን -->
-    <div class="bg-white rounded-t-[2rem] md:rounded-2xl border-t md:border border-slate-100 shadow-[0_-10px_30px_rgba(0,0,0,0.15)] md:shadow-[0_15px_35px_rgba(8,_112,_184,_0.15)] transition-all duration-300 w-full max-w-sm overflow-hidden relative p-4 space-y-3 max-h-[85vh] overflow-y-auto">
+<!-- የክፍያ ሞዳሉ ዋና ማቀፊያ (በዲፎልት hidden ሆኖ ይጀምራል) -->
+<div id="checkout-modal" class="hidden fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/70 backdrop-blur-md p-0 md:p-3 overflow-y-auto">
+    
+    <!-- የሞዳል ሳጥኑ እና ይዘቶቹ -->
+    <div class="relative bg-white w-full max-w-lg rounded-t-2xl md:rounded-2xl p-6 shadow-2xl">
         
-        <!-- ለሞባይል የሚሆን መጎተቻ ምልክት (Drag Handle) -->
-        <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto md:hidden -mt-1"></div>
+        <!-- የ 'X' መዝጊያ ቁልፍ -->
+        <button type="button" onclick="closeCheckoutModal()" aria-label="Close" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all shadow-inner hover:scale-110 active:scale-95 z-50 cursor-pointer pointer-events-auto">
+            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
 
-        <!-- 🔴 የተስተካከለችው X ቁልፍ (onclick ላይ በቀጥታ ለመዝጋት ተዘጋጅታለች) -->
-        <!-- የተስተካከለው የ X ቁልፍ ኮድ -->
-<button type="button" onclick="closeCheckoutModal()" aria-label="Close" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all shadow-inner hover:scale-110 active:scale-95 z-50 cursor-pointer pointer-events-auto">
-    <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
-    </svg>
-</button>
+        <!-- የክፍያ ፎርም ወይም ሌሎች ይዘቶችዎ እዚህ ይገባሉ -->
+        <h3 class="text-xl font-bold mb-4">የክፍያ አማራጭ</h3>
+        <!-- የእርስዎ የፎርም ይዘቶች እዚህ ይቀጥላሉ -->
+
+    </div>
+</div>
 
         <!-- የርዕስ ክፍል -->
         <div class="flex items-center gap-2.5 border-b border-slate-100 pb-2.5 pr-8">
@@ -1063,25 +1069,27 @@ async function loadSiteSettingsFromSupabase() {
  // Checkout & Bank Selection
 function openCheckoutModal() {
     if (cart.length === 0) return alert('እባክዎ መጽሐፍ ይምረጡ');
+    
     if (currentUser && currentUser.name) {
         document.getElementById('order-customer-name').value = currentUser.name;
     } else if (currentUser && currentUser.username) {
         document.getElementById('order-customer-name').value = currentUser.username;
     }
+    
     populateBankDropdown();
     
     const modal = document.getElementById('checkout-modal');
     if (modal) {
-        modal.classList.remove('hidden'); // hidden የሚለውን በማጥፋት ሞዳሉ እንዲታይ ያደርጋል
+        modal.classList.remove('hidden'); // hidden የሚለውን ክላስ በማስወገድ ሞዳሉ እንዲታይ ያደርጋል
     }
     toggleCartDrawer();
 }
 
-// ሞዳሉን በ 'X' ቁልፍ የሚዘጋው
+// ሞዳሉን በ 'X' ቁልፍ የሚዘጋው ፋንክሽን
 function closeCheckoutModal() {
     const modal = document.getElementById('checkout-modal');
     if (modal) {
-        modal.classList.add('hidden'); // hidden የሚለውን በመጨመር ሞዳሉን እና የብለር ዳራውን ይደብቃል
+        modal.classList.add('hidden'); // hidden የሚለውን ክላስ በመጨመር ሞዳሉን እና ብለሩን ሙሉ በሙሉ ይደብቃል
     }
 }
         function populateBankDropdown() {
