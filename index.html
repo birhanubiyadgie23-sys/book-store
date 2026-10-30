@@ -1075,8 +1075,9 @@ async function loadSiteSettingsFromSupabase() {
         function closeCheckoutModal() {
     const modal = document.getElementById('checkout-modal');
     if (modal) {
-        modal.style.display = 'none';
+        // 1. ቪዚብል እንዳይሆን እና ከስክሪኑ እንዲጠፋ በዲዛይን ደረጃ እንሰውራለን
         modal.classList.add('hidden');
+        modal.style.display = 'none'; // ብለር ዳራውን ጨምሮ ሙሉ በሙሉ እንዲጠፋ ያደርጋል
     }
 }
 
