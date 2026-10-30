@@ -338,31 +338,54 @@
             </div>
         </div>
 
-        <!-- 2. የክፍያ አማራጭ እና ትክክለኛው የ QR ኮድ (ለስካን የተዘጋጀ) -->
+        <!-- 2. የክፍያ አማራጭ እና ትክክለኛው የ QR ኮድ (Dynamic) -->
         <div class="bg-gradient-to-b from-indigo-50/50 to-slate-50 p-3 rounded-xl border border-indigo-100/80 shadow-sm space-y-2.5 text-center">
             
-            <!-- የክፍያ አማራጭ Dropdown -->
+            <!-- የክፍያ አማራጭ Dropdown (onchange ተጨምሯል) -->
             <div class="space-y-1 text-left">
                 <label for="payment-method-select" class="block font-bold text-slate-700 text-[10px]">የክፍያ አማራጭ/የባንክ አካውንት ይምረጡ፡</label>
-                <select id="payment-method-select" class="w-full p-2 border border-slate-200 rounded-lg bg-white text-[11px] font-semibold text-slate-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/30">
+                <select id="payment-method-select" onchange="updatePaymentDetails()" class="w-full p-2 border border-slate-200 rounded-lg bg-white text-[11px] font-semibold text-slate-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/30">
                     <option value="telebirr">Telebirr - 0930836065 (ይቻላል መጽሐፍት)</option>
-                    <option value="cbe">የኢትዮጵያ ንግድ ባንክ (CBE)</option>
-                    <option value="abyssinia">የአቢሲኒያ ባንክ</option>
+                    <option value="cbe">የኢትዮጵያ ንግድ ባንክ - 1000123456789</option>
+                    <option value="abyssinia">የአቢሲኒያ ባንክ - 987654321001</option>
                 </select>
             </div>
 
             <div class="space-y-0.5">
-                <span class="inline-block px-2 py-0.5 bg-indigo-600 text-white font-black text-[8px] rounded-full uppercase tracking-wider shadow-sm">የተመረጠው አካውንት</span>
+                <span id="payment-provider-badge" class="inline-block px-2 py-0.5 bg-indigo-600 text-white font-black text-[8px] rounded-full uppercase tracking-wider shadow-sm">Telebirr</span>
                 <div class="inline-block bg-white border border-indigo-100 px-3 py-1 rounded-lg shadow-sm my-0.5">
-                    <p class="font-mono font-black text-indigo-700 text-xs tracking-wider">0930836065</p>
+                    <!-- ቁጥሩ በ JavaScript እንዲቀየር id ተሰጥቶታል -->
+                    <p id="payment-account-number" class="font-mono font-black text-indigo-700 text-xs tracking-wider">0930836065</p>
                 </div>
-                <p class="text-[9px] text-slate-500">የሂሳብ ባለቤት፡ <span class="font-bold text-slate-800">ይቻላል መጽሐፍት</span></p>
+                <p class="text-[9px] text-slate-500">የሂሳብ ባለቤት፡ <span id="payment-account-owner" class="font-bold text-slate-800">ይቻላል መጽሐፍት</span></p>
             </div>
-            <!-- እውነተኛውን የቴሌብር ቁጥር ወደ QR ኮድ የሚቀይረው ዲጂታል ምስል ማቀፊያ -->
+
+            <!-- የ QR ኮድ ምስል (በ JavaScript አማካኝነት ቁጥሩን እየቀየረ አዲስ QR ያመነጫል) -->
             <div class="flex justify-center pt-1">
                 <div class="bg-white p-2 rounded-xl shadow-md border-2 border-indigo-100/80 inline-block transform hover:scale-105 transition-transform duration-300 relative group">
-                    <div class="absolute -top-2 -right-2 bg-indigo-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full shadow">Scan</div> 
-                    <!-- እዚህ ጋር
+                    <div class="absolute -top-2 -right-2 bg-indigo-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full shadow">Scan</div>
+                    
+                    <img id="payment-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=0930836065" alt="Payment QR Code" class="w-20 h-20 rounded-md object-contain">
+                </div>
+            </div>
+            <p class="text-[8px] text-slate-400">ካሜራ በመጠቀም ሲቃኝ ቁጥሩ በቀጥታ ይመጣል</p>
+        </div>
+
+        <!-- የማስጠንቀቂያ መልእክት -->
+        <div class="text-[9px] text-amber-700 bg-amber-50/80 p-2 rounded-xl border border-amber-200/60 shadow-sm flex items-start gap-1.5">
+            <span class="text-xs">💡</span>
+            <span class="leading-tight">የሚያስገቡት ስልክ ቁጥር ትክክለኛነት መጽሐፍቶ በቀጥታ በእጅዎ እንዲደርስ ለማድረግ ከፍተኛ አስተዋጽኦ አለው።</span>
+        </div>
+
+        <!-- የማስረከቢያ ቁልፍ -->
+        <a href="https://t.me/Ychalal2" target="_blank" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white py-2.5 rounded-xl font-bold text-xs transition-all shadow-[0_6px_15px_rgba(79,_70,_229,_0.3)] active:scale-[0.98] flex items-center justify-center gap-1.5">
+            <span>ትዕዛዝ አስተላልፍ እና ደረሰኝ ላክ (@Ychalal2)</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+
+    </div>
+</div>
+                    
     <!-- 8. AUTHENTICATION MODAL -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
