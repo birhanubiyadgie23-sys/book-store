@@ -368,18 +368,33 @@
                 <button id="tab-signup-btn" onclick="switchAuthTab('signup')" class="w-1/2 py-2 rounded-lg text-slate-600 transition">ተመዝገብ (Sign Up)</button>
             </div>
 
-            <div id="form-login" class="space-y-3 pt-2">
-                <input type="text" id="login-username" placeholder="የተጠቃሚ ስም (Username)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
-                <input type="password" id="login-password" placeholder="የይለፍ ቃል (Password)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
-                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md">ግባ</button>
-            </div>
+          <div id="form-login" class="space-y-3 pt-2">
+    <div>
+        <label for="login-username" class="block font-bold text-xs text-slate-700 mb-1">የተጠቃሚ ስም (Username)</label>
+        <input type="text" id="login-username" placeholder="የተጠቃሚ ስምዎን ያስገቡ" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
+    </div>
+    <div>
+        <label for="login-password" class="block font-bold text-xs text-slate-700 mb-1">የይለፍ ቃል (Password)</label>
+        <input type="password" id="login-password" placeholder="••••••••" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
+    </div>
+    <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md">ግባ</button>
+</div>
 
-            <div id="form-signup" class="space-y-3 pt-2 hidden">
-                <input type="text" id="signup-name" placeholder="ሙሉ ስም" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
-                <input type="text" id="signup-username" placeholder="የተጠቃሚ ስም (Username)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
-                <input type="password" id="signup-password" placeholder="የይለፍ ቃል (Password)" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
-                <button onclick="handleSignup()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md">አካውንት ፍጠር</button>
-            </div>
+<div id="form-signup" class="space-y-3 pt-2 hidden">
+    <div>
+        <label for="signup-name" class="block font-bold text-xs text-slate-700 mb-1">ሙሉ ስም</label>
+        <input type="text" id="signup-name" placeholder="ሙሉ ስምዎን ያስገቡ" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
+    </div>
+    <div>
+        <label for="signup-username" class="block font-bold text-xs text-slate-700 mb-1">የተጠቃሚ ስም (Username)</label>
+        <input type="text" id="signup-username" placeholder="ልዩ የተጠቃሚ ስም ይምረጡ" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
+    </div>
+    <div>
+        <label for="signup-password" class="block font-bold text-xs text-slate-700 mb-1">የይለፍ ቃል (Password)</label>
+        <input type="password" id="signup-password" placeholder="••••••••" class="w-full p-3 border rounded-xl text-xs bg-slate-50 focus:outline-none">
+    </div>
+    <button onclick="handleSignup()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md">አካውንት ፍጠር</button>
+</div>
         </div>
     </div>
 
