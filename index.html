@@ -301,68 +301,68 @@
         </div>
     </div>
 
-<div class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/70 backdrop-blur-md p-0 md:p-4 overflow-y-auto">
+<div class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/70 backdrop-blur-md p-0 md:p-3 overflow-y-auto">
     
-    <!-- ዋናው Bottom Sheet / 3D Popup ሳጥን -->
-    <div class="bg-white rounded-t-[2.5rem] md:rounded-3xl border-t md:border border-slate-100 shadow-[0_-10px_40px_rgba(0,0,0,0.15)] md:shadow-[0_20px_50px_rgba(8,_112,_184,_0.2)] transition-all duration-300 w-full max-w-md overflow-hidden relative p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+    <!-- በጣም የታመቀ እና አነስተኛ መጠን ያለው የ 3D Popup ሳጥን -->
+    <div class="bg-white rounded-t-[2rem] md:rounded-2xl border-t md:border border-slate-100 shadow-[0_-10px_30px_rgba(0,0,0,0.15)] md:shadow-[0_15px_35px_rgba(8,_112,_184,_0.15)] transition-all duration-300 w-full max-w-sm overflow-hidden relative p-4 space-y-3 max-h-[85vh] overflow-y-auto">
         
         <!-- ለሞባይል የሚሆን መጎተቻ ምልክት (Drag Handle) -->
-        <div class="w-12 h-1.5 bg-slate-300 rounded-full mx-auto md:hidden -mt-2"></div>
+        <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto md:hidden -mt-1"></div>
 
         <!-- የዝጋ (Close) ቁልፍ -->
-        <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all shadow-inner hover:scale-105 active:scale-95 z-10">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <button onclick="closeModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-1.5 rounded-full transition-all shadow-inner hover:scale-105 active:scale-95 z-10">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
         <!-- የርዕስ ክፍል -->
-        <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
-            <div class="bg-indigo-50 p-2.5 rounded-2xl border border-indigo-100 shadow-sm text-lg">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-2.5">
+            <div class="bg-indigo-50 p-2 rounded-xl border border-indigo-100 shadow-sm text-sm">
                 💳
             </div>
             <div>
-                <h3 class="font-extrabold text-slate-800 text-sm md:text-base">የመጨረሻ ማረጋገጫ እና የክፍያ ዝርዝር</h3>
-                <p class="text-[11px] text-slate-500">እባክዎ መረጃዎን ሞልተው ክፍያውን ያጠናቅቁ</p>
+                <h3 class="font-extrabold text-slate-800 text-xs">የመጨረሻ ማረጋገጫ እና የክፍያ ዝርዝር</h3>
+                <p class="text-[9px] text-slate-500">እባክዎ መረጃዎን ሞልተው ክፍያውን ያጠናቅቁ</p>
             </div>
         </div>
 
         <!-- 1. የግል መረጃ መቀበያ ፎርም -->
-        <div class="space-y-3.5 text-xs">
+        <div class="space-y-2.5 text-xs">
             <div>
-                <label for="order-customer-name" class="block font-bold text-slate-700 mb-1">ሙሉ ስምዎ፡</label>
-                <input type="text" id="order-customer-name" placeholder="እባክዎ ስምዎን ያስገቡ" class="w-full p-3.5 border border-slate-200 rounded-2xl bg-slate-50/50 shadow-inner focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all text-xs">
+                <label for="order-customer-name" class="block font-bold text-slate-700 text-[10px] mb-1">ሙሉ ስምዎ፡</label>
+                <input type="text" id="order-customer-name" placeholder="እባክዎ ስምዎን ያስገቡ" class="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50/50 shadow-inner focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all text-xs">
             </div>
 
             <div>
-                <label for="order-customer-phone" class="block font-bold text-slate-700 mb-1">ስልክ ቁጥርዎ (ለማስተባበር)፡</label>
-                <input type="tel" id="order-customer-phone" placeholder="09... ወይም 07..." class="w-full p-3.5 border border-slate-200 rounded-2xl bg-slate-50/50 shadow-inner focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all text-xs">
+                <label for="order-customer-phone" class="block font-bold text-slate-700 text-[10px] mb-1">ስልክ ቁጥርዎ (ለማስተባበር)፡</label>
+                <input type="tel" id="order-customer-phone" placeholder="09... ወይም 07..." class="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50/50 shadow-inner focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all text-xs">
             </div>
         </div>
 
-        <!-- 2. የክፍያ አማራጭ እና እውነተኛ የ QR ኮድ ንድፍ -->
-        <div class="bg-gradient-to-b from-indigo-50/60 to-slate-50 p-4.5 rounded-2xl border border-indigo-100/80 shadow-sm space-y-3.5 text-center">
+        <!-- 2. የክፍያ አማራጭ እና የ QR ኮድ ክፍል (በጣም የታመቀ) -->
+        <div class="bg-gradient-to-b from-indigo-50/50 to-slate-50 p-3 rounded-xl border border-indigo-100/80 shadow-sm space-y-2.5 text-center">
             
             <!-- የክፍያ አማራጭ Dropdown -->
             <div class="space-y-1 text-left">
-                <label for="payment-method-select" class="block font-bold text-slate-700 text-[11px]">የክፍያ አማራጭ/የባንክ አካውንት ይምረጡ፡</label>
-                <select id="payment-method-select" class="w-full p-3 border border-slate-200 rounded-xl bg-white text-xs font-semibold text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+                <label for="payment-method-select" class="block font-bold text-slate-700 text-[10px]">የክፍያ አማራጭ/የባንክ አካውንት ይምረጡ፡</label>
+                <select id="payment-method-select" class="w-full p-2 border border-slate-200 rounded-lg bg-white text-[11px] font-semibold text-slate-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/30">
                     <option value="telebirr">Telebirr - 0930836065 (ይቻላል መጽሐፍት)</option>
                     <option value="cbe">የኢትዮጵያ ንግድ ባንክ (CBE)</option>
                     <option value="abyssinia">የአቢሲኒያ ባንክ</option>
                 </select>
             </div>
 
-            <div class="space-y-1">
-                <span class="inline-block px-3 py-0.5 bg-indigo-600 text-white font-black text-[9px] rounded-full uppercase tracking-wider shadow-sm">የተመረጠው አካውንት</span>
-                <div class="inline-block bg-white border border-indigo-100 px-4 py-1.5 rounded-xl shadow-sm my-1">
-                    <p class="font-mono font-black text-indigo-700 text-sm md:text-base tracking-wider">0930836065</p>
+            <div class="space-y-0.5">
+                <span class="inline-block px-2 py-0.5 bg-indigo-600 text-white font-black text-[8px] rounded-full uppercase tracking-wider shadow-sm">የተመረጠው አካውንት</span>
+                <div class="inline-block bg-white border border-indigo-100 px-3 py-1 rounded-lg shadow-sm my-0.5">
+                    <p class="font-mono font-black text-indigo-700 text-xs tracking-wider">0930836065</p>
                 </div>
-                <p class="text-xs text-slate-500">የሂሳብ ባለቤት፡ <span class="font-bold text-slate-800">ይቻላል መጽሐፍት</span></p>
+                <p class="text-[9px] text-slate-500">የሂሳብ ባለቤት፡ <span class="font-bold text-slate-800">ይቻላል መጽሐፍት</span></p>
             </div>
 
-            <!-- እውነተኛ የሚመስል የ QR ኮድ ግራፊክስ (SVG) -->
-            <div class="flex justify-center pt-1">
-                <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 inline-block transform hover:scale-105 transition-transform duration-200">
-                    <svg class="w-24 h-24 text-slate-800" viewBox="0 0 24 24" fill="currentColor">
+            <!-- የ QR ኮድ ግራፊክስ -->
+            <div class="flex justify-center">
+                <div class="bg-white p-2 rounded-xl shadow-sm border border-slate-200 inline-block">
+                    <svg class="w-16 h-16 text-slate-800" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M2 2h6v6H2V2m2 2v2h2V4H4M2 16h6v6H2v-6m2 2v2h2v-2H4m12-14h6v6h-6V2m2 2v2h2V4h-2M11 2h2v3h-2V2m0 5h2v2h-2V7m-5 3h2v2H6v-2m5 0h2v2h-2v-2m5 0h2v2h-2v-2m-5 5h2v2h-2v-2m5 0h2v2h-2v-2m-10 0h2v5H6v-5m5 3h2v2h-2v-2m10-3h2v6h-2v-6m-5 3h2v3h-2v-3m0 5h2v2h-2v-2m-5 0h2v2h-2v-2Z"/>
                     </svg>
                 </div>
@@ -370,15 +370,15 @@
         </div>
 
         <!-- የማስጠንቀቂያ መልእክት -->
-        <div class="text-[11px] text-amber-700 bg-amber-50/80 p-3 rounded-2xl border border-amber-200/60 shadow-sm flex items-start gap-2">
-            <span class="text-base">💡</span>
-            <span class="leading-relaxed">የሚያስገቡት ስልክ ቁጥር ትክክለኛነት መጽሐፍቶ በቀጥታ በእጅዎ እንዲደርስ ለማድረግ ከፍተኛ አስተዋጽኦ አለው።</span>
+        <div class="text-[9px] text-amber-700 bg-amber-50/80 p-2 rounded-xl border border-amber-200/60 shadow-sm flex items-start gap-1.5">
+            <span class="text-xs">💡</span>
+            <span class="leading-tight">የሚያስገቡት ስልክ ቁጥር ትክክለኛነት መጽሐፍቶ በቀጥታ በእጅዎ እንዲደርስ ለማድረግ ከፍተኛ አስተዋጽኦ አለው።</span>
         </div>
 
         <!-- የማስረከቢያ ቁልፍ -->
-        <a href="https://t.me/Ychalal2" target="_blank" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white py-3.5 rounded-2xl font-bold text-xs md:text-sm transition-all shadow-[0_10px_20px_rgba(79,_70,_229,_0.3)] hover:shadow-[0_15px_25px_rgba(79,_70,_229,_0.4)] active:scale-[0.98] flex items-center justify-center gap-2">
+        <a href="https://t.me/Ychalal2" target="_blank" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white py-2.5 rounded-xl font-bold text-xs transition-all shadow-[0_6px_15px_rgba(79,_70,_229,_0.3)] active:scale-[0.98] flex items-center justify-center gap-1.5">
             <span>ትዕዛዝ አስተላልፍ እና ደረሰኝ ላክ (@Ychalal2)</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
         </a>
 
     </div>
