@@ -301,57 +301,78 @@
         </div>
     </div>
 
-    <!-- 7. CHECKOUT MODAL -->
-    <div id="checkout-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <!-- max-h-[90vh] እና overflow-y-auto ለዴስክቶፕ ሽብለላ (Scrolling) -->
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3 sticky top-0 bg-white z-10">
-                <h3 class="font-serif font-bold text-slate-900 text-base flex items-center gap-2">
-                    <i class="fa-solid fa-wallet text-indigo-600"></i> የመጨረሻ ማረጋገጫ እና ክፍያ
-                </h3>
-                <button onclick="closeCheckoutModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg px-2">✕</button>
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4 overflow-y-auto">
+    
+    <!-- ዋናው የ3D ሞዳል ሳጥን (Deep Shadow & Elevated Border Effect) -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-[0_20px_50px_rgba(8,_112,_184,_0.2)] hover:shadow-[0_25px_60px_rgba(79,_70,_229,_0.25)] transition-all duration-300 w-full max-w-lg overflow-hidden relative p-6 md:p-8 space-y-6 my-8 transform lg:scale-105">
+        
+        <!-- የዝጋ (Close) ቁልፍ - ከነ 3D Soft Shadow -->
+        <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2.5 rounded-full transition-all shadow-inner hover:scale-110 active:scale-95 z-10">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <!-- የርዕስ ክፍል -->
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div class="bg-indigo-50 p-2.5 rounded-2xl border border-indigo-100 shadow-sm text-xl">
+                💳
+            </div>
+            <div>
+                <h3 class="font-extrabold text-slate-800 text-base">የመጨረሻ ማረጋገጫ እና የክፍያ ዝርዝር</h3>
+                <p class="text-[11px] text-slate-500">እባክዎ መረጃዎን ሞልተው ክፍያውን ያጠናቅቁ</p>
+            </div>
+        </div>
+
+        <!-- 1. የግል መረጃ መቀበያ ፎርም (3D Input Effect) -->
+        <div class="space-y-4 text-xs">
+            <div>
+                <label for="order-customer-name" class="block font-bold text-slate-700 mb-1.5">ሙሉ ስምዎ፡</label>
+                <input type="text" id="order-customer-name" placeholder="እባክዎ ስምዎን ያስገቡ" class="w-full p-3.5 border border-slate-200 rounded-2xl bg-slate-50/50 shadow-inner focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all">
             </div>
 
-           <div class="space-y-3 text-xs">
-    <div>
-        <label for="order-customer-name" class="block font-bold text-slate-700 mb-1">ሙሉ ስምዎ፡</label>
-        <input type="text" id="order-customer-name" placeholder="እባክዎ ስምዎን ያስገቡ" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
-    </div>
+            <div>
+                <label for="order-customer-phone" class="block font-bold text-slate-700 mb-1.5">ስልክ ቁጥርዎ (ለማስተባበር)፡</label>
+                <input type="tel" id="order-customer-phone" placeholder="09... ወይም 07..." class="w-full p-3.5 border border-slate-200 rounded-2xl bg-slate-50/50 shadow-inner focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all">
+            </div>
+        </div>
 
-    <div>
-        <label for="order-customer-phone" class="block font-bold text-slate-700 mb-1">ስልክ ቁጥርዎ (ለማስተባበር)፡</label>
-        <input type="tel" id="order-customer-phone" placeholder="09... ወይም 07..." class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
-    </div>
-</div>
-                    <!-- 👇 የሚያስገቡት ስልክ ቁጥር ማሳሰቢያ ተጨመረ -->
-                    <p class="text-[11px] text-indigo-600 font-medium mt-1">
-                        💡 የሚያስገቡት ስልክ ቁጥር ትክክለኛነት ግዥ የፈጸሙት መጽሃፍ ቶሎ እጅዎ እንዲደርስ መሸጋገሪያ ድልድይ ነው።
-                    </p>
+        <!-- 2. የቴሌብር ክፍያ እና QR ኮድ ክፍል (Elevated 3D Card Look) -->
+        <div class="bg-gradient-to-b from-indigo-50/60 to-slate-50 p-5 rounded-2xl border border-indigo-100/80 shadow-[0_4px_15px_rgba(0,0,0,0.03)] space-y-4 text-center">
+            
+            <div class="space-y-1">
+                <span class="inline-block px-3 py-1 bg-indigo-600 text-white font-black text-[10px] rounded-full uppercase tracking-wider shadow-sm mb-1">Telebirr</span>
+                <p class="text-xs font-medium text-slate-600">አካውንት / ስልክ ቁጥር:</p>
+                <!-- ቁጥሩ ጎልቶ እንዲወጣ የተደረገ 3D Badge -->
+                <div class="inline-block bg-white border border-indigo-100 px-4 py-2 rounded-xl shadow-sm my-1">
+                    <p class="font-mono font-black text-indigo-700 text-base tracking-wider">0930836065</p>
                 </div>
+                <p class="text-xs text-slate-500">የሂሳብ ባለቤት፡ <span class="font-bold text-slate-800">ይቻላል መጽሐፍት</span></p>
+            </div>
 
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">የባንክ/የክፍያ አካውንት ይምረጡ፡</label>
-                    <select id="selected-payment-method" onchange="updatePaymentDetails()" class="w-full p-3 border rounded-xl bg-slate-50 focus:outline-none font-medium"></select>
-                </div>
-
-                <div id="payment-instruction-box" class="p-3 bg-indigo-50 border border-indigo-100 rounded-xl space-y-2 text-slate-700"></div>
-
-                <div id="qrcode-container" class="text-center pt-2 hidden">
-                    <p class="text-[11px] font-bold text-slate-600 mb-1">ስልክዎ ላይ በካሜራ በመቃኘት በቀላሉ ይክፈሉ (QR Code)</p>
-                    <div class="inline-block p-2 bg-white border rounded-xl shadow-sm">
-                        <img id="dynamic-qrcode" src="" alt="Payment QR Code" class="w-32 h-32 mx-auto object-contain">
+            <!-- የ QR ኮድ ማቀፊያ ከ3D Shadow ጋር -->
+            <div class="flex justify-center pt-1">
+                <div class="bg-white p-3 rounded-2xl shadow-[0_8px_20px_rgba(0,0,0,0.06)] border border-slate-100 transform hover:scale-105 transition-transform duration-200 inline-block">
+                    <!-- የQR ኮድ ምስል የሚገባበት -->
+                    <div class="w-28 h-28 bg-slate-100 rounded-xl flex items-center justify-center text-xs font-semibold text-slate-400 border border-dashed border-slate-300">
+                        [QR Code]
                     </div>
-                </div>
-
-                <div class="pt-2 border-t sticky bottom-0 bg-white pb-1">
-                    <button onclick="completeBankCheckout()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-xs transition shadow-md flex items-center justify-center gap-2">
-                        <i class="fa-brands fa-telegram text-base"></i>
-                        <span>ትዕዛዝ አስተላልፍ እና ደረሰኝ ላክ (@Ychalal2)</span>
-                    </button>
                 </div>
             </div>
         </div>
+
+        <!-- የማስጠንቀቂያ መልእክት -->
+        <div class="text-[11px] text-amber-700 bg-amber-50/80 p-3.5 rounded-2xl border border-amber-200/60 shadow-sm flex items-start gap-2">
+            <span class="text-base">💡</span>
+            <span class="leading-relaxed">የሚያስገቡት ስልክ ቁጥር ትክክለኛነት መጽሐፍቶ በቀጥታ በእጅዎ እንዲደርስ ለማድረግ ከፍተኛ አስተዋጽኦ አለው።</span>
+        </div>
+
+        <!-- የማስረከቢያ ቁልፍ (3D Floating Button with Gloss Effect) -->
+        <a href="https://t.me/Ychalal2" target="_blank" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white py-3.5 rounded-2xl font-bold text-xs transition-all shadow-[0_10px_20px_rgba(79,_70,_229,_0.3)] hover:shadow-[0_15px_25px_rgba(79,_70,_229,_0.4)] active:scale-[0.98] flex items-center justify-center gap-2">
+            <span>ትዕዛዝ አስተላልፍ እና ደረሰኝ ላክ (@Ychalal2)</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+
     </div>
+</div>
 
     <!-- 8. AUTHENTICATION MODAL -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
