@@ -1072,7 +1072,13 @@ async function loadSiteSettingsFromSupabase() {
             document.getElementById('checkout-modal').classList.remove('hidden');
             toggleCartDrawer();
         }
-        function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
+        function closeCheckoutModal() {
+    const modal = document.getElementById('checkout-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+    }
+}
 
         function populateBankDropdown() {
             const select = document.getElementById('selected-payment-method');
