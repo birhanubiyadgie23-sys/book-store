@@ -303,7 +303,7 @@
 
 <div class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-900/70 backdrop-blur-md p-0 md:p-3 overflow-y-auto">
     
-    <!-- በጣም የታመቀ እና አነስተኛ መጠን ያለው የ 3D Popup ሳጥን -->
+    <!-- ዋናው የታመቀ እና ዘመናዊ 3D Popup ሳጥን -->
     <div class="bg-white rounded-t-[2rem] md:rounded-2xl border-t md:border border-slate-100 shadow-[0_-10px_30px_rgba(0,0,0,0.15)] md:shadow-[0_15px_35px_rgba(8,_112,_184,_0.15)] transition-all duration-300 w-full max-w-sm overflow-hidden relative p-4 space-y-3 max-h-[85vh] overflow-y-auto">
         
         <!-- ለሞባይል የሚሆን መጎተቻ ምልክት (Drag Handle) -->
@@ -338,7 +338,7 @@
             </div>
         </div>
 
-        <!-- 2. የክፍያ አማራጭ እና ይበልጥ ሳቢ የሆነ የ QR ኮድ ዲዛይን -->
+        <!-- 2. የክፍያ አማራጭ እና ትክክለኛው የ QR ኮድ (ለስካን የተዘጋጀ) -->
         <div class="bg-gradient-to-b from-indigo-50/50 to-slate-50 p-3 rounded-xl border border-indigo-100/80 shadow-sm space-y-2.5 text-center">
             
             <!-- የክፍያ አማራጭ Dropdown -->
@@ -358,32 +358,11 @@
                 </div>
                 <p class="text-[9px] text-slate-500">የሂሳብ ባለቤት፡ <span class="font-bold text-slate-800">ይቻላል መጽሐፍት</span></p>
             </div>
-
-            <!-- እጅግ ሳቢ እና ማራኪ የሆነ የ QR ኮድ ንድፍ (Modern Scan Box) -->
+            <!-- እውነተኛውን የቴሌብር ቁጥር ወደ QR ኮድ የሚቀይረው ዲጂታል ምስል ማቀፊያ -->
             <div class="flex justify-center pt-1">
-                <div class="bg-white p-2.5 rounded-2xl shadow-md border-2 border-indigo-100/80 inline-block transform hover:scale-105 transition-transform duration-300 relative group">
-                    <div class="absolute -top-2 -right-2 bg-indigo-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full shadow">Scan</div>
-                    <svg class="w-20 h-20 text-slate-900" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M2 2h7v7H2V2m2 2v3h3V4H4m11-2h7v7h-7V2m2 2v3h3V4h-2M2 15h7v7H2v-7m2 2v3h3v-3H4m13-1.5v2.5h2.5v-2.5H17m-2.5 0h2.5v2.5h-2.5v-2.5m5 0h2.5v2.5H19.5v-2.5m-5 2.5v2.5h2.5v-2.5H14.5m5 0v2.5h2.5v-2.5H19.5m-2.5 2.5v2.5h2.5v-2.5H17m-2.5 0v2.5h2.5v-2.5H14.5m5 2.5v2.5h2.5v-2.5H19.5m-5 0v2.5h2.5v-2.5H14.5M15 2h2v5h-2V2m0 7h2v2h-2V9m-7 0h2v2H8V9m5 0h2v2h-2V9m-5 5h2v2H8v-2m5 0h2v2h-2v-2m-5 5h2v2H8v-2m5 0h2v2h-2v-2Z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <!-- የማስጠንቀቂያ መልእክት -->
-        <div class="text-[9px] text-amber-700 bg-amber-50/80 p-2 rounded-xl border border-amber-200/60 shadow-sm flex items-start gap-1.5">
-            <span class="text-xs">💡</span>
-            <span class="leading-tight">የሚያስገቡት ስልክ ቁጥር ትክክለኛነት መጽሐፍቶ በቀጥታ በእጅዎ እንዲደርስ ለማድረግ ከፍተኛ አስተዋጽኦ አለው።</span>
-        </div>
-
-        <!-- የማስረከቢያ ቁልፍ -->
-        <a href="https://t.me/Ychalal2" target="_blank" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white py-2.5 rounded-xl font-bold text-xs transition-all shadow-[0_6px_15px_rgba(79,_70,_229,_0.3)] active:scale-[0.98] flex items-center justify-center gap-1.5">
-            <span>ትዕዛዝ አስተላልፍ እና ደረሰኝ ላክ (@Ychalal2)</span>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-        </a>
-
-    </div>
-</div>
+                <div class="bg-white p-2 rounded-xl shadow-md border-2 border-indigo-100/80 inline-block transform hover:scale-105 transition-transform duration-300 relative group">
+                    <div class="absolute -top-2 -right-2 bg-indigo-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full shadow">Scan</div> 
+                    <!-- እዚህ ጋር
     <!-- 8. AUTHENTICATION MODAL -->
     <div id="auth-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
@@ -393,12 +372,10 @@
                 </h3>
                 <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
-            
             <div class="flex gap-2 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
                 <button id="tab-login-btn" onclick="switchAuthTab('login')" class="w-1/2 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition">ግባ (Login)</button>
                 <button id="tab-signup-btn" onclick="switchAuthTab('signup')" class="w-1/2 py-2 rounded-lg text-slate-600 transition">ተመዝገብ (Sign Up)</button>
             </div>
-
 <div id="form-login" class="space-y-3 pt-2">
     <div>
         <label for="login-username" class="block font-bold text-xs text-slate-700 mb-1">የተጠቃሚ ስም (Username)</label>
@@ -436,7 +413,6 @@
                 </h3>
                 <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
-
             <div class="flex gap-2 border-b border-slate-100 pb-3 mb-4 overflow-x-auto text-xs font-semibold">
                 <button onclick="switchAdminTab('books')" id="adm-tab-books-btn" class="px-3 py-1.5 rounded-xl bg-indigo-600 text-white">መጽሐፍት</button>
                 <button onclick="switchAdminTab('banks')" id="adm-tab-banks-btn" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700">ባንኮች</button>
@@ -466,11 +442,9 @@
                         </select>
                         <input type="text" id="new-book-category-custom" placeholder="አዲሱን ካታጎሪ ስም እዚህ ይጻፉ..." class="p-3 border rounded-xl bg-slate-50 focus:outline-none hidden mt-1">
                     </div>
-
                     <input type="text" id="new-book-cover" placeholder="የሽፋን ምስል URL" class="col-span-full p-3 border rounded-xl bg-slate-50 focus:outline-none">
                     <textarea id="new-book-description" rows="3" placeholder="ስለመጽሐፉ አጭር ማብራሪያ ወይም አባውት ጽሁፍ እዚህ ይጻፉ..." class="col-span-full p-3 border rounded-xl bg-slate-50 focus:outline-none text-xs"></textarea>
                 </div>
-
                 <!-- የደራሲው ተጨማሪ ስራዎች መመዝገቢያ -->
                 <div class="border-t pt-4 mt-4">
                     <h5 class="font-bold text-xs text-slate-800 mb-2">✍️ የደራሲው ሌሎች ተጨማሪ ስራዎች</h5>
