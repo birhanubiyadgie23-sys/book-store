@@ -1081,29 +1081,38 @@ async function loadSiteSettingsFromSupabase() {
             updatePaymentDetails();
         }
 
-        function updatePaymentDetails() {
-            const idx = document.getElementById('selected-payment-method').value;
-            const bank = bankAccounts[idx];
-            const box = document.getElementById('payment-instruction-box');
-            const qrContainer = document.getElementById('qrcode-container');
-            const qrImg = document.getElementById('dynamic-qrcode');
+       function updatePaymentDetails() {
+    const selectElement = document.getElementById('payment-method-select');
+    const selectedValue = selectElement.value;
+    
+    const accountNumberEl = document.getElementById('payment-account-number');
+    const accountOwnerEl = document.getElementById('payment-account-owner');
+    const qrCodeImg = document.getElementById('payment-qr-code');
+    const providerBadge = document.getElementById('payment-provider-badge');
 
-            if (!bank) return;
+    let accountNumber = '';
+    let accountOwner = 'ይቻላል መጽሐፍት';
+    let providerName = '';
 
-            box.innerHTML = `
-                <p class="font-bold text-indigo-900">${bank.name}</p>
-                <p>አካውንት / ስልክ፡ <span class="font-extrabold text-slate-900">${bank.accNo}</span></p>
-                <p>የሂሳብ ባለቤት፡ <span class="font-semibold text-slate-900">${bank.holder}</span></p>
-            `;
+    if (selectedValue === 'telebirr') {
+        accountNumber = '0930836065';
+        providerName = 'Telebirr';
+    } else if (selectedValue === 'cbe') {
+        accountNumber = '1000123456789'; // የሚፈልጉትን የንግድ ባንክ ቁጥር ያስገቡ
+        providerName = 'CBE';
+    } else if (selectedValue === 'abyssinia') {
+        accountNumber = '987654321001'; // የሚፈልጉትን የአቢሲኒያ ባንክ ቁጥር ያስገቡ
+        providerName = 'Abyssinia';
+    }
 
-            if (bank.qr) {
-                qrImg.src = bank.qr;
-                qrContainer.classList.remove('hidden');
-            } else {
-                qrContainer.classList.add('hidden');
-            }
-        }
+    // መረጃዎቹን በ HTML ውስጥ ማዘመን
+    accountNumberEl.textContent = accountNumber;
+    accountOwnerEl.textContent = accountOwner;
+    providerBadge.textContent = providerName;
 
+    // የ QR ኮዱን አድራሻ በአዲሱ ቁጥር ማደስ (ለስካን ዝግጁ እንዲሆን)
+    qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${accountNumber}`;
+}
   async function completeBankCheckout() {
             const customerName = document.getElementById('order-customer-name').value.trim();
             const customerPhone = document.getElementById('order-customer-phone').value.trim();
